@@ -15,11 +15,21 @@ public class User {
         this.plan = null;
     }
 
+    static User mock_instance = null;
+
     void selectPlan(String planCode) {
         this.plan = Plan.byCode(planCode);
     }
 
     public String getPlanCode() {
         return this.plan.getCode();
+    }
+
+    static User getMock() {
+        if (mock_instance == null) {
+            mock_instance = new User("Harry", "Potter");
+            mock_instance.selectPlan(Plan.getDefault());
+        }
+        return mock_instance;
     }
 }

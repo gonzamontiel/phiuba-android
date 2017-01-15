@@ -1,5 +1,6 @@
 package mont.gonzalo.phiuba;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +20,12 @@ public class Course {
     private String depto;
     private Boolean required;
     private List<String> correlatives;
+
+    public Course(String name, String depCode, String code) {
+        this.name = name;
+        this.code = code;
+        this.depCode = depCode;
+    }
 
     public String getCode() {
         return code;
@@ -90,5 +97,39 @@ public class Course {
 
     public void setCorrelatives(List<String> correlatives) {
         this.correlatives = correlatives;
+    }
+
+    public int getImageResource() {
+        return Department.getIconByDepartmentCode(this.getDepCode());
+    }
+
+    static private List<Course> sample_data;
+
+    static List<Course> getSampleData() {
+        if (sample_data == null) {
+            List<Course> cc = new ArrayList<>();
+            cc.add(new Course("Fisica I A", "62", "62.01"));
+            cc.add(new Course("algebra II A", "61", "61.08"));
+            cc.add(new Course("Quimica", "63", "63.01"));
+            cc.add(new Course("Analisis Matematico II A", "61", "61.03"));
+            cc.add(new Course("Algoritmos y Programacion I", "75", "75.40"));
+            cc.add(new Course("Fisica II A", "62", "62.03"));
+            cc.add(new Course("Algoritmos y Programacion II", "75", "75.41"));
+            cc.add(new Course("Fisica III D", "62", "62.15"));
+            cc.add(new Course("Laboratorio", "66", "66.02"));
+            cc.add(new Course("Estructura del Computador", "66", "66.70"));
+            cc.add(new Course("Algoritmos y Programacion III", "75", "75.07"));
+            cc.add(new Course("Analisis Numerico I", "75", "75.12"));
+            cc.add(new Course("Probabilidad y Estadistica B", "61", "61.09"));
+            cc.add(new Course("Analisis Matematico III A", "61", "61.10"));
+            cc.add(new Course("Organizacion de Computadoras", "66", "66.20"));
+            cc.add(new Course("Organizacion de Datos", "75", "75.06"));
+            cc.add(new Course("Taller de Programacion I", "75", "75.42"));
+            cc.add(new Course("Estructura de las Organizaciones", "71", "71.12"));
+            cc.add(new Course("Modelos y Optimizacion I", "71", "71.14"));
+            cc.add(new Course("Sistemas Operativos", "75", "75.08"));
+            sample_data = cc;
+        }
+        return sample_data;
     }
 }

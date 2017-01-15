@@ -26,4 +26,8 @@ public class Plan {
     public String getCode() {
         return planCode;
     }
+
+    public static String getDefault() {
+        return "INFORMA86";
+    }
 }

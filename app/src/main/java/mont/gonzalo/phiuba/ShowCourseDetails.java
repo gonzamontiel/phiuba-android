@@ -16,7 +16,7 @@ public class ShowCourseDetails extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.course_details);
+        setContentView(R.layout.detail_course);
 
         //Initializing Views
         textViewCourseCode = (TextView) findViewById(R.id.textViewCourseCode);
