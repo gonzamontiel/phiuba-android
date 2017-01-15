@@ -44,7 +44,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
     public void onBindViewHolder(final CourseViewHolder holder, int position) {
         holder.mItem = mCourses.get(position);
         holder.courseName.setText(mCourses.get(position).getName());
-        holder.courseDescription.setText(mCourses.get(position).getDepCode());
+        holder.courseDepartment.setText(mCourses.get(position).getDepto());
         holder.courseIcon.setImageResource(mCourses.get(position).getImageResource());
 
         holder.rv.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +76,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
     public class CourseViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         public final View rv;
         public final TextView courseName;
-        public final TextView courseDescription;
+        public final TextView courseDepartment;
         public final ImageView courseIcon;
         public Course mItem;
 
@@ -85,7 +85,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
             rv = itemView.findViewById(R.id.course_card_view);
             rv.setOnCreateContextMenuListener(this);
             courseName = (TextView)itemView.findViewById(R.id.course_name);
-            courseDescription = (TextView)itemView.findViewById(R.id.course_description);
+            courseDepartment = (TextView)itemView.findViewById(R.id.course_description);
             courseIcon = (ImageView)itemView.findViewById(R.id.course_icon);
         }
 
