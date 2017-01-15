@@ -28,6 +28,7 @@ public class Department {
         depMap.put("76", R.drawable.dep76);
         depMap.put("77", R.drawable.dep77);
         depMap.put("78", R.drawable.dep78);
+        depMap.put("ALIM", R.drawable.dep_alim);
         return depMap;
     }
 
