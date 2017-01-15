@@ -6,6 +6,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,9 +19,11 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        CourseFragment.OnListFragmentInteractionListener
-{
+        CourseFragment.OnListFragmentInteractionListener, NewsFragment.OnListFragmentInteractionListener {
+
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String ACTIVE_FRAGMENT = "active_fragment";
+    private Fragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,22 +32,27 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Fragment fragment = null;
-        Class fragmentClass = null;
+        currentFragment = null;
+        Class fragmentClass = CourseFragment.class;
+        if (savedInstanceState != null) {
+            Class savedActiveFragment = (Class) savedInstanceState.get(ACTIVE_FRAGMENT);
+            fragmentClass = savedActiveFragment;
+        }
         try {
-            fragment = (Fragment) CourseFragment.newInstance(1, this);
+            currentFragment = (Fragment) fragmentClass.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
+            currentFragment = CourseFragment.newInstance(1, this);
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.flContent, currentFragment).commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Envia sugerencias!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -57,6 +65,12 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState (Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(ACTIVE_FRAGMENT, currentFragment.getClass());
     }
 
     @Override
@@ -95,13 +109,22 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.nav_courses) {
-
+            Log.d(TAG, "Courses clicked!");
+            currentFragment = CourseFragment.newInstance(1, this);
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.flContent, currentFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
         } else if (id == R.id.nav_events) {
 
         } else if (id == R.id.nav_news) {
-
+            Log.d(TAG, "News clicked!");
+            currentFragment = NewsFragment.newInstance(1, this);
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.flContent, currentFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
         } else if (id == R.id.nav_myplan) {
 
         } else if (id == R.id.nav_share) {
@@ -117,5 +140,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(Course item) {
         Log.d(TAG, item.getName() + " was clicked!");
+    }
+
+    @Override
+    public void onListFragmentInteraction(News item) {
+        Log.d(TAG, item.getTitle() + " was clicked!");
     }
 }
