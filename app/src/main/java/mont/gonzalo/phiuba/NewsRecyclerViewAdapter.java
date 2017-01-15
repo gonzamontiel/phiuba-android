@@ -10,13 +10,15 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
-import mont.gonzalo.phiuba.CourseFragment.OnListFragmentInteractionListener;
+import mont.gonzalo.phiuba.NewsFragment.OnListFragmentInteractionListener;
 
-public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.CourseViewHolder> {
+public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.NewsViewHolder> {
 
-    private final List<Course> mCourses;
+    private final List<News> mNews;
     private final OnListFragmentInteractionListener mListener;
     private int position;
 
@@ -28,24 +30,25 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         this.position = position;
     }
 
-    public NewsRecyclerViewAdapter(List<Course> courses, OnListFragmentInteractionListener mListener) {
-        mCourses = courses;
+    public NewsRecyclerViewAdapter(List<News> news, OnListFragmentInteractionListener mListener) {
+        mNews = news;
         this.mListener = mListener;
     }
 
     @Override
-    public CourseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NewsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_course, parent, false);
-        return new CourseViewHolder(view);
+                .inflate(R.layout.fragment_news, parent, false);
+        return new NewsViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final CourseViewHolder holder, int position) {
-        holder.mItem = mCourses.get(position);
-        holder.courseName.setText(mCourses.get(position).getName());
-        holder.courseDepartment.setText(mCourses.get(position).getDepto());
-        holder.courseIcon.setImageResource(mCourses.get(position).getImageResource());
+    public void onBindViewHolder(final NewsViewHolder holder, int position) {
+        holder.mItem = mNews.get(position);
+        holder.newsTitle.setText(mNews.get(position).getTitle());
+        holder.newsText.setText(mNews.get(position).getText());
+
+        Picasso.with(holder.rv.getContext()).load(mNews.get(position).getImg()).into(holder.newsThumbnail);
 
         holder.rv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,37 +73,34 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 
     @Override
     public int getItemCount() {
-        return mCourses.size();
+        return mNews.size();
     }
 
-    public class CourseViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
+    public class NewsViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         public final View rv;
-        public final TextView courseName;
-        public final TextView courseDepartment;
-        public final ImageView courseIcon;
-        public Course mItem;
+        public final TextView newsTitle;
+        public final TextView newsText;
+        public final ImageView newsThumbnail;
+        public News mItem;
 
-        public CourseViewHolder(View itemView) {
+        public NewsViewHolder(View itemView) {
             super(itemView);
-            rv = itemView.findViewById(R.id.course_card_view);
+            rv = itemView.findViewById(R.id.news_card_view);
             rv.setOnCreateContextMenuListener(this);
-            courseName = (TextView)itemView.findViewById(R.id.course_name);
-            courseDepartment = (TextView)itemView.findViewById(R.id.course_description);
-            courseIcon = (ImageView)itemView.findViewById(R.id.course_icon);
+            newsThumbnail = (ImageView)itemView.findViewById(R.id.news_thumbnail);
+            newsTitle = (TextView)itemView.findViewById(R.id.news_title);
+            newsText = (TextView)itemView.findViewById(R.id.news_text);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + courseName.getText() + "'";
+            return super.toString() + " '" + newsTitle.getText() + "'";
         }
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            menu.setHeaderTitle(R.string.course_context_title);
-            menu.add(0, R.string.course_context_favorite, 1, v.getResources().getString(R.string.course_context_favorite));
-            menu.add(0, R.string.course_context_schedule, 2, v.getResources().getString(R.string.course_context_schedule));
-            menu.add(0, R.string.course_context_department, 3, v.getResources().getString(R.string.course_context_department));
-            menu.add(0, R.string.course_context_department_courses, 4, v.getResources().getString(R.string.course_context_department_courses));
+            menu.setHeaderTitle(R.string.news_context_title);
+            menu.add(0, R.string.news_context_pin, 1, v.getResources().getString(R.string.news_context_pin));
         }
     }
 }

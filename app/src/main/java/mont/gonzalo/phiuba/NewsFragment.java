@@ -60,13 +60,12 @@ public class NewsFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             mListener = (OnListFragmentInteractionListener) getActivity();
-            mAdapter = new CourseRecyclerViewAdapter(Course.getSampleData(), mListener);
+            mAdapter = new NewsRecyclerViewAdapter(News.getSampleData(), mListener);
             recyclerView.setAdapter(mAdapter);
             registerForContextMenu(recyclerView);
         }
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -93,20 +92,13 @@ public class NewsFragment extends Fragment {
     public boolean onContextItemSelected(MenuItem item) {
         int position = -1;
         try {
-            position = ((CourseRecyclerViewAdapter)mAdapter).getPosition();
+            position = ((NewsRecyclerViewAdapter)mAdapter).getPosition();
         } catch (Exception e) {
             Log.d(TAG, e.getLocalizedMessage(), e);
             return super.onContextItemSelected(item);
         }
         switch (item.getItemId()) {
-            case R.string.course_context_favorite:
-                break;
-            case R.string.course_context_department:
-                break;
-            case R.string.course_context_department_courses:
-                break;
-            case R.string.course_context_schedule:
-                break;
+            case R.string.news_context_pin:
         }
         return super.onContextItemSelected(item);
     }
@@ -118,6 +110,6 @@ public class NewsFragment extends Fragment {
      * activity.
      */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Course item);
+        void onListFragmentInteraction(News item);
     }
 }
