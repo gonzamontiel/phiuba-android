@@ -1,12 +1,14 @@
-package mont.gonzalo.phiuba;
+package mont.gonzalo.phiuba.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by gonzalo on 10/10/16.
  */
-public class Course {
+public class Course implements Serializable {
+    public static final String KEY_COURSE = "key_course";
     public static final String KEY_COURSE_CODE = "key_course_code";
     public static final String KEY_COURSE_NAME = "key_course_name";
 
@@ -19,12 +21,21 @@ public class Course {
     private String depto;
     private Boolean required;
     private List<String> correlatives;
+    private List<Cathedra> cathedras;
 
     public Course(String name, String depCode, String code, String depto) {
         this.name = name;
         this.code = code;
         this.depCode = depCode;
         this.depto = depto;
+    }
+
+    public List<Cathedra> getCathedras() {
+        return cathedras;
+    }
+
+    public void setCathedras(List<Cathedra> cathedras) {
+        this.cathedras = cathedras;
     }
 
     public String getCode() {
@@ -105,7 +116,7 @@ public class Course {
 
     static private List<Course> sample_data;
 
-    static List<Course> getSampleData() {
+    public static List<Course> getSampleData() {
         if (sample_data == null) {
             List<Course> cc = new ArrayList<>();
             cc.add(new Course("Analisis Matematico II A", "61", "61.03", "Matemática"));

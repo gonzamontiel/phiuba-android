@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/coursed_header"
+        android:orientation="horizontal"
+        android:background="#FFC107"
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_height="120dp">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:elevation="12dp"
+            android:id="@+id/view2"
+            app:cardCornerRadius="50dp"
+            android:layout_centerHorizontal="true"
+            android:innerRadius="2dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9">
+            <ImageView
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:id="@+id/imageView1"
+                android:src="@drawable/dep63"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true">
+            </ImageView>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/coursed_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="#fff"
+            android:breakStrategy="balanced"
+            android:textSize="35dp"
+            android:layout_marginLeft="10dp"
+            android:text="Química orgánica" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/coursed_depto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary_text"
+        android:breakStrategy="balanced"
+        android:textSize="20dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
+        android:text="Departamento: Química" />
+
+    <TextView
+        android:id="@+id/coursed_teachers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary_text"
+        android:breakStrategy="balanced"
+        android:textSize="20dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
+        android:text="Docentes: Niels Bohr - Ernest Rutherford" />
+
+    <TextView
+        android:id="@+id/coursed_schedule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary_text"
+        android:breakStrategy="balanced"
+        android:textSize="20dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
+        android:text="Horarios" />
+
+    <include layout="@layout/schedule_list"></include>
+
+</LinearLayout>

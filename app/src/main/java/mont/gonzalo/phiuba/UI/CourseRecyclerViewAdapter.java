@@ -1,4 +1,4 @@
-package mont.gonzalo.phiuba;
+package mont.gonzalo.phiuba.UI;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -12,7 +12,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import mont.gonzalo.phiuba.CourseFragment.OnListFragmentInteractionListener;
+import mont.gonzalo.phiuba.UI.CourseFragment.OnListFragmentInteractionListener;
+import mont.gonzalo.phiuba.R;
+import mont.gonzalo.phiuba.model.Course;
 
 public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecyclerViewAdapter.CourseViewHolder> {
 
@@ -36,7 +38,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
     @Override
     public CourseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_course, parent, false);
+                .inflate(R.layout.fragment_course_row, parent, false);
         return new CourseViewHolder(view);
     }
 

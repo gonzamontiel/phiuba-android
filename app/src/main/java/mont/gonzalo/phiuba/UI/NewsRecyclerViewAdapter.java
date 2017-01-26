@@ -1,4 +1,4 @@
-package mont.gonzalo.phiuba;
+package mont.gonzalo.phiuba.UI;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -14,7 +14,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import mont.gonzalo.phiuba.NewsFragment.OnListFragmentInteractionListener;
+import mont.gonzalo.phiuba.UI.NewsFragment.OnListFragmentInteractionListener;
+import mont.gonzalo.phiuba.R;
+import mont.gonzalo.phiuba.model.News;
 
 public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.NewsViewHolder> {
 
@@ -38,7 +40,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
     @Override
     public NewsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_news, parent, false);
+                .inflate(R.layout.fragment_news_row, parent, false);
         return new NewsViewHolder(view);
     }
 

@@ -1,4 +1,4 @@
-package mont.gonzalo.phiuba;
+package mont.gonzalo.phiuba.UI;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,9 +17,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import mont.gonzalo.phiuba.R;
+import mont.gonzalo.phiuba.model.Course;
+import mont.gonzalo.phiuba.model.News;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        CourseFragment.OnListFragmentInteractionListener, NewsFragment.OnListFragmentInteractionListener {
+        CourseFragment.OnListFragmentInteractionListener, NewsFragment.OnListFragmentInteractionListener, CourseDetailFragment.OnFragmentInteractionListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String ACTIVE_FRAGMENT = "active_fragment";
@@ -140,10 +144,21 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(Course item) {
         Log.d(TAG, item.getName() + " was clicked!");
+        currentFragment = CourseDetailFragment.newInstance(this);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.flContent, currentFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
     }
 
     @Override
     public void onListFragmentInteraction(News item) {
         Log.d(TAG, item.getTitle() + " was clicked!");
+    }
+
+    @Override
+    public void onFragmentInteraction(Course course) {
+
     }
 }

@@ -1,7 +1,8 @@
-package mont.gonzalo.phiuba;
+package mont.gonzalo.phiuba.api;
 
 import java.util.List;
 
+import mont.gonzalo.phiuba.model.Course;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 
@@ -33,5 +34,9 @@ public class DataFetcher {
 
     public void searchCourses(String planCode, String plan, Callback<List<Course>> c) {
         this.courseApi.searchCourses(planCode, plan, c);
+    }
+
+    public void findSpecificCourses(List<String> codes, Callback<List<Course>> c) {
+        this.courseApi.findCoursesByCode(codes, c);
     }
 }

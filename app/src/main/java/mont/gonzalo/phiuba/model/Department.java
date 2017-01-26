@@ -1,6 +1,8 @@
-package mont.gonzalo.phiuba;
+package mont.gonzalo.phiuba.model;
 
 import java.util.HashMap;
+
+import mont.gonzalo.phiuba.R;
 
 /**
  * Created by gonzalo on 1/14/17.

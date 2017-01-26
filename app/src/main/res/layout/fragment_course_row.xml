@@ -50,17 +50,17 @@
                     android:layout_height="50dp">
 
                     <TextView
-                    android:id="@+id/course_name"
-                    android:text="Análisis Matemático II A"
-                    android:breakStrategy="simple"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:layout_width="fill_parent"
-                    android:layout_height="30dp"
-                    android:paddingStart="10dp"
-                    android:paddingLeft="10dp"
-                    android:textSize="22dp"
-                    android:textColor="@color/primary_text"/>
+                        android:id="@+id/course_name"
+                        android:text="Análisis Matemático II A"
+                        android:breakStrategy="simple"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="30dp"
+                        android:paddingStart="10dp"
+                        android:paddingLeft="10dp"
+                        android:textSize="22dp"
+                        android:textColor="@color/primary_text"/>
 
                     <TextView
                         android:id="@+id/course_description"

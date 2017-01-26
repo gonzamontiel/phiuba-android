@@ -1,4 +1,4 @@
-package mont.gonzalo.phiuba;
+package mont.gonzalo.phiuba.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +73,7 @@ public class News {
 
     static private List<News> sample_data;
 
-    static List<News> getSampleData() {
+    public static List<News> getSampleData() {
         if (sample_data == null) {
             List<News> nn = new ArrayList<>();
             nn.add(new News("http://www.fi.uba.ar/es/node/2096", "Plataforma renovada", "http://www.fi.uba.ar/sites/default/files/styles/miniatura_noticia/public/field/image/Campus%203-1%20web.jpg?itok=eHmL5EYv", "El Centro de Educación a Distancia informa que ya está on line una nueva versión del campus institucional de la FIUBA, que incorpora mejoras a funcionalidades básicas y también novedades que permiten una interacción mucho más dinámica con esta plataforma de enseñanza.  \nEntre las mejoras que permite esta nueva versión, se destacan:\n_ Usabilidad mejorada para estudiantes con un tablero que concentra\nmensajes, tareas pendientes, calificaciones.\n_ Mayor fluidez y practicidad en envío y corrección de tareas, con la función de agregar anotaciones en las devoluciones. \n_ Mejoras en el etiquetado y edición de cursos y en actividades, tales como foros, talleres\no lecciones.\n_ Descarga masiva de archivos y materiales.\n_ Mejoras en el envío de mensajes internos.\n_ Nuevos tipos de ejercicios para elaborar cuestionarios y encuestas.\n_ Carpeta personal de archivos.\nEntre las nuevas aplicaciones:\n_ Entorno responsivo que puede verse desde dispositivos móviles.\n_ Calificación basada en competencias.\n_ Calificación con insignias.\n_ Mayor facilidad en la recuperación de archivos con la nueva papelera de reciclaje.\n_ Hilos fijos en los foros y enlaces permanentes.\n_ Búsquedas globales haciendo más sencillo acceder a los contenidos de toda la plataforma Moodle.\n_ Bookmarks de sitios relevantes en el campus.\n_ Repositorio de archivos externos.\nVer Campus FIUBA, versión 3.1\nConsultas:\nCentro de Educación a Distancia\nAv. Paseo Colón 850, 2do. Piso, C1063ACV, Buenos Aires, Argentina.\n4343-0893/0092 int. 1110cead@fi.uba.ar", "http://www.fi.uba.ar/sites/default/files/field/image/Campus%203-1%20web.jpg" ));

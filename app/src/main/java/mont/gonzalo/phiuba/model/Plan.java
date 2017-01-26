@@ -1,4 +1,4 @@
-package mont.gonzalo.phiuba;
+package mont.gonzalo.phiuba.model;
 
 import org.json.JSONObject;
 
