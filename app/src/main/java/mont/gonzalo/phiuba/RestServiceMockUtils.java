@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
  */
 
 public class RestServiceMockUtils {
-
     public static String convertStreamToString(InputStream is) throws Exception {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
@@ -25,9 +24,7 @@ public class RestServiceMockUtils {
 
     public static String getStringFromFile(Context context, String filePath) throws Exception {
         final InputStream stream = context.getResources().getAssets().open(filePath);
-
         String ret = convertStreamToString(stream);
-        //Make sure you close all streams.
         stream.close();
         return ret;
     }

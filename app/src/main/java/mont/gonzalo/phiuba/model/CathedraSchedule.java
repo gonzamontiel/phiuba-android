@@ -5,11 +5,16 @@ package mont.gonzalo.phiuba.model;
  */
 
 public class CathedraSchedule {
+    private final String time;
     private String day;
     private String from;
     private String to;
     private String type;
     private String classroomCode;
+
+    CathedraSchedule() {
+        this.time = getTimeToString();
+    }
 
     public String getDay() {
         return day;
@@ -49,5 +54,25 @@ public class CathedraSchedule {
 
     public void setClassroomCode(String classroomCode) {
         this.classroomCode = classroomCode;
+    }
+
+    public String getShortType() {
+        String initials;
+        String[] s = type.split(" ");
+        if (s.length == 2) {
+            return s[0].substring(0,1).toUpperCase() +  s[1].substring(0,1).toUpperCase();
+        } else if (s.length == 1) {
+            return type.substring(0,1).toUpperCase() + type.substring(-1).toLowerCase();
+        }
+        return "";
+    }
+
+    @Override
+    public String toString() {
+        return this.getDay() + " " + getTimeToString();
+    }
+
+    public String getTimeToString() {
+        return this.getFrom() + " to " + this.getTo();
     }
 }

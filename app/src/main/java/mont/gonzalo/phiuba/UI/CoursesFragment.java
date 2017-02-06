@@ -17,7 +17,7 @@ import mont.gonzalo.phiuba.model.Course;
 
 import static android.content.ContentValues.TAG;
 
-public class CourseFragment extends Fragment {
+public class CoursesFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
@@ -28,11 +28,11 @@ public class CourseFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public CourseFragment() {
+    public CoursesFragment() {
     }
 
-    public static CourseFragment newInstance(int columnCount, OnListFragmentInteractionListener listener) {
-        CourseFragment fragment = new CourseFragment();
+    public static CoursesFragment newInstance(int columnCount, OnListFragmentInteractionListener listener) {
+        CoursesFragment fragment = new CoursesFragment();
         fragment.setListener(listener);
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
@@ -69,7 +69,6 @@ public class CourseFragment extends Fragment {
         }
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {

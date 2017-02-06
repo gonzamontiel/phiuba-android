@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import mont.gonzalo.phiuba.api.DataFetcher;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by gonzalo on 11/20/16.
@@ -41,17 +38,6 @@ public class User {
 
     public List<Course> getApprovedCourses() {
         DataFetcher df = new DataFetcher();
-        df.findSpecificCourses(this.coursesMap.get(CourseStatus.APPROVED), new Callback<List<Course>>() {
-            @Override
-            public void success(List<Course> courses, Response response) {
-
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
         // TODO return real courses list
         return new ArrayList<Course>();
     }

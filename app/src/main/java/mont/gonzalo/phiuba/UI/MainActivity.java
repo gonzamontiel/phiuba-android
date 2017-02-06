@@ -1,5 +1,6 @@
 package mont.gonzalo.phiuba.UI;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -17,13 +18,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.io.Serializable;
+
 import mont.gonzalo.phiuba.R;
+import mont.gonzalo.phiuba.model.Cathedra;
 import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.News;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        CourseFragment.OnListFragmentInteractionListener, NewsFragment.OnListFragmentInteractionListener, CourseDetailFragment.OnFragmentInteractionListener {
+        CoursesFragment.OnListFragmentInteractionListener, NewsFragment.OnListFragmentInteractionListener, CourseDetailFragment.OnFragmentInteractionListener, CourseDetailFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String ACTIVE_FRAGMENT = "active_fragment";
@@ -37,7 +41,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         currentFragment = null;
-        Class fragmentClass = CourseFragment.class;
+        Class fragmentClass = CoursesFragment.class;
         if (savedInstanceState != null) {
             Class savedActiveFragment = (Class) savedInstanceState.get(ACTIVE_FRAGMENT);
             fragmentClass = savedActiveFragment;
@@ -46,7 +50,7 @@ public class MainActivity extends AppCompatActivity
             currentFragment = (Fragment) fragmentClass.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
-            currentFragment = CourseFragment.newInstance(1, this);
+            currentFragment = CoursesFragment.newInstance(1, this);
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -89,7 +93,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -115,7 +118,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.nav_courses) {
             Log.d(TAG, "Courses clicked!");
-            currentFragment = CourseFragment.newInstance(1, this);
+            currentFragment = CoursesFragment.newInstance(1, this);
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.flContent, currentFragment);
             transaction.addToBackStack(null);
@@ -141,22 +144,32 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    // Manage clicks inside Courses list view
     @Override
     public void onListFragmentInteraction(Course item) {
         Log.d(TAG, item.getName() + " was clicked!");
-        currentFragment = CourseDetailFragment.newInstance(this);
+        currentFragment = CourseDetailFragment.newInstance(this, this, item);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.flContent, currentFragment);
         transaction.addToBackStack(null);
         transaction.commit();
-
     }
 
+    // Manage clicks on News view
     @Override
     public void onListFragmentInteraction(News item) {
         Log.d(TAG, item.getTitle() + " was clicked!");
     }
 
+    // Manage clicks of Cathedras inside Courses detailed view
+    @Override
+    public void onListFragmentInteraction(Cathedra item) {
+        Intent intent = new Intent(this, CathedraActivity.class);
+        intent.putExtra(CathedraActivity.INTENT_CODE, (Serializable) item);
+        startActivity(intent);
+    }
+
+    // Manage interaction inside Course detail view
     @Override
     public void onFragmentInteraction(Course course) {
 

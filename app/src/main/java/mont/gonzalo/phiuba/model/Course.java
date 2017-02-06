@@ -8,15 +8,11 @@ import java.util.List;
  * Created by gonzalo on 10/10/16.
  */
 public class Course implements Serializable {
-    public static final String KEY_COURSE = "key_course";
-    public static final String KEY_COURSE_CODE = "key_course_code";
-    public static final String KEY_COURSE_NAME = "key_course_name";
-
+    public static final String COURSE_DODE_TAG = "course_code";
     private String code;
     private String depCode;
     private String planCode;
     private String name;
-    private String indexableTokens;
     private String link;
     private String depto;
     private Boolean required;
@@ -28,6 +24,8 @@ public class Course implements Serializable {
         this.code = code;
         this.depCode = depCode;
         this.depto = depto;
+        // TODO: get actual list of cathedras
+        this.cathedras = Cathedra.getSampleCathedras();
     }
 
     public List<Cathedra> getCathedras() {
@@ -68,14 +66,6 @@ public class Course implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getIndexableTokens() {
-        return indexableTokens;
-    }
-
-    public void setIndexableTokens(String indexableTokens) {
-        this.indexableTokens = indexableTokens;
     }
 
     public String getLink() {

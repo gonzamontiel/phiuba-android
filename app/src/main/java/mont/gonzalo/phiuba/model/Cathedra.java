@@ -1,19 +1,24 @@
 package mont.gonzalo.phiuba.model;
 
+import android.content.res.Resources;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import mont.gonzalo.phiuba.R;
 
 /**
  * Created by gonzalo on 1/25/17.
  */
 
-public class Cathedra {
+public class Cathedra implements Serializable {
     private String courseCode;
     private String teachers;
     private int seats;
-    private String[] availablePlans;
-    private CathedraSchedule[] schedules;
+    private String availablePlans;
+    private List<CathedraSchedule> schedule;
 
     public String getCourseCode() {
         return courseCode;
@@ -24,6 +29,10 @@ public class Cathedra {
     }
 
     public String getTeachers() {
+        return teachers.replace("-", ", ");
+    }
+
+    public String getTeachersKey() {
         return teachers;
     }
 
@@ -40,27 +49,41 @@ public class Cathedra {
     }
 
     public String[] getAvailablePlans() {
-        return availablePlans;
+        return availablePlans.split(",");
     }
 
-    public void setAvailablePlans(String[] availablePlans) {
+    public void setAvailablePlans(String availablePlans) {
         this.availablePlans = availablePlans;
     }
 
-    public CathedraSchedule[] getSchedules() {
-        return schedules;
+    public List<CathedraSchedule> getSchedule() {
+        return schedule;
     }
 
-    public void setSchedules(CathedraSchedule[] schedules) {
-        this.schedules = schedules;
+    public void setSchedule(List<CathedraSchedule> schedule) {
+        this.schedule = schedule;
     }
 
-    public static List<Cathedra> getSampleCathedra() {
+
+    public String getSchedulesAsMultilineText(Resources res) {
+        String text = "";
+        if (schedule != null) {
+            for (CathedraSchedule cs: this.getSchedule()) {
+                text += cs.getDay() + " " +
+                        cs.getFrom() + " a " + cs.getTo() + ". " +
+                        res.getString(R.string.classroom)+ " " + cs.getClassroomCode() +
+                        ". " + cs.getShortType() + "\n";
+            }
+        }
+        return text;
+    }
+
+    public static List<Cathedra> getSampleCathedras() {
         Cathedra cat1 = new Cathedra();
         cat1.setCourseCode("75.12");
         cat1.setTeachers("Sassano-Payva-Bello-Sarris");
         cat1.setSeats(70);
-        cat1.setAvailablePlans("Civil, Industrial, Naval, Mecánica, Electricista, Electrónica, Química, Sistemas, Informática".split(","));
+        cat1.setAvailablePlans("Civil, Industrial, Naval, Mecánica, Electricista, Electrónica, Química, Sistemas, Informática");
 
         CathedraSchedule sch1 = new CathedraSchedule();
         sch1.setDay("Miércoles");
@@ -76,13 +99,13 @@ public class Cathedra {
         sch2.setType("Teórico");
         sch2.setClassroomCode("PC-A ASIG");
 
-        cat1.setSchedules(new CathedraSchedule[]{sch1, sch2});
+        cat1.setSchedule(new ArrayList<CathedraSchedule>(Arrays.asList(sch1, sch2)));
 
         Cathedra cat2 = new Cathedra();
         cat2.setCourseCode("75.12");
         cat2.setTeachers("Tarela-Poltarak-Ezcurra-Vitell");
         cat2.setSeats(60);
-        cat2.setAvailablePlans("Civil, Industrial, Naval, Mecánica, Electricista, Electrónica, Química, Sistemas, Informática".split(","));
+        cat2.setAvailablePlans("Civil, Industrial, Naval, Mecánica, Electricista, Electrónica, Química, Sistemas, Informática");
 
         CathedraSchedule sch3 = new CathedraSchedule();
         sch3.setDay("Miércoles");
@@ -97,7 +120,7 @@ public class Cathedra {
         sch4.setTo("22:00");
         sch4.setType("Teórica");
         sch4.setClassroomCode("PC-414");
-        cat2.setSchedules(new CathedraSchedule[]{sch3, sch4});
+        cat2.setSchedule(new ArrayList<CathedraSchedule>(Arrays.asList(sch3, sch4)));
 
         return new ArrayList<Cathedra>(Arrays.asList(cat1,cat2));
     }

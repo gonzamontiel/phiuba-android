@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import mont.gonzalo.phiuba.UI.CourseFragment.OnListFragmentInteractionListener;
+import mont.gonzalo.phiuba.UI.CoursesFragment.OnListFragmentInteractionListener;
 import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.model.Course;
 
