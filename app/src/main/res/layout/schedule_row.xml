@@ -37,7 +37,7 @@
                 android:layout_height="50dp">
 
                 <TextView
-                    android:id="@+id/schedule_type"
+                    android:id="@+id/type"
                     android:text="TP"
                     android:textAlignment="center"
                     android:layout_width="50dp"
@@ -55,7 +55,7 @@
                     android:layout_height="50dp">
 
                     <TextView
-                        android:id="@+id/schedule_day"
+                        android:id="@+id/day"
                         android:text="Jueves"
                         android:breakStrategy="simple"
                         android:ellipsize="end"
@@ -67,7 +67,7 @@
                         android:textColor="@color/primary_text"/>
 
                     <TextView
-                        android:id="@+id/schedule_time"
+                        android:id="@+id/time"
                         android:text="14:00 a 17:00"
                         android:breakStrategy="balanced"
                         android:ellipsize="end"

@@ -7,5 +7,5 @@ android:name="mont.gonzalo.phiuba.CourseFragment"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 app:layoutManager="LinearLayoutManager"
-tools:context="mont.gonzalo.phiuba.UI.CourseFragment"
+tools:context="mont.gonzalo.phiuba.UI.CoursesFragment"
 tools:listitem="@layout/fragment_news_row" />
