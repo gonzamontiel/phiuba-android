@@ -1,19 +1,18 @@
 package mont.gonzalo.phiuba.model;
 
-import org.json.JSONObject;
-
 import java.util.HashMap;
 
 /**
- * Created by gonzalo on 11/20/16.
+ * Created by Gonzalo Montiel on 11/20/16.
  */
 public class Plan {
-    private String planCode;
-    private JSONObject information;
+    private String code;
+    private String name;
+    private String link;
     private static HashMap<String, Plan> plans = new HashMap<String, Plan>();
 
-    Plan(String planCode) {
-        this.planCode = planCode;
+    Plan(String code) {
+        this.code = code;
     }
 
     static Plan byCode(String planCode) {
@@ -24,7 +23,23 @@ public class Plan {
     }
 
     public String getCode() {
-        return planCode;
+        return code;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public static String getDefault() {

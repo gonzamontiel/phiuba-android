@@ -12,7 +12,7 @@ import mont.gonzalo.phiuba.model.User;
 import mont.gonzalo.phiuba.model.UserCourse;
 
 /**
- * Created by gonzalo on 1/22/17.
+ * Created by Gonzalo Montiel on 1/22/17.
  */
 
 public class Database {

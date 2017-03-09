@@ -1,13 +1,14 @@
 package mont.gonzalo.phiuba.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by gonzalo on 1/8/17.
+ * Created by Gonzalo Montiel on 1/8/17.
  */
 
-public class News {
+public class News implements Serializable{
     private String title;
     private String created;
     private String thumbnail;

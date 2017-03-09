@@ -1,6 +1,10 @@
 package mont.gonzalo.phiuba.model;
 
 import android.content.res.Resources;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
+import com.alamkanak.weekview.WeekViewEvent;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,9 +12,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import mont.gonzalo.phiuba.R;
+import mont.gonzalo.phiuba.layout.ActivityContext;
+import mont.gonzalo.phiuba.layout.MaterialColors;
 
 /**
- * Created by gonzalo on 1/25/17.
+ * Created by Gonzalo Montiel on 1/25/17.
  */
 
 public class Cathedra implements Serializable {
@@ -18,6 +24,7 @@ public class Cathedra implements Serializable {
     private String teachers;
     private int seats;
     private String availablePlans;
+    private Integer color;
     private List<CathedraSchedule> schedule;
 
     public String getCourseCode() {
@@ -56,7 +63,7 @@ public class Cathedra implements Serializable {
         this.availablePlans = availablePlans;
     }
 
-    public List<CathedraSchedule> getSchedule() {
+    public List<CathedraSchedule> getSchedules() {
         return schedule;
     }
 
@@ -65,10 +72,25 @@ public class Cathedra implements Serializable {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public List<WeekViewEvent> toWeekEvents(String name) {
+        List<WeekViewEvent> eventList = new ArrayList<WeekViewEvent>();
+        for (CathedraSchedule cs: getSchedules()) {
+            ScheduleSlot sslot = new ScheduleSlot();
+            sslot.setName(name);
+            sslot.setColor(ActivityContext.get().getResources().getString(getColor()));
+            sslot.setDayOfWeek(cs.getDayOfWeek());
+            sslot.setStartTime(cs.getFrom());
+            sslot.setEndTime(cs.getTo());
+            eventList.add(sslot.toWeekViewEvent());
+        }
+        return eventList;
+    }
+
     public String getSchedulesAsMultilineText(Resources res) {
         String text = "";
         if (schedule != null) {
-            for (CathedraSchedule cs: this.getSchedule()) {
+            for (CathedraSchedule cs: this.getSchedules()) {
                 text += cs.getDay() + " " +
                         cs.getFrom() + " a " + cs.getTo() + ". " +
                         res.getString(R.string.classroom)+ " " + cs.getClassroomCode() +
@@ -123,5 +145,16 @@ public class Cathedra implements Serializable {
         cat2.setSchedule(new ArrayList<CathedraSchedule>(Arrays.asList(sch3, sch4)));
 
         return new ArrayList<Cathedra>(Arrays.asList(cat1,cat2));
+    }
+
+    public Integer getColor() {
+        if (color == null) {
+            color = MaterialColors.getRandom(0);
+        }
+        return color;
+    }
+
+    public void setColor(Integer color) {
+        this.color = color;
     }
 }

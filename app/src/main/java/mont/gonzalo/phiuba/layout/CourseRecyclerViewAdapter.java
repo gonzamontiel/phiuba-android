@@ -1,4 +1,4 @@
-package mont.gonzalo.phiuba.UI;
+package mont.gonzalo.phiuba.layout;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import mont.gonzalo.phiuba.UI.CoursesFragment.OnListFragmentInteractionListener;
 import mont.gonzalo.phiuba.R;
+import mont.gonzalo.phiuba.layout.CoursesFragment.OnListFragmentInteractionListener;
 import mont.gonzalo.phiuba.model.Course;
 
 public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecyclerViewAdapter.CourseViewHolder> {
@@ -33,6 +33,12 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
     public CourseRecyclerViewAdapter(List<Course> courses, OnListFragmentInteractionListener mListener) {
         mCourses = courses;
         this.mListener = mListener;
+    }
+
+    public void updateItems(List<Course> newItems) {
+        mCourses.clear();
+        mCourses.addAll(newItems);
+        this.notifyDataSetChanged();
     }
 
     @Override

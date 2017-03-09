@@ -1,4 +1,4 @@
-package mont.gonzalo.phiuba.UI;
+package mont.gonzalo.phiuba.layout;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -28,7 +28,7 @@ public class CathedraActivity extends ListActivity {
         this.setContentView(R.layout.activity_schedules);
         Intent intent = getIntent();
         mCathedra = (Cathedra) intent.getSerializableExtra(CathedraActivity.INTENT_CODE);
-        setListAdapter(new ArrayAdapter<CathedraSchedule>(this, R.layout.schedule_row, mCathedra.getSchedule()));
+        setListAdapter(new ArrayAdapter<CathedraSchedule>(this, R.layout.schedule_row, mCathedra.getSchedules()));
     }
 
     @Override

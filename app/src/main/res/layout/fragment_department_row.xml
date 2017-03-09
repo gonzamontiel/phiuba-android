@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:layout_margin="4dp"
+    android:id="@+id/department_card_view"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="2dp">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:scaleType="centerCrop"
+        android:layout_height="60dp">
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:background="#fff"
+            android:id="@+id/view" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/view"
+            android:layout_toEndOf="@+id/view"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:padding="5dp"
+                    card_view:srcCompat="@drawable/dep61"
+                    android:id="@+id/department_icon" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp">
+
+                    <TextView
+                        android:id="@+id/department_name"
+                        android:text="Matemática"
+                        android:breakStrategy="simple"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="30dp"
+                        android:paddingStart="10dp"
+                        android:paddingLeft="10dp"
+                        android:layout_marginTop="5dp"
+                        android:textSize="22dp"
+                        android:textColor="@color/primary_text"/>
+
+                    <TextView
+                        android:id="@+id/department_description"
+                        android:text="10 materias. Sede Paseo Colón."
+                        android:breakStrategy="balanced"
+                        android:ellipsize="end"
+                        android:layout_width="fill_parent"
+                        android:layout_height="20dp"
+                        android:paddingStart="10dp"
+                        android:paddingLeft="10dp"
+                        android:textSize="12dp"
+                        android:textColor="@color/secondary_text"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

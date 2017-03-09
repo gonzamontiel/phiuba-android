@@ -3,84 +3,86 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#EEEEEE"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/coursed_header"
-        android:orientation="horizontal"
-        android:background="#FFC107"
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view_inner"
         android:layout_width="match_parent"
-        android:padding="10dp"
-        android:layout_height="120dp">
+        android:layout_height="wrap_content"
+        android:elevation="6dp"
+        android:layout_marginBottom="10dp">
 
-        <android.support.v7.widget.CardView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:elevation="12dp"
-            android:id="@+id/view2"
-            app:cardCornerRadius="50dp"
-            android:layout_centerHorizontal="true"
-            android:innerRadius="2dp"
-            android:shape="ring"
-            android:thicknessRatio="1.9">
-            <ImageView
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:id="@+id/coursed_depto_con"
-                android:src="@drawable/dep63"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true">
-            </ImageView>
-        </android.support.v7.widget.CardView>
-
-        <TextView
-            android:id="@+id/coursed_name"
+        <LinearLayout
+            android:id="@+id/coursed_header"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="#fff"
-            android:breakStrategy="balanced"
-            android:textSize="40dp"
-            android:maxLines="2"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:text="Fisica" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#f9a825"
+            android:padding="10dp">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/view2"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_centerHorizontal="true"
+                android:elevation="12dp"
+                android:shape="ring"
+                android:thicknessRatio="1.9"
+                app:cardCornerRadius="26dp">
+
+                <ImageView
+                    android:id="@+id/coursed_depto_con"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/dep63" />
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:id="@+id/course_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:breakStrategy="balanced"
+                android:gravity="center_vertical"
+                android:text="Fisica"
+                android:textColor="#FFFFFF"
+                android:textSize="25dp"
+                android:shadowColor="@color/primary_text"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="1"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/course_depto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:breakStrategy="balanced"
+                android:gravity="center_vertical"
+                android:text="Departamento de Física"
+                android:textColor="#FFFFFF"
+                android:textSize="13dp"
+                android:shadowColor="@color/primary_text"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="1"/>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 
     <TextView
-        android:id="@+id/coursed_depto"
+        android:id="@+id/schedulesText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/primary_text"
         android:breakStrategy="balanced"
-        android:textSize="20dp"
-        android:paddingTop="10dp"
-        android:paddingLeft="10dp"
-        android:paddingBottom="10dp"
-        android:text="Departamento: Química" />
-
-    <TextView
-        android:id="@+id/coursed_teachers"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Horarios"
         android:textColor="@color/primary_text"
-        android:breakStrategy="balanced"
-        android:textSize="20dp"
-        android:paddingLeft="10dp"
-        android:paddingBottom="10dp"
-        android:visibility="gone"
-        android:text="" />
+        android:textSize="15dp"
+        android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/coursed_schedule"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/primary_text"
-        android:breakStrategy="balanced"
-        android:textSize="20dp"
-        android:paddingLeft="10dp"
-        android:paddingBottom="10dp"
-        android:visibility="gone"
-        android:text="Horarios" />
 
-    <include layout="@layout/cathedra_list"/>
+    <include layout="@layout/cathedra_list" />
 </LinearLayout>

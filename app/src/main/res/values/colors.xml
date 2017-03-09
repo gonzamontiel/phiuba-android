@@ -4,12 +4,18 @@
     <color name="primary_dark">#D32F2F</color>
     <color name="primary_light">#FFCDD2</color>
     <color name="accent">#CDDC39</color>
-    <color name="primary_text">#263238</color>
+    <color name="primary_text">#424242</color>
     <color name="secondary_text">#78909c</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
     <color name="course_default">#EEEEEE</color>
     <color name="course_added">#41c0f2</color>
-    <color name="course_approved">#41f241</color>
-    <color name="course_studyng">#41f241</color>
+    <color name="course_approved">#64dd17</color>
+    <color name="course_studyng">#6a1b9a</color>
+
+    <color name="material_1">#e53935</color>
+    <color name="material_2">#64dd17</color>
+    <color name="material_3">#b39ddb</color>
+    <color name="material_4">#64b5f6</color>
+    <color name="material_5">#f9a825</color>
 </resources>

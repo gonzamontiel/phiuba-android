@@ -29,14 +29,11 @@
         android:textSize="16dp"
         android:textColor="@color/primary_text"/>
 
-    <android.support.v7.widget.ListView
+    <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:name="mont.gonzalo.phiuba.SchedulesActivity"
         app:layoutManager="LinearLayoutManager"
-        tools:context="mont.gonzalo.phiuba.UI.CathedraActivity"
-        android:layout_weight="1"
         tools:listitem="@layout/schedule_row"/>
 
 </android.support.v4.widget.DrawerLayout>

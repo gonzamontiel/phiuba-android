@@ -1,8 +1,7 @@
-package mont.gonzalo.phiuba.UI;
+package mont.gonzalo.phiuba.layout;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,16 +21,12 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class CourseDetailFragment extends Fragment {
+public class CourseDetailFragment extends SearchableFragment {
     private static final String TAG = "CourseDetailFragment";
     private OnFragmentInteractionListener mListener;
     private OnListFragmentInteractionListener mListListener;
     private Course mCourse;
-    private DataFetcher mFetcher;
-    private TextView deptoTextView;
-    private TextView schedulesTextView;
     private TextView nameTextView;
-    private TextView teachersTextView;
     private ImageView deptoIcon;
     private RecyclerView cathedrasView;
 
@@ -52,20 +47,15 @@ public class CourseDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFetcher = new DataFetcher();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_course_detail, container, false);
-        nameTextView = (TextView) view.findViewById(R.id.coursed_name);
-        deptoTextView = (TextView) view.findViewById(R.id.coursed_depto);
-        teachersTextView = (TextView) view.findViewById(R.id.coursed_teachers);
+        nameTextView = (TextView) view.findViewById(R.id.course_name);
         deptoIcon = (ImageView) view.findViewById(R.id.coursed_depto_con);
-        schedulesTextView = (TextView) view.findViewById(R.id.coursed_schedule);
 
-        deptoTextView.setText(getResources().getString(R.string.course_detail_department) + " " + mCourse.getDepto());
         deptoIcon.setImageResource(mCourse.getImageResource());
 
         AutofitHelper.create(nameTextView);
@@ -73,16 +63,11 @@ public class CourseDetailFragment extends Fragment {
 
         cathedrasView = (RecyclerView) view.findViewById(R.id.cathedra_rv);
 
-        mFetcher.getCathedras(mCourse.getCode(), new Callback<List<Cathedra>>() {
+        DataFetcher.getInstance().getCathedras(mCourse.getCode(), new Callback<List<Cathedra>>() {
             @Override
             public void success(List<Cathedra> cathedras, Response response) {
-                Log.d(TAG, String.valueOf(cathedras));
-                if (cathedras.size() == 1) {
-                    teachersTextView.setText(cathedras.get(0).getTeachers());
-                    teachersTextView.setVisibility(View.VISIBLE);
-                } else if (cathedras.size() > 1) {
-                    schedulesTextView.setVisibility(View.VISIBLE);
-                    cathedrasView.setAdapter(new CathedrasRecyclerViewAdapter(cathedras, mListListener));
+                if (cathedras.size() > 0) {
+                    cathedrasView.setAdapter(new CathedrasRecyclerViewAdapter(cathedras, mCourse, mListListener));
                     mListListener = (OnListFragmentInteractionListener) getActivity();
                     registerForContextMenu(cathedrasView);
                 }
@@ -132,11 +117,23 @@ public class CourseDetailFragment extends Fragment {
         this.mCourse = course;
     }
 
+    @Override
+    public void updateResults(String query) {}
+
+    @Override
+    public void reset() {}
+
+    @Override
+    public SearchableFragment getResultsFragment() {
+        return CoursesFragment.newInstance(1, (CoursesFragment.OnListFragmentInteractionListener) getActivity());
+    }
+
+
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Course course);
     }
 
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Cathedra item);
+        void onListFragmentInteraction(Cathedra item, String courseName, String teachers);
     }
 }

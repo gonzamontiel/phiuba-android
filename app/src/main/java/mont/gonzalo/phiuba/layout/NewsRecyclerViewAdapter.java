@@ -1,4 +1,4 @@
-package mont.gonzalo.phiuba.UI;
+package mont.gonzalo.phiuba.layout;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -10,15 +10,16 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
+import java.io.Serializable;
 import java.util.List;
 
-import mont.gonzalo.phiuba.UI.NewsFragment.OnListFragmentInteractionListener;
 import mont.gonzalo.phiuba.R;
+import mont.gonzalo.phiuba.layout.NewsFragment.OnListFragmentInteractionListener;
 import mont.gonzalo.phiuba.model.News;
 
-public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.NewsViewHolder> {
+public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.NewsViewHolder>
+        implements Serializable
+{
 
     private final List<News> mNews;
     private final OnListFragmentInteractionListener mListener;
@@ -37,6 +38,12 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         this.mListener = mListener;
     }
 
+    public void updateItems(List<News> newItems) {
+        mNews.clear();
+        mNews.addAll(newItems);
+        notifyDataSetChanged();
+    }
+
     @Override
     public NewsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -45,12 +52,12 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(final NewsViewHolder holder, int position) {
+    public void onBindViewHolder(final NewsViewHolder holder, final int position) {
         holder.mItem = mNews.get(position);
         holder.newsTitle.setText(mNews.get(position).getTitle());
-        holder.newsText.setText(mNews.get(position).getText());
+        holder.newsText.setText(LayoutHelper.fromHtml(mNews.get(position).getText()));
 
-        Picasso.with(holder.rv.getContext()).load(mNews.get(position).getImg()).into(holder.newsThumbnail);
+        LayoutHelper.addImageToView(holder.rv.getContext(), mNews.get(position).getImg(), holder.newsThumbnail);
 
         holder.rv.setOnClickListener(new View.OnClickListener() {
             @Override

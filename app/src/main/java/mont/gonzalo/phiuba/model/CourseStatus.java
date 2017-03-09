@@ -5,14 +5,14 @@ import java.util.HashMap;
 import mont.gonzalo.phiuba.R;
 
 /**
- * Created by gonzalo on 1/15/17.
+ * Created by Gonzalo Montiel on 1/15/17.
  */
 
 public enum CourseStatus {
     DEFAULT,
     ADDED,
     STUDYING,
-    APPROVED;
+    APPROVED, ContextCompat;
 
     private static HashMap<CourseStatus, Integer>  mapColors;
     static

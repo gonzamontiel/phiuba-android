@@ -1,8 +1,7 @@
-package mont.gonzalo.phiuba.UI;
+package mont.gonzalo.phiuba.layout;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,17 +11,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.Serializable;
+import java.util.List;
+
 import mont.gonzalo.phiuba.R;
+import mont.gonzalo.phiuba.api.DataFetcher;
 import mont.gonzalo.phiuba.model.Course;
+import mont.gonzalo.phiuba.model.User;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import static android.content.ContentValues.TAG;
 
-public class CoursesFragment extends Fragment {
+public class CoursesFragment extends SearchableFragment implements Serializable {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
-    private RecyclerView.Adapter mAdapter;
+    private transient OnListFragmentInteractionListener mListListener;
+    private transient CourseRecyclerViewAdapter mAdapter;
+    private RecyclerView recyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -56,16 +64,30 @@ public class CoursesFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mListener = (OnListFragmentInteractionListener) getActivity();
-            mAdapter = new CourseRecyclerViewAdapter(Course.getSampleData(), mListener);
-            recyclerView.setAdapter(mAdapter);
-            registerForContextMenu(recyclerView);
+            mListListener = (OnListFragmentInteractionListener) getActivity();
+
+            DataFetcher.getInstance().getCourses(User.get().getPlanCode(),new Callback<List<Course>>() {
+                @Override
+                public void success(List<Course> courses, Response response) {
+                    if (courses.size() > 0) {
+                        mAdapter = new CourseRecyclerViewAdapter(courses, mListListener);
+                        recyclerView.setAdapter(mAdapter);
+                        mListListener = (OnListFragmentInteractionListener) getActivity();
+                        registerForContextMenu(recyclerView);
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.d(TAG, error.getMessage());
+                }
+            });
         }
         return view;
     }
@@ -74,7 +96,7 @@ public class CoursesFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+            mListListener = (OnListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -84,11 +106,11 @@ public class CoursesFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        mListListener = null;
     }
 
     public void setListener(OnListFragmentInteractionListener listener) {
-        this.mListener = listener;
+        this.mListListener = listener;
     }
 
     @Override
@@ -111,6 +133,38 @@ public class CoursesFragment extends Fragment {
                 break;
         }
         return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public void updateResults(String query) {
+        DataFetcher.getInstance().searchCourses(query, User.get().getPlanCode(), new Callback<List<Course>>() {
+            @Override
+            public void success(List<Course> courses, Response response) {
+                mAdapter.updateItems(courses);
+            }
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, error.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void reset() {
+        DataFetcher.getInstance().getCourses(User.get().getPlanCode(), new Callback<List<Course>>() {
+            @Override
+            public void success(List<Course> courses, Response response) {
+                recyclerView.setAdapter(mAdapter = new CourseRecyclerViewAdapter(courses, mListListener));
+            }
+
+            @Override
+            public void failure(RetrofitError error) {Log.d(TAG, error.getMessage());}
+        });
+    }
+
+    @Override
+    public SearchableFragment getResultsFragment() {
+        return this;
     }
 
     /**

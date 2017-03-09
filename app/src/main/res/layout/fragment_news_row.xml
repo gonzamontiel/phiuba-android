@@ -9,6 +9,7 @@
     android:id="@+id/news_card_view"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    card_view:cardBackgroundColor="#FFF"
     card_view:cardCornerRadius="2dp">
 
     <RelativeLayout
@@ -22,15 +23,17 @@
             android:layout_height="100dp"
             card_view:srcCompat="@drawable/sample_banner"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop" />
+            android:scaleType="fitCenter" />
 
         <TextView
             android:id="@+id/news_title"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:paddingTop="4dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="0dp"
             android:text="@string/test_title"
-            android:textSize="20dp"
+            android:textSize="18dp"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/news_thumbnail"
@@ -43,20 +46,17 @@
         <TextView
             android:id="@+id/news_text"
             android:text="@string/test_description"
-            android:textColor="@color/secondary_text"
+            android:textColor="#999"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/news_title"
             android:textSize="14dp"
-            android:padding="4dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="10dp"
             android:elegantTextHeight="true"
             android:ellipsize="end"
-            android:scrollHorizontally="true"
-            android:maxLines="6"
-            android:autoLink="all" />
+            android:maxLines="6" />
     </RelativeLayout>
 </android.support.v7.widget.CardView>

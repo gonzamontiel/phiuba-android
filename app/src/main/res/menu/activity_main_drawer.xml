@@ -22,6 +22,10 @@
             android:id="@+id/nav_myplan"
             android:icon="@drawable/ic_menu_manage"
             android:title="Mi plan de estudios" />
+        <item
+            android:id="@+id/nav_myweek"
+            android:icon="@drawable/ic_menu_week"
+            android:title="Mi semana"/>
     </group>
 
     <item android:title="Communicate">

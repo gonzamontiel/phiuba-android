@@ -22,4 +22,14 @@
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 
+    <ImageView
+        android:id="@+id/disconnected_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        android:alpha="0.6"
+        android:src="@drawable/disconnected"
+        android:visibility="gone"/>
 </android.support.v4.widget.DrawerLayout>

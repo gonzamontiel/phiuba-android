@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by gonzalo on 10/10/16.
+ * Created by Gonzalo Montiel on 10/10/16.
  */
 public class Course implements Serializable {
     public static final String COURSE_DODE_TAG = "course_code";
@@ -24,8 +24,6 @@ public class Course implements Serializable {
         this.code = code;
         this.depCode = depCode;
         this.depto = depto;
-        // TODO: get actual list of cathedras
-        this.cathedras = Cathedra.getSampleCathedras();
     }
 
     public List<Cathedra> getCathedras() {

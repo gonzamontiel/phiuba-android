@@ -1,6 +1,8 @@
-package mont.gonzalo.phiuba.UI;
+package mont.gonzalo.phiuba.layout;
 
 import android.content.res.Resources;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -14,11 +16,13 @@ import java.util.List;
 
 import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.model.Cathedra;
+import mont.gonzalo.phiuba.model.Course;
 
 public class CathedrasRecyclerViewAdapter extends RecyclerView.Adapter<CathedrasRecyclerViewAdapter.CathedraViewHolder> {
 
     private final List<Cathedra> mCathedras;
     private final CourseDetailFragment.OnListFragmentInteractionListener mListener;
+    private final Course mCourse;
     private int position;
     private Resources res;
 
@@ -30,9 +34,15 @@ public class CathedrasRecyclerViewAdapter extends RecyclerView.Adapter<Cathedras
         this.position = position;
     }
 
-    public CathedrasRecyclerViewAdapter(List<Cathedra> cathedras, CourseDetailFragment.OnListFragmentInteractionListener mListener) {
+    public CathedrasRecyclerViewAdapter(List<Cathedra> cathedras, Course c, CourseDetailFragment.OnListFragmentInteractionListener mListener) {
         this.mCathedras = cathedras;
         this.mListener = mListener;
+        this.mCourse = c;
+    }
+
+    public void updateItems(List<Cathedra> newItems) {
+        mCathedras.clear();
+        mCathedras.addAll(newItems);
     }
 
     @Override
@@ -43,12 +53,14 @@ public class CathedrasRecyclerViewAdapter extends RecyclerView.Adapter<Cathedras
         return new CathedraViewHolder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void onBindViewHolder(final CathedraViewHolder holder, int position) {
+    public void onBindViewHolder(final CathedraViewHolder holder, final int position) {
         holder.mItem = mCathedras.get(position);
-        holder.teachers.setText(mCathedras.get(position).getTeachers());
-        holder.schedulesText.setText(mCathedras.get(position).getSchedulesAsMultilineText(res));
-        holder.seatsText.setText(res.getString(R.string.seats) + ": " + mCathedras.get(position).getSeats());
+        holder.teachers.setText(holder.mItem.getTeachers());
+        holder.schedulesText.setText(holder.mItem.getSchedulesAsMultilineText(res));
+        holder.seatsText.setText(res.getString(R.string.seats) + ": " + holder.mItem.getSeats());
+        holder.color.setBackgroundColor(res.getColor(holder.mItem.getColor(), null));
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,7 +68,7 @@ public class CathedrasRecyclerViewAdapter extends RecyclerView.Adapter<Cathedras
                     Animation animation1 = new AlphaAnimation(0.3f, 1.0f);
                     animation1.setDuration(200);
                     v.startAnimation(animation1);
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(holder.mItem, mCourse.getName(), mCathedras.get(position).getTeachers());
                 }
             }
         });
@@ -80,6 +92,7 @@ public class CathedrasRecyclerViewAdapter extends RecyclerView.Adapter<Cathedras
         public final TextView teachers;
         public final TextView seatsText;
         public final TextView schedulesText;
+        public final View color;
         public Cathedra mItem;
 
         public CathedraViewHolder(View itemView) {
@@ -88,6 +101,7 @@ public class CathedrasRecyclerViewAdapter extends RecyclerView.Adapter<Cathedras
             teachers = (TextView)itemView.findViewById(R.id.teachers);
             schedulesText = (TextView)itemView.findViewById(R.id.schedulesText);
             seatsText = (TextView)itemView.findViewById(R.id.seatsText);
+            color = (View)itemView.findViewById(R.id.colorView);
         }
 
         @Override

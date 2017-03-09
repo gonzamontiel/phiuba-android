@@ -8,7 +8,7 @@ import retrofit.http.GET;
 import retrofit.http.Query;
 
 /**
- * Created by gonzalo on 10/10/16.
+ * Created by Gonzalo Montiel on 10/10/16.
  */
 public interface CathedraAPI {
     @GET("/api/cathedras")
