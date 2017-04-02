@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private Class getDefaultFragmentClass() {
-        return EventsFragment.class;
+        return NewsFragment.class;
     }
 
     private void checkNetwork() {
