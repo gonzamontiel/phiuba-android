@@ -127,7 +127,9 @@ public class NewsFragment extends SearchableFragment implements Serializable {
     private class UpdateCallback implements Callback<List<News>> {
         @Override
         public void success(List<News> newses, Response response) {
-            mAdapter.updateItems(newses);
+            if (mAdapter != null) {
+                mAdapter.updateItems(newses);
+            }
         }
         @Override
         public void failure(RetrofitError error) {

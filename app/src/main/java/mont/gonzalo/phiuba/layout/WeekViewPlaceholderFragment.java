@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mont.gonzalo.phiuba.R;
+import mont.gonzalo.phiuba.model.CustomDateTimeInterpreter;
 import mont.gonzalo.phiuba.model.ScheduleSlot;
 
 
@@ -50,22 +51,21 @@ class WeekViewPlaceholderFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_week_view, container, false);
         TextView textView = (TextView) rootView.findViewById(R.id.section_label);
         textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-
         WeekView weekView = (WeekView) rootView.findViewById(R.id.weekView);
+        weekView.setDateTimeInterpreter(new CustomDateTimeInterpreter());
 
+        weekView.goToDate(ScheduleSlot.getUniqueWeekDate());
         weekView.setOnEventClickListener(new WeekView.EventClickListener() {
             @Override
             public void onEventClick(WeekViewEvent event, RectF eventRect) {
-
             }
         });
 
         weekView.setMonthChangeListener(new MonthLoader.MonthChangeListener() {
             @Override
             public List<WeekViewEvent> onMonthChange(int newYear, int newMonth) {
-                // TODO Populate the week view with some events.
                 List<WeekViewEvent> events = new ArrayList<WeekViewEvent>();
-                events.add(ScheduleSlot.getSample().toWeekViewEvent());
+                events.addAll(ScheduleSlot.getSamples());
                 return events;
             }
         });

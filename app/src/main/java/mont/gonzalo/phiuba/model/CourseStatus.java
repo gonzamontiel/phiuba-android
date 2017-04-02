@@ -10,21 +10,21 @@ import mont.gonzalo.phiuba.R;
 
 public enum CourseStatus {
     DEFAULT,
-    ADDED,
+    FAVOURITE,
     STUDYING,
-    APPROVED, ContextCompat;
+    APPROVED,
+    AVAILABLE,
+    NOT_AVAILABLE;
 
-    private static HashMap<CourseStatus, Integer>  mapColors;
+    private static HashMap<CourseStatus, Integer> mapColors;
     static
     {
         mapColors = new HashMap<CourseStatus, Integer>();
         mapColors.put(DEFAULT, R.color.course_default);
-        mapColors.put(ADDED, R.color.course_added);
+        mapColors.put(FAVOURITE, R.color.course_added);
         mapColors.put(STUDYING, R.color.course_studyng);
         mapColors.put(APPROVED, R.color.course_approved);
-    }
-
-    public Integer getColor(CourseStatus ucs) {
-        return mapColors.get(ucs);
+        mapColors.put(AVAILABLE, R.color.course_available);
+        mapColors.put(NOT_AVAILABLE, R.color.course_not_available);
     }
 }

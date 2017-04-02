@@ -14,6 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import mont.gonzalo.phiuba.R;
+import mont.gonzalo.phiuba.model.CathedrasCombination;
+import mont.gonzalo.phiuba.model.UserCourse;
+import mont.gonzalo.phiuba.model.UserCourses;
 
 public class WeekViewActivity extends AppCompatActivity {
 
@@ -57,6 +60,9 @@ public class WeekViewActivity extends AppCompatActivity {
         });
 
         ActivityContext.set(this);
+
+        CathedrasCombination cc = new CathedrasCombination();
+        cc.fillWith(UserCourses.getInstance());
     }
 
 
@@ -102,20 +108,12 @@ public class WeekViewActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 10;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-            }
-            return null;
+            return "Combiación número " + String.valueOf(position);
         }
     }
 }

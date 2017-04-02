@@ -69,9 +69,6 @@ public class EventsFragment extends SearchableFragment implements Serializable {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             mListListener = (OnListFragmentInteractionListener) getActivity();
-
-            Log.d("events", "WAT!");
-
             DataFetcher.getInstance().getEvents(new Callback<List<Event>>() {
                 @Override
                 public void success(List<Event> events, Response response) {

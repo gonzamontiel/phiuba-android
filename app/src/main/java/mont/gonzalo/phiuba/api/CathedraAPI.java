@@ -13,4 +13,7 @@ import retrofit.http.Query;
 public interface CathedraAPI {
     @GET("/api/cathedras")
     void get(@Query("courseCode") String courseCode, Callback<List<Cathedra>> c);
+
+    @GET("/api/cathedras")
+    List<Cathedra> getSync(@Query("courseCode") String courseCode);
 }

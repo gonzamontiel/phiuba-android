@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.List;
 
 import me.grantland.widget.AutofitHelper;
@@ -21,17 +22,16 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class CourseDetailFragment extends SearchableFragment {
+public class CourseDetailFragment extends SearchableFragment implements Serializable {
     private static final String TAG = "CourseDetailFragment";
-    private OnFragmentInteractionListener mListener;
-    private OnListFragmentInteractionListener mListListener;
+    private transient OnFragmentInteractionListener mListener;
+    private transient OnListFragmentInteractionListener mListListener;
+    private transient TextView nameTextView;
+    private transient ImageView deptoIcon;
+    private transient RecyclerView cathedrasView;
     private Course mCourse;
-    private TextView nameTextView;
-    private ImageView deptoIcon;
-    private RecyclerView cathedrasView;
 
     public CourseDetailFragment() {
-        // Required empty public constructor
     }
 
     public static CourseDetailFragment newInstance(OnFragmentInteractionListener listener,
@@ -53,6 +53,7 @@ public class CourseDetailFragment extends SearchableFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_course_detail, container, false);
+        final TextView schedulesTextView = (TextView) view.findViewById(R.id.schedulesText);
         nameTextView = (TextView) view.findViewById(R.id.course_name);
         deptoIcon = (ImageView) view.findViewById(R.id.coursed_depto_con);
 
@@ -70,6 +71,8 @@ public class CourseDetailFragment extends SearchableFragment {
                     cathedrasView.setAdapter(new CathedrasRecyclerViewAdapter(cathedras, mCourse, mListListener));
                     mListListener = (OnListFragmentInteractionListener) getActivity();
                     registerForContextMenu(cathedrasView);
+                } else {
+                    schedulesTextView.setText(getActivity().getResources().getString(R.string.NO_SCHEDULES));
                 }
             }
 

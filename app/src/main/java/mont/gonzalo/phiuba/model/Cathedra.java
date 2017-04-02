@@ -1,8 +1,6 @@
 package mont.gonzalo.phiuba.model;
 
 import android.content.res.Resources;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 
 import com.alamkanak.weekview.WeekViewEvent;
 
@@ -71,8 +69,6 @@ public class Cathedra implements Serializable {
         this.schedule = schedule;
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public List<WeekViewEvent> toWeekEvents(String name) {
         List<WeekViewEvent> eventList = new ArrayList<WeekViewEvent>();
         for (CathedraSchedule cs: getSchedules()) {
@@ -149,7 +145,7 @@ public class Cathedra implements Serializable {
 
     public Integer getColor() {
         if (color == null) {
-            color = MaterialColors.getRandom(0);
+            color = MaterialColors.getRandom();
         }
         return color;
     }

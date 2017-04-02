@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EEEEEE"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view_inner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="6dp"
+        android:layout_marginBottom="10dp">
+
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#f9a825"
+            android:padding="10dp">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/view2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:elevation="12dp"
+                android:shape="ring"
+                android:thicknessRatio="1.9"
+                app:cardCornerRadius="26dp">
+
+                <ImageView
+                    android:id="@+id/icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/dep63" />
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:id="@+id/dept_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:breakStrategy="balanced"
+                android:gravity="center_vertical"
+                android:text="Fisica"
+                android:textColor="#FFFFFF"
+                android:textSize="25dp"
+                android:shadowColor="@color/primary_text"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="1"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/availableCourses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:breakStrategy="balanced"
+                android:gravity="center_vertical"
+                android:text="20 materias"
+                android:textColor="#FFFFFF"
+                android:textSize="18dp"
+                android:shadowColor="@color/primary_text"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="1"/>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Cod"
+                android:textColor="#999"/>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.75dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="#c0c0c0"/>
+
+            <TextView
+                android:id="@+id/contactInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Contacto"
+                android:textColor="#999"
+                android:linksClickable="true"
+                android:autoLink="all"/>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.75dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="#c0c0c0"/>
+
+            <TextView
+                android:id="@+id/mailto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="asdasd@asd.com"
+                android:textColor="#999"
+                android:linksClickable="true"
+                android:autoLink="email"/>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="0.75dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="#c0c0c0"/>
+
+            <TextView
+                android:id="@+id/councilHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:breakStrategy="balanced"
+                android:gravity="center"
+                android:text="Consejo"
+                android:textColor="@color/primary_text"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/teachers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Docentes"
+                android:textColor="#999"
+                android:linksClickable="true"/>
+
+            <TextView
+                android:id="@+id/aux"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Auxiliares"
+                android:textColor="#999"
+                android:linksClickable="true"/>
+
+            <TextView
+                android:id="@+id/graduated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Graduados"
+                android:textColor="#999"
+                android:linksClickable="true"/>
+
+            <TextView
+                android:id="@+id/students"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Estudiantes"
+                android:textColor="#999"
+                android:linksClickable="true"/>
+
+            <TextView
+                android:id="@+id/coursesHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:breakStrategy="balanced"
+                android:gravity="center"
+                android:text="Materias"
+                android:textColor="@color/primary_text"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <include layout="@layout/fragment_course_list" android:id="@+id/courses_view"/>
+
+</LinearLayout>

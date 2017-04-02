@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import mont.gonzalo.phiuba.R;
@@ -21,27 +20,15 @@ public class User {
     private Plan plan;
     private String firstName;
     private String lastName;
-    private HashMap<CourseStatus, List<String>> coursesMap;
-    private List<CathedraSchedule> schedulesCache;
+    private UserCourses userCourses;
 
     public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.coursesMap = new HashMap<CourseStatus, List<String>>();
-        this.initializeCoursesWithMockData();
     }
 
-    private void initializeCoursesWithMockData() {
-        List<String> l = new ArrayList<String>();
-        l.add("63.01");
-        l.add("75.40");
-        l.add("61.08");
-        l.add("62.03");
-        this.coursesMap.put(CourseStatus.APPROVED, l);
-    }
-
-    public void selectPlan(String planCode) {
-        this.plan = Plan.byCode(planCode);
+    public void selectPlan(Plan plan) {
+        this.plan = plan;
     }
 
     public List<Course> getApprovedCourses() {
@@ -52,20 +39,12 @@ public class User {
         return this.plan.getCode();
     }
 
-    public void addSchedule(CathedraSchedule cs) {
-        this.schedulesCache.add(cs);
-    }
-
-    public void removeSchedule(CathedraSchedule cs) {
-        this.schedulesCache.remove(cs);
-    }
-
     private static User mock_instance = null;
 
     public static User getMock() {
         if (mock_instance == null) {
             mock_instance = new User("Harry", "Potter");
-            mock_instance.selectPlan(Plan.getDefault());
+            mock_instance.selectPlan(Plan.byCode(Plan.getDefault()));
         }
         return mock_instance;
     }
@@ -98,5 +77,8 @@ public class User {
 
     public static User get() {
         return getMock();
+    }
+
+    public static void initialize() {
     }
 }

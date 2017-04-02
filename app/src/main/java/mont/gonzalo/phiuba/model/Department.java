@@ -2,6 +2,7 @@ package mont.gonzalo.phiuba.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import mont.gonzalo.phiuba.R;
@@ -9,7 +10,7 @@ import mont.gonzalo.phiuba.R;
 /**
  * Created by Gonzalo Montiel on 1/14/17.
  */
-public class Department {
+public class Department implements Serializable {
     String code;
     String altCode;
     String contacto;

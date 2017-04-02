@@ -2,13 +2,16 @@ package mont.gonzalo.phiuba.model;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.util.Log;
 
 import com.alamkanak.weekview.WeekViewEvent;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Gonzalo Montiel on 3/7/17.
@@ -60,16 +63,6 @@ public class ScheduleSlot {
         this.mColor = color;
     }
 
-    public static ScheduleSlot getSample() {
-        ScheduleSlot sslot = new ScheduleSlot();
-        sslot.setName("Test");
-        sslot.setColor("#64dd17");
-        sslot.setDayOfWeek(2);
-        sslot.setStartTime("19:00");
-        sslot.setEndTime("22:00");
-        return sslot;
-    }
-
     @SuppressLint("SimpleDateFormat")
     public WeekViewEvent toWeekViewEvent(){
 
@@ -89,23 +82,20 @@ public class ScheduleSlot {
         }
 
         // Initialize start and end time.
-        Calendar now = Calendar.getInstance();
-        Calendar startTime = (Calendar) now.clone();
+        Calendar startTime = getUniqueWeekDate();
         startTime.setTimeInMillis(start.getTime());
-        startTime.set(Calendar.YEAR, now.get(Calendar.YEAR));
-        startTime.set(Calendar.MONTH, now.get(Calendar.MONTH));
+        startTime.set(2007, Calendar.JANUARY, getDayOfWeek());
 
-        // Always get first week pf the month
-        startTime.set(Calendar.WEEK_OF_MONTH, 1);
-        startTime.set(Calendar.DAY_OF_WEEK, getDayOfWeek());
+        SimpleDateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy G");
+        Log.d("start", formatter.format(startTime.getTime()));
 
-        Calendar endTime = (Calendar) startTime.clone();
+        Calendar endTime = getUniqueWeekDate();
         endTime.setTimeInMillis(end.getTime());
-        endTime.set(Calendar.YEAR, startTime.get(Calendar.YEAR));
-        endTime.set(Calendar.MONTH, startTime.get(Calendar.MONTH));
-        endTime.set(Calendar.DAY_OF_MONTH, startTime.get(Calendar.DAY_OF_MONTH));
+        endTime.set(2007, Calendar.JANUARY, getDayOfWeek());
 
-        // Create a week view event
+        Log.d("end", formatter.format(endTime.getTime()));
+
+        // Create an week view event.
         WeekViewEvent weekViewEvent = new WeekViewEvent();
         weekViewEvent.setName(getName());
         weekViewEvent.setStartTime(startTime);
@@ -113,5 +103,71 @@ public class ScheduleSlot {
         weekViewEvent.setColor(Color.parseColor(getColor()));
 
         return weekViewEvent;
+    }
+
+    public static Calendar getUniqueWeekDate() {
+        Calendar date = (Calendar) Calendar.getInstance().clone();
+        date.set(2007, Calendar.JANUARY, 1);
+        return date;
+    }
+
+    public static List<WeekViewEvent> getSamples() {
+        List<WeekViewEvent> slots = new ArrayList<WeekViewEvent>();
+
+        ScheduleSlot sslot = new ScheduleSlot();
+        sslot.setName("Física I");
+        sslot.setColor("#64dd17");
+        sslot.setDayOfWeek(1);
+        sslot.setStartTime("19:00");
+        sslot.setEndTime("22:00");
+        Log.d("mat", sslot.getName());
+        slots.add(sslot.toWeekViewEvent());
+
+        sslot = new ScheduleSlot();
+        sslot.setName("Física I");
+        sslot.setColor("#64dd17");
+        sslot.setDayOfWeek(4);
+        sslot.setStartTime("19:00");
+        sslot.setEndTime("22:00");
+        Log.d("mat", sslot.getName());
+        slots.add(sslot.toWeekViewEvent());
+
+        sslot = new ScheduleSlot();
+        sslot.setName("Análisis II");
+        sslot.setColor("#64b5f6");
+        sslot.setDayOfWeek(2);
+        sslot.setStartTime("15:00");
+        sslot.setEndTime("19:00");
+        Log.d("mat", sslot.getName());
+        slots.add(sslot.toWeekViewEvent());
+
+        sslot = new ScheduleSlot();
+        sslot.setName("Análisis II");
+        sslot.setColor("#64b5f6");
+        sslot.setDayOfWeek(3);
+        sslot.setStartTime("19:00");
+        sslot.setEndTime("23:00");
+        Log.d("mat", sslot.getName());
+        slots.add(sslot.toWeekViewEvent());
+
+        sslot = new ScheduleSlot();
+        sslot.setName("Algebra II");
+        sslot.setColor("#e53935");
+        sslot.setDayOfWeek(6);
+        sslot.setStartTime("19:00");
+        sslot.setEndTime("22:00");
+        Log.d("mat", sslot.getName());
+        slots.add(sslot.toWeekViewEvent());
+
+        sslot = new ScheduleSlot();
+        sslot.setName("Algebra II");
+        sslot.setColor("#e53935");
+        sslot.setDayOfWeek(4);
+        sslot.setStartTime("14:00");
+        sslot.setEndTime("18:00");
+        Log.d("mat", sslot.getName());
+        slots.add(sslot.toWeekViewEvent());
+
+        return slots;
     }
 }

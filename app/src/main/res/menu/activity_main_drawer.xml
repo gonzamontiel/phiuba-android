@@ -5,27 +5,27 @@
         <item
             android:id="@+id/nav_courses"
             android:icon="@drawable/ic_action_courses"
-            android:title="Cursos" />
+            android:title="@string/menu_courses" />
         <item
             android:id="@+id/nav_events"
             android:icon="@drawable/ic_menu_send"
-            android:title="Eventos" />
+            android:title="@string/menu_events" />
         <item
             android:id="@+id/nav_news"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Novedades" />
+            android:title="@string/menu_news" />
         <item
             android:id="@+id/nav_depts"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Departamentos" />
+            android:title="@string/menu_departments" />
         <item
             android:id="@+id/nav_myplan"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Mi plan de estudios" />
+            android:title="@string/mune_myplan" />
         <item
             android:id="@+id/nav_myweek"
             android:icon="@drawable/ic_menu_week"
-            android:title="Mi semana"/>
+            android:title="@string/menu_myweek"/>
     </group>
 
     <item android:title="Communicate">

@@ -2,6 +2,7 @@ package mont.gonzalo.phiuba.layout;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +18,9 @@ import java.util.List;
 import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.api.DataFetcher;
 import mont.gonzalo.phiuba.model.Course;
+import mont.gonzalo.phiuba.model.Department;
 import mont.gonzalo.phiuba.model.User;
+import mont.gonzalo.phiuba.model.UserCourses;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -30,7 +33,7 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
     private int mColumnCount = 1;
     private transient OnListFragmentInteractionListener mListListener;
     private transient CourseRecyclerViewAdapter mAdapter;
-    private RecyclerView recyclerView;
+    private transient RecyclerView recyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -76,6 +79,7 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
                 @Override
                 public void success(List<Course> courses, Response response) {
                     if (courses.size() > 0) {
+//                        UserCourses.generateMagicCourses(courses);
                         mAdapter = new CourseRecyclerViewAdapter(courses, mListListener);
                         recyclerView.setAdapter(mAdapter);
                         mListListener = (OnListFragmentInteractionListener) getActivity();
@@ -116,21 +120,50 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         int position = -1;
+        Course course;
+        int opcion = 0;
         try {
             position = ((CourseRecyclerViewAdapter)mAdapter).getPosition();
+            course = mAdapter.getCourse(position);
         } catch (Exception e) {
             Log.d(TAG, e.getLocalizedMessage(), e);
             return super.onContextItemSelected(item);
         }
         switch (item.getItemId()) {
-            case R.string.course_context_favorite:
+            case R.string.course_context_favourite:
+                opcion = R.string.favourite;
+                UserCourses.getInstance().addFavourite(course);
+                break;
+            case R.string.course_context_studying:
+                opcion = R.string.studying;
+                UserCourses.getInstance().addStudying(course);
+                break;
+            case R.string.course_context_approved:
+                opcion = R.string.approved;
+                Integer calif = 10; // FIXME Launch popup to select calif
+                UserCourses.getInstance().addApproved(course, calif);
                 break;
             case R.string.course_context_department:
-                break;
-            case R.string.course_context_department_courses:
+                DataFetcher.getInstance().getDepartment(course.getDepCode(), new Callback<Department>() {
+                    @Override
+                    public void success(Department department, Response response) {
+                        MainActivity act = (MainActivity) getActivity();
+                        act.showDepartment(department);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Snackbar.make(getView(), "Hubo un error al encontrar el departamento (no tenemos las llaves).", Snackbar.LENGTH_LONG)
+                                .show();
+                    }
+                });
                 break;
             case R.string.course_context_schedule:
                 break;
+        }
+        if (opcion != 0) {
+            Snackbar.make(getView(), course.getName() + " fue agregada como " + getContext().getResources().getString(opcion), Snackbar.LENGTH_LONG)
+                    .show();
         }
         return super.onContextItemSelected(item);
     }
@@ -140,7 +173,9 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
         DataFetcher.getInstance().searchCourses(query, User.get().getPlanCode(), new Callback<List<Course>>() {
             @Override
             public void success(List<Course> courses, Response response) {
-                mAdapter.updateItems(courses);
+                if (mAdapter != null) {
+                    mAdapter.updateItems(courses);
+                }
             }
             @Override
             public void failure(RetrofitError error) {

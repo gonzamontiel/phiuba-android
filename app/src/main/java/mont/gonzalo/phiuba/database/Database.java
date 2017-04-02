@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 
 import mont.gonzalo.phiuba.model.CourseStatus;
+import mont.gonzalo.phiuba.model.Plan;
 import mont.gonzalo.phiuba.model.User;
 import mont.gonzalo.phiuba.model.UserCourse;
 
@@ -44,7 +45,7 @@ public class Database {
         ContentValues contentValues = new ContentValues();
         Cursor res = db.rawQuery("SELECT * FROM user where id = " + USER_ID, null);
         User u = new User(res.getString(res.getColumnIndex("firstName")), res.getString(res.getColumnIndex("lastName")));
-        u.selectPlan(res.getString(res.getColumnIndex("planCode")));
+        u.selectPlan(Plan.byCode(res.getString(res.getColumnIndex("planCode"))));
         return u;
     }
 

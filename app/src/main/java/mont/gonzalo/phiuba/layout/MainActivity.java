@@ -25,12 +25,20 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SearchEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import mont.gonzalo.phiuba.R;
+import mont.gonzalo.phiuba.api.DataFetcher;
 import mont.gonzalo.phiuba.model.CalendarIntegration;
 import mont.gonzalo.phiuba.model.Cathedra;
 import mont.gonzalo.phiuba.model.CathedraSchedule;
@@ -38,23 +46,73 @@ import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.Department;
 import mont.gonzalo.phiuba.model.Event;
 import mont.gonzalo.phiuba.model.News;
+import mont.gonzalo.phiuba.model.Plan;
+import mont.gonzalo.phiuba.model.User;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        CoursesFragment.OnListFragmentInteractionListener, NewsFragment.OnListFragmentInteractionListener, CourseDetailFragment.OnFragmentInteractionListener, CourseDetailFragment.OnListFragmentInteractionListener, DepartmentsFragment.OnListFragmentInteractionListener, EventsFragment.OnListFragmentInteractionListener, SearchView.OnQueryTextListener {
+        CoursesFragment.OnListFragmentInteractionListener, NewsFragment.OnListFragmentInteractionListener, CourseDetailFragment.OnFragmentInteractionListener, CourseDetailFragment.OnListFragmentInteractionListener, DepartmentsFragment.OnListFragmentInteractionListener, EventsFragment.OnListFragmentInteractionListener, SearchView.OnQueryTextListener, Observer, DepartmentDetailFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String ACTIVE_FRAGMENT = "active_fragment";
     private SearchView searchView;
     private SearchableFragment currentFragment;
+    private ProgressBar progressBar;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        progressBar = (ProgressBar) findViewById(R.id.progress_spinner);
+        progressBar.setVisibility(View.VISIBLE);
+
+        DataFetcher.getInstance().addObserver(this);
+
+        User.initialize();
+        Plan.initialize();
+
+        applyDefaultFragment(savedInstanceState);
+        showFloatingButton();
+        initializeDrawer();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        fillSpinnerWithPlans(navigationView);
+        // Search on keystrokes
+        setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
+
+        // Check connection and show snack message if necessary
+        checkNetwork();
+    }
+
+    private void initializeDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+    }
 
+    private void showFloatingButton() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Envia sugerencias!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+    }
+
+    private void applyDefaultFragment(Bundle savedInstanceState) {
         // Set current fragment to be shown
         currentFragment = null;
         if (savedInstanceState != null) {
@@ -69,61 +127,69 @@ public class MainActivity extends AppCompatActivity
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, currentFragment).commit();
+    }
 
-        // Show floating button
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+    private void fillSpinnerWithPlans(NavigationView navigationView) {
+        final Spinner spinner = (Spinner) navigationView.getHeaderView(0).findViewById(R.id.spinner);
+
+        DataFetcher.getInstance().getPlans(new Callback<List<Plan>>() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Envia sugerencias!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void success(List<Plan> plans, Response response) {
+                Plan.setAvailablePlans(plans);
+                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.menu_spinner_item_first, Plan.getAvailableNames());
+                spinnerArrayAdapter.setDropDownViewResource(R.layout.menu_spinner_item);
+                spinner.setAdapter(spinnerArrayAdapter);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                String[] defaults = new String[] {Plan.getDefault()};
+                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.menu_spinner_item, defaults);
+                spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(spinnerArrayAdapter);
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String data = spinner.getItemAtPosition(position).toString();
+                Plan p = Plan.byShortName(data);
+                User.get().selectPlan(p);
+                Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
+                currentFragment.reset();
+                drawer.closeDrawers();
+            }
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-        // Search on keystrokes
-        setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
-
-        // Check connection and show snack message if necessary
-        showConnectionIndicator();
-
+            }
+        });
     }
-
 
     private Class getDefaultFragmentClass() {
         return EventsFragment.class;
     }
 
-    @Override
-    public boolean onSearchRequested(SearchEvent searchEvent) {
-        Log.d(TAG, "search");
-        return false;
-    }
-
-    private void showConnectionIndicator() {
+    private void checkNetwork() {
         ConnectivityManager cm =
                 (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
+        if (!isConnected)
+            showConnectionIndicator();
+    }
 
+    private void showConnectionIndicator() {
         final View viewForSnackBar = this.findViewById(android.R.id.content);
-        if (!isConnected) {
-            Snackbar.make(viewForSnackBar, R.string.disconnected_message, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                View v = viewForSnackBar.findViewById(R.id.disconnected_placeholder);
-                v.setVisibility(View.VISIBLE);
-            }
+        Snackbar.make(viewForSnackBar, R.string.disconnected_message, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            View v = viewForSnackBar.findViewById(R.id.disconnected_placeholder);
+            v.setVisibility(View.VISIBLE);
         }
     }
 
@@ -176,14 +242,14 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_courses) {
             newOne = CoursesFragment.newInstance(1, this);
         } else if (id == R.id.nav_events) {
-            Log.d(TAG, "Events clicked!");
             newOne = EventsFragment.newInstance(1, this);
         } else if (id == R.id.nav_news) {
             newOne = NewsFragment.newInstance(1, this);
         } else if (id == R.id.nav_depts) {
             newOne = DepartmentsFragment.newInstance(1, this);
         } else if (id == R.id.nav_myplan) {
-            Log.d(TAG, "My plan clicked!");
+            Intent intent = new Intent(this, MyPlanActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_myweek) {
             Intent intent = new Intent(this, WeekViewActivity.class);
             startActivity(intent);
@@ -259,11 +325,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Department item) {
-//        currentFragment = DepartmentDetailFragment.newInstance(this, this, item);
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        transaction.replace(R.id.flContent, currentFragment);
-//        transaction.addToBackStack(null);
-//        transaction.commit();
+        currentFragment = DepartmentDetailFragment.newInstance(this, item);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.flContent, currentFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @Override
@@ -317,5 +383,24 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void update(Observable obs, Object arg) {
+        if (obs instanceof DataFetcher) {
+            DataFetcher df = (DataFetcher) obs;
+            if (!df.isRunning()) {
+                showConnectionIndicator();
+            }
+        }
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    public void showDepartment(Department dep) {
+        currentFragment = DepartmentDetailFragment.newInstance(this, dep);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.flContent, currentFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

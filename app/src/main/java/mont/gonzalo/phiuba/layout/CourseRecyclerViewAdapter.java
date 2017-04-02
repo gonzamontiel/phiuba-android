@@ -48,6 +48,10 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
         return new CourseViewHolder(view);
     }
 
+    public Course getCourse(int position) {
+        return mCourses.get(position);
+    }
+
     @Override
     public void onBindViewHolder(final CourseViewHolder holder, int position) {
         holder.mItem = mCourses.get(position);
@@ -105,10 +109,11 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             menu.setHeaderTitle(R.string.course_context_title);
-            menu.add(0, R.string.course_context_favorite, 1, v.getResources().getString(R.string.course_context_favorite));
+            menu.add(0, R.string.course_context_favourite, 1, v.getResources().getString(R.string.course_context_favourite));
+            menu.add(0, R.string.course_context_approved, 1, v.getResources().getString(R.string.course_context_approved));
+            menu.add(0, R.string.course_context_studying, 1, v.getResources().getString(R.string.course_context_studying));
             menu.add(0, R.string.course_context_schedule, 2, v.getResources().getString(R.string.course_context_schedule));
             menu.add(0, R.string.course_context_department, 3, v.getResources().getString(R.string.course_context_department));
-            menu.add(0, R.string.course_context_department_courses, 4, v.getResources().getString(R.string.course_context_department_courses));
         }
     }
 }

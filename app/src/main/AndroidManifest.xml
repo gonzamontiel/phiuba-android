@@ -21,6 +21,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -28,6 +29,15 @@
         <activity
             android:name=".layout.WeekViewActivity"
             android:label="@string/title_activity_week_view"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".layout.MyPlanActivity"
+            android:label="@string/title_activity_my_plan"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".layout.ScrollingActivity"
+            android:label="@string/title_activity_scrolling"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
+
 </manifest>

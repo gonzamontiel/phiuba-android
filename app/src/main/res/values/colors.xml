@@ -12,6 +12,8 @@
     <color name="course_added">#41c0f2</color>
     <color name="course_approved">#64dd17</color>
     <color name="course_studyng">#6a1b9a</color>
+    <color name="course_available">#CDDC39</color>
+    <color name="course_not_available">#e53935</color>
 
     <color name="material_1">#e53935</color>
     <color name="material_2">#64dd17</color>

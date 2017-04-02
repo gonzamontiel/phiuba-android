@@ -42,7 +42,6 @@ public class LayoutHelper {
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
         URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
         for(URLSpan span : urls) {
-            Log.d("url", span.getURL());
             makeLinkClickable(strBuilder, span, activity);
         }
         text.setText(strBuilder);

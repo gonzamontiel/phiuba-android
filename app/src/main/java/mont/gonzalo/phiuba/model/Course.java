@@ -102,6 +102,10 @@ public class Course implements Serializable {
         return Department.getIconByDepartmentCode(this.getDepCode());
     }
 
+    public boolean equals(Course course) {
+        return this.getCode() == course.getCode();
+    }
+
     static private List<Course> sample_data;
 
     public static List<Course> getSampleData() {
