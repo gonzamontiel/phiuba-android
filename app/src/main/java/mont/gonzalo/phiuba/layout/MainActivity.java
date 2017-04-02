@@ -57,7 +57,9 @@ public class MainActivity extends AppCompatActivity
         CoursesFragment.OnListFragmentInteractionListener, NewsFragment.OnListFragmentInteractionListener, CourseDetailFragment.OnFragmentInteractionListener, CourseDetailFragment.OnListFragmentInteractionListener, DepartmentsFragment.OnListFragmentInteractionListener, EventsFragment.OnListFragmentInteractionListener, SearchView.OnQueryTextListener, Observer, DepartmentDetailFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String ACTIVE_FRAGMENT = "active_fragment";
+    public static final String ACTIVE_FRAGMENT = "active_fragment";
+    public static final String SPECIFIC_FRAGMENT = "specific_fragment";
+    public static final String SPECIFIC_FRAGMENT_DATA = "specific_fragment_data";
     private SearchView searchView;
     private SearchableFragment currentFragment;
     private ProgressBar progressBar;
