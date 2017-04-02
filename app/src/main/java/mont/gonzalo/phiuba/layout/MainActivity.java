@@ -275,7 +275,6 @@ public class MainActivity extends AppCompatActivity
     // Manage clicks inside Courses list view
     @Override
     public void onListFragmentInteraction(Course item) {
-        Log.d(TAG, item.getName() + " was clicked!");
         currentFragment = CourseDetailFragment.newInstance(this, this, item);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.flContent, currentFragment);
@@ -286,7 +285,6 @@ public class MainActivity extends AppCompatActivity
     // Manage clicks on News view
     @Override
     public void onListFragmentInteraction(News item) {
-        Log.d(TAG, item.getTitle() + " was clicked!");
         currentFragment = NewsDetailFragment.newInstance(item);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.flContent, currentFragment);
