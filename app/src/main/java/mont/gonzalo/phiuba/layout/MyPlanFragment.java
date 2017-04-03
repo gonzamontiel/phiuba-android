@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,19 +42,14 @@ public class MyPlanFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_my_plan, container, false);
         final RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.course_rv);
+        final TextView  placeHolder = (TextView) rootView.findViewById(R.id.placeHolder);
         int sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
-        List<Course> tabCourses;
-        if (mCourses.size() > 0) {
-            tabCourses = getCoursesByState(sectionNumber);
-            if (tabCourses.size() > 0) {
-
-            } else {
-                rv.setVisibility(View.GONE);
-                // TODO Show empty place holder
-            }
-        } else {
-            rv.setVisibility(View.GONE);
-            // TODO Show place holder inviting to add courses to plan
+        List<Course> tabCourses = getCoursesByState(sectionNumber);
+        if (tabCourses.size() > 0) {
+            rv.setAdapter(new CourseRecyclerViewAdapter(tabCourses,
+                    (CoursesFragment.OnListFragmentInteractionListener) getActivity()));
+            rv.setVisibility(View.VISIBLE);
+            placeHolder.setVisibility(View.GONE);
         }
 
         return rootView;

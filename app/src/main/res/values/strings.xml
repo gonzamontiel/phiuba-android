@@ -135,5 +135,11 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="my_plan_title">Mi plan de estudios</string>
+
+    <string name="myplan_tab_approved">Aprobadas</string>
+    <string name="myplan_tab_studying">Cursando</string>
+    <string name="myplan_tab_not_coursed">No cursadas</string>
+    <string name="myplan_tab_complete">Plan completo</string>
 
 </resources>

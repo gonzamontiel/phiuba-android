@@ -8,22 +8,27 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="mont.gonzalo.phiuba.layout.MyPlanFragment">
 
-    <android.support.v4.widget.NestedScrollView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/course_rv"
+        android:name="mont.gonzalo.phiuba.CourseFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="mont.gonzalo.phiuba.layout.ScrollingActivity"
-        tools:showIn="@layout/activity_scrolling"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layoutManager="LinearLayoutManager"
+        tools:context="mont.gonzalo.phiuba.layout.CoursesFragment"
+        tools:listitem="@layout/fragment_course_row"
+        android:visibility="gone"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/course_rv"
-            android:name="mont.gonzalo.phiuba.CourseFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layoutManager="LinearLayoutManager"
-            tools:context="mont.gonzalo.phiuba.layout.CoursesFragment"
-            tools:listitem="@layout/fragment_course_row" />
 
-    </android.support.v4.widget.NestedScrollView>
+    <TextView
+        android:id="@+id/placeHolder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="No hay materias en esta sección. Prueba agregando algunas con el botón de '+' o desde el listado de Materias."
+        android:textSize="16dp"
+        android:textColor="@color/primary_text"
+        android:gravity="center|top"
+        android:linksClickable="true"
+        android:autoLink="web"
+        android:visibility="visible"/>
 
 </RelativeLayout>

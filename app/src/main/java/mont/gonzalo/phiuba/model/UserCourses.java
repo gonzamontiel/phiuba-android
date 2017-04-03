@@ -84,4 +84,16 @@ public class UserCourses implements Serializable {
             }
         }
     }
+
+    public static List<Course> filterApproved(List<Course> mCourses) {
+        return mCourses;
+    }
+
+    public static List<Course> filterStudying(List<Course> mCourses) {
+        return mCourses;
+    }
+
+    public static List<Course> filterNotCoursed(List<Course> mCourses) {
+        return mCourses;
+    }
 }
