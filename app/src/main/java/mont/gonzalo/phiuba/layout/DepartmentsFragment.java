@@ -26,7 +26,7 @@ public class DepartmentsFragment extends SearchableFragment implements Serializa
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+    private transient OnListFragmentInteractionListener mListener;
     private transient RecyclerView.Adapter mAdapter;
     private transient DataFetcher mFetcher;
     private transient RecyclerView recyclerView;
