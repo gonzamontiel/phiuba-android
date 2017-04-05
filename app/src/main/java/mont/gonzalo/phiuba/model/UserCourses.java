@@ -1,7 +1,6 @@
 package mont.gonzalo.phiuba.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,14 +17,13 @@ public class UserCourses implements Serializable {
     private HashMap<String, UserCourse> studyingCourses;
     private HashMap<String, UserCourse> favouriteCourses;
 
-    private static HashMap<String, UserCourses> _instances = new HashMap<String, UserCourses>();
+    private static UserCourses _instance = null;
 
     public static UserCourses getInstance() {
-        String planCode = User.get().getPlanCode();
-        if (!_instances.containsKey(planCode)) {
-            _instances.put(planCode, new UserCourses());
+        if (_instance == null) {
+            _instance = new UserCourses();
         }
-        return _instances.get(planCode);
+        return _instance;
     }
 
     private UserCourses() {
