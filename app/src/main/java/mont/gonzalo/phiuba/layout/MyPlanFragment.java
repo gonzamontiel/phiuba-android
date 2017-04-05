@@ -42,6 +42,7 @@ public class MyPlanFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_my_plan, container, false);
         final RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.course_rv);
+        final TextView  placeHolderTitle = (TextView) rootView.findViewById(R.id.placeHolder_title);
         final TextView  placeHolder = (TextView) rootView.findViewById(R.id.placeHolder);
         int sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
         List<Course> tabCourses = getCoursesByState(sectionNumber);
@@ -50,6 +51,7 @@ public class MyPlanFragment extends Fragment {
                     (CoursesFragment.OnListFragmentInteractionListener) getActivity()));
             rv.setVisibility(View.VISIBLE);
             placeHolder.setVisibility(View.GONE);
+            placeHolderTitle.setVisibility(View.GONE);
         }
 
         return rootView;

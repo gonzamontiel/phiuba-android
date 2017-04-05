@@ -20,13 +20,29 @@
 
 
     <TextView
-        android:id="@+id/placeHolder"
+        android:id="@+id/placeHolder_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="No hay materias en esta sección. Prueba agregando algunas con el botón de '+' o desde el listado de Materias."
-        android:textSize="16dp"
+        android:layout_height="wrap_content"
+        android:text="@string/myplan_placeholder_text_title"
+        android:textSize="18dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textStyle="bold"
         android:textColor="@color/primary_text"
         android:gravity="center|top"
+        android:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/placeHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/myplan_placeholder_text"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textSize="16dp"
+        android:textColor="@color/secondary_text"
+        android:gravity="center_horizontal"
         android:linksClickable="true"
         android:autoLink="web"
         android:visibility="visible"/>
