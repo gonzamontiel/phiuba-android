@@ -38,5 +38,6 @@ dependencies {
     compile 'me.grantland:autofittextview:0.2.+'
     compile 'com.facebook.network.connectionclass:connectionclass:1.0.1'
     compile 'com.github.alamkanak:android-week-view:1.2.6'
+    compile 'org.jsoup:jsoup:1.10.2'
     testCompile 'junit:junit:4.12'
 }
