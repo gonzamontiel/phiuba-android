@@ -16,7 +16,7 @@
         android:scaleType="centerCrop">
 
         <View
-            android:id="@+id/view"
+            android:id="@+id/status"
             android:layout_width="10dp"
             android:layout_height="wrap_content"
             android:background="@color/course_default" />
@@ -27,6 +27,7 @@
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/view"
             android:layout_toRightOf="@+id/view"
+            android:layout_marginLeft="5dp"
             android:orientation="vertical"
             android:padding="10dp"
             android:weightSum="1">
@@ -90,6 +91,34 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/course_award_container"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/course_award"
+                android:layout_height="60dp"
+                android:layout_width="70dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/oro"
+                android:alpha="0.9"
+                android:layout_alignParentRight="true"/>
+
+            <TextView
+                android:id="@+id/course_award_calif"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_marginLeft="2dp"
+                android:layout_alignLeft="@+id/course_award"
+                android:layout_alignTop="@+id/course_award"
+                android:layout_alignRight="@+id/course_award"
+                android:layout_alignBottom="@+id/course_award"
+                android:gravity="center"
+                android:text="10"
+                android:textColor="#333"/>
+        </RelativeLayout>
+    </RelativeLayout>
 </android.support.v7.widget.CardView>

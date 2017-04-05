@@ -18,12 +18,21 @@ public class Course implements Serializable {
     private Boolean required;
     private List<String> correlatives;
     private List<Cathedra> cathedras;
+    private boolean isComplete;
+
+    public Course(String cCode, String cName) {
+        this.planCode = User.get().getPlanCode();
+        this.name = cName;
+        this.code = cCode;
+        this.isComplete = false;
+    }
 
     public Course(String name, String depCode, String code, String depto) {
         this.name = name;
         this.code = code;
         this.depCode = depCode;
         this.depto = depto;
+        this.isComplete = false;
     }
 
     public List<Cathedra> getCathedras() {
@@ -102,8 +111,19 @@ public class Course implements Serializable {
         return Department.getIconByDepartmentCode(this.getDepCode());
     }
 
-    public boolean equals(Course course) {
-        return this.getCode() == course.getCode();
+    public boolean isAvailable(User user) {
+        return true;
+    }
+
+    public int getColorId() {
+        return isAvailable(User.get())? CourseStatus.getByStatus(CourseStatus.AVAILABLE) :
+                CourseStatus.getByStatus(CourseStatus.NOT_AVAILABLE);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Course course = (Course) obj;
+        return this.getCode() == course.getCode() && this.getPlanCode() == course.getPlanCode();
     }
 
     static private List<Course> sample_data;

@@ -10,7 +10,7 @@ public class UserCourse implements Serializable  {
     private Course course;
     private CourseStatus status;
     private CathedraSchedule schedule;
-    private Integer calification;
+    private Integer calification = 0;
 
     public UserCourse(Course course, CourseStatus status, Integer calif) {
         this.course = course;

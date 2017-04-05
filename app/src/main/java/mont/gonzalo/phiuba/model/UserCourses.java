@@ -1,13 +1,11 @@
 package mont.gonzalo.phiuba.model;
 
+import android.util.Log;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import mont.gonzalo.phiuba.api.DataFetcher;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by Gonzalo Montiel on 3/20/17.
@@ -33,6 +31,7 @@ public class UserCourses implements Serializable {
     }
 
     public void addApproved(Course c, Integer calification) {
+        Log.d(c.getCode(), String.valueOf(calification));
         this.studyingCourses.remove(c.getCode());
         this.favouriteCourses.remove(c.getCode());
         this.approvedCourses.put(c.getCode(), new UserCourse(c, CourseStatus.APPROVED, calification));
@@ -56,44 +55,58 @@ public class UserCourses implements Serializable {
         this.favouriteCourses.remove(c.getCode());
     }
 
+    public HashMap<String, UserCourse> getApprovedCourses() {
+        return approvedCourses;
+    }
+
+    public void printSummary() {
+        Log.d("Studying", this.studyingCourses.keySet().toString());
+        Log.d("Approved", this.approvedCourses.keySet().toString());
+        Log.d("Favourites", this.favouriteCourses.keySet().toString());
+    }
+
     public HashMap<String, UserCourse> getStudyingCourses() {
         return studyingCourses;
     }
 
-    public static void egenerateMagicCourses(List<Course> courses) {
-        final UserCourses ucs = getInstance();
-        for (final Course c: courses) {
-            if (c.getCode().equals("61.03") ||
-                    c.getCode().equals("61.10") ||
-                    c.getCode().equals("62.03") ||
-                    c.getCode().equals("75.41")) {
-                DataFetcher.getInstance().getCathedras(c.getCode(), new Callback<List<Cathedra>>() {
-                    @Override
-                    public void success(List<Cathedra> cathedras, Response response) {
-                        if (cathedras.size() > 0) {
-                            c.setCathedras(cathedras);
-                            ucs.addStudying(c);
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-
-                    }
-                });
+    public static List<Course> filterApproved(List<Course> mCourses) {
+        List<Course> filtered = new ArrayList<>();
+        for (Course c: mCourses) {
+            if (UserCourses.getInstance().approvedCourses.containsKey(c.getCode())) {
+                filtered.add(c);
             }
         }
-    }
-
-    public static List<Course> filterApproved(List<Course> mCourses) {
-        return mCourses;
+        return filtered;
     }
 
     public static List<Course> filterStudying(List<Course> mCourses) {
-        return mCourses;
+        List<Course> filtered = new ArrayList<>();
+        for (Course c: mCourses) {
+            if (UserCourses.getInstance().studyingCourses.containsKey(c.getCode())) {
+                filtered.add(c);
+            }
+        }
+        return filtered;
+
     }
 
     public static List<Course> filterNotCoursed(List<Course> mCourses) {
-        return mCourses;
+        UserCourses ucs = UserCourses.getInstance();
+        List<Course> filtered = new ArrayList<>();
+        for (Course c: mCourses) {
+            if (!ucs.approvedCourses.containsKey(c.getCode()) &&
+                    !ucs.studyingCourses.containsKey(c.getCode())) {
+                filtered.add(c);
+            }
+        }
+        return filtered;
+    }
+
+    public int getCalification(Course c) {
+        UserCourse uc = approvedCourses.get(c.getCode());
+        if (uc != null) {
+            return uc.getCalification();
+        }
+        return -1;
     }
 }
