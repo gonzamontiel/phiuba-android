@@ -144,7 +144,9 @@ public class EventsFragment extends SearchableFragment implements Serializable {
     private class UpdateCallback implements Callback<List<Event>> {
         @Override
         public void success(List<Event> events, Response response) {
-            mAdapter.updateItems(events);
+            if (mAdapter != null) {
+                mAdapter.updateItems(events);
+            }
         }
         @Override
         public void failure(RetrofitError error) {
