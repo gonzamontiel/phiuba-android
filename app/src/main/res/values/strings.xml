@@ -46,6 +46,14 @@
     <string name="menu_myweek">Mi semana</string>
     <string name="NO_SCHEDULES">No se encontraron horarios para esta materia.</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
+
+    <string name="my_plan_title">Mi plan de estudios</string>
+
+    <string name="myplan_tab_approved">Aprobadas</string>
+    <string name="myplan_tab_studying">Cursando</string>
+    <string name="myplan_tab_not_coursed">No cursadas</string>
+    <string name="myplan_tab_complete">Plan completo</string>
+    <string name="parse_siu_warning">Recordá que la tabla \"Historia Académica\" debe estar visible!</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -135,11 +143,12 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
-    <string name="my_plan_title">Mi plan de estudios</string>
-
-    <string name="myplan_tab_approved">Aprobadas</string>
-    <string name="myplan_tab_studying">Cursando</string>
-    <string name="myplan_tab_not_coursed">No cursadas</string>
-    <string name="myplan_tab_complete">Plan completo</string>
-
+    <string name="myplan_confirm_import_text">Para importar materias desde SIU, es necesario loguearse al sistema con tus credenciales. No te preocupes, las mismas no se guardan ni se transmiten a otro servidor que no sea el de la facultad. Si estás de acuerdo, adelante. Si no, siempre podés agregar tus materias desde la app!</string>
+    <string name="myplan_confirm_import_title">Importar materias desde SIU</string>
+    <string name="myplan_placeholder_text_title">
+        No hay materias en esta sección aún.
+    </string>
+    <string name="myplan_placeholder_text">
+        Probá agregarlas desde el menú contextual en el listado de Materias, o importando tu Historia Académica desde SIU (beta)
+    </string>
 </resources>
