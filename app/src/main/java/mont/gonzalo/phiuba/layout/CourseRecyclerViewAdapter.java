@@ -52,12 +52,16 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
         return mCourses.get(position);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(final CourseViewHolder holder, int position) {
         holder.mItem = mCourses.get(position);
         holder.courseName.setText(mCourses.get(position).getName());
         holder.courseDepartment.setText(mCourses.get(position).getDepto());
         holder.courseIcon.setImageResource(mCourses.get(position).getImageResource());
+        holder.status.setBackgroundColor(ActivityContext.get().getResources().getColor(
+                mCourses.get(position).getColorId(), null
+        ));
 
         holder.rv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +94,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
         public final TextView courseName;
         public final TextView courseDepartment;
         public final ImageView courseIcon;
+        public final View status;
         public Course mItem;
 
         public CourseViewHolder(View itemView) {
@@ -99,6 +104,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
             courseName = (TextView)itemView.findViewById(R.id.course_name);
             courseDepartment = (TextView)itemView.findViewById(R.id.course_description);
             courseIcon = (ImageView)itemView.findViewById(R.id.course_icon);
+            status = itemView.findViewById(R.id.status);
         }
 
         @Override
