@@ -28,7 +28,7 @@ public class ImportSIUActivity extends Activity {
         myWebView.getSettings().setDisplayZoomControls(false);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        final SIUImporter parser = new SIUImporter(this);
+        final SIUImporter parser = new SIUImporter();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

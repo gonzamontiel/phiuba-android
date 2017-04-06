@@ -1,11 +1,9 @@
 package mont.gonzalo.phiuba.layout;
 
-import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
-import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,7 +14,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.UserCourses;
 
@@ -24,12 +21,6 @@ import mont.gonzalo.phiuba.model.UserCourses;
  * Created by Gonzalo Montiel on 4/2/17.
  */
 public class SIUImporter {
-
-    private final Context context;
-
-    public SIUImporter(Context context) {
-        this.context = context;
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void loadApprovedCourses(WebView myWebView) {
@@ -46,7 +37,6 @@ public class SIUImporter {
 
                         parseHtml(html);
                     }
-
                 });
     }
 
