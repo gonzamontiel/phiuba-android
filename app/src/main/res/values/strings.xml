@@ -47,7 +47,7 @@
     <string name="NO_SCHEDULES">No se encontraron horarios para esta materia.</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
 
-    <string name="my_plan_title">Mi plan de estudios</string>
+    <string name="my_plan_title">Plan de estudios</string>
 
     <string name="myplan_tab_approved">Aprobadas</string>
     <string name="myplan_tab_studying">Cursando</string>

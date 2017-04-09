@@ -6,11 +6,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * Created by Gonzalo Montiel on 3/20/17.
  */
-public class UserCourses implements Serializable {
+public class UserCourses extends Observable implements Serializable {
     private HashMap<String, UserCourse> approvedCourses;
     private HashMap<String, UserCourse> studyingCourses;
     private HashMap<String, UserCourse> favouriteCourses;
@@ -35,34 +36,60 @@ public class UserCourses implements Serializable {
         this.studyingCourses.remove(c.getCode());
         this.favouriteCourses.remove(c.getCode());
         this.approvedCourses.put(c.getCode(), new UserCourse(c, CourseStatus.APPROVED, calification));
+        this.notifyObservers();
     }
 
     public void addStudying(Course c) {
         this.approvedCourses.remove(c.getCode());
         this.favouriteCourses.remove(c.getCode());
         this.studyingCourses.put(c.getCode(), new UserCourse(c, CourseStatus.STUDYING));
+        this.notifyObservers();
     }
 
     public void addFavourite(Course c) {
         this.studyingCourses.remove(c.getCode());
         this.approvedCourses.remove(c.getCode());
         this.favouriteCourses.put(c.getCode(), new UserCourse(c, CourseStatus.FAVOURITE));
+        this.notifyObservers();
     }
 
     public void removeCourse(Course c) {
         this.studyingCourses.remove(c.getCode());
         this.approvedCourses.remove(c.getCode());
         this.favouriteCourses.remove(c.getCode());
+        this.notifyObservers();
     }
 
     public HashMap<String, UserCourse> getApprovedCourses() {
         return approvedCourses;
     }
 
+    public double getAverageCalification() {
+        double sum = 0;
+        for (UserCourse uc: this.approvedCourses.values()) {
+            sum += uc.getCalification();
+        }
+        return sum / getApprovedCount();
+    }
+
+    public int getApprovedCount() {
+        return this.approvedCourses.keySet().size();
+    }
+
+    public double getCredits() {
+        int sum = 0;
+        for (UserCourse uc: this.approvedCourses.values()) {
+            sum += uc.getCourse().getCredits();
+        }
+        return sum;
+    }
+
     public void printSummary() {
         Log.d("Studying", this.studyingCourses.keySet().toString());
         Log.d("Approved", this.approvedCourses.keySet().toString());
         Log.d("Favourites", this.favouriteCourses.keySet().toString());
+        Log.d("Average", String.valueOf(getAverageCalification()));
+        Log.d("Total approved", String.valueOf(getApprovedCount()));
     }
 
     public HashMap<String, UserCourse> getStudyingCourses() {

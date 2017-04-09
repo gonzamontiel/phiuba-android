@@ -3,7 +3,9 @@ package mont.gonzalo.phiuba.layout;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -17,14 +19,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.api.DataFetcher;
 import mont.gonzalo.phiuba.model.Cathedra;
 import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.User;
+import mont.gonzalo.phiuba.model.UserCourses;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -33,7 +40,7 @@ import static android.content.ContentValues.TAG;
 
 public class MyPlanActivity extends AppCompatActivity
         implements CoursesFragment.OnListFragmentInteractionListener,
-        CourseDetailFragment.OnFragmentInteractionListener, CourseDetailFragment.OnListFragmentInteractionListener {
+        CourseDetailFragment.OnFragmentInteractionListener, CourseDetailFragment.OnListFragmentInteractionListener, CircleDisplay.SelectionListener, Observer {
     private transient SectionsPagerAdapter mSectionsPagerAdapter;
     private transient ViewPager mViewPager;
     private transient TabLayout tabs;
@@ -43,15 +50,44 @@ public class MyPlanActivity extends AppCompatActivity
     public static final int TAB_NOT_COURSED_ID = 2;
     public static final int TAB_COMPLETE_ID = 3;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_plan);
+        setTitle(getString(R.string.my_plan_title));
+        ActivityContext.set(this);
+        initializaToolbar();
+        loadStatistics();
+        initializeCourses();
+        loadFloatingButton();
+        UserCourses.getInstance().addObserver(this);
+    }
 
+    private void initializaToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle(getString(R.string.my_plan_title));
+    }
 
+    private void initializeCourses() {
+        DataFetcher.getInstance().getCourses(User.get().getPlanCode(), new Callback<List<Course>>() {
+            @Override
+            public void success(List<Course> courses, Response response) {
+                mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), courses);
+                mViewPager = (ViewPager) findViewById(R.id.container);
+                mViewPager.setAdapter(mSectionsPagerAdapter);
+                tabs = (TabLayout) findViewById(R.id.tabs);
+                tabs.setupWithViewPager(mViewPager);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.d(TAG, error.getMessage());
+            }
+        });
+    }
+
+    private void loadFloatingButton() {
         final Activity app = this;
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -71,29 +107,42 @@ public class MyPlanActivity extends AppCompatActivity
                         .show();
             }
         });
-
-        DataFetcher.getInstance().getCourses(User.get().getPlanCode(), new Callback<List<Course>>() {
-            @Override
-            public void success(List<Course> courses, Response response) {
-                mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), courses);
-                mViewPager = (ViewPager) findViewById(R.id.container);
-                mViewPager.setOffscreenPageLimit(0);
-                mViewPager.setAdapter(mSectionsPagerAdapter);
-
-                tabs = (TabLayout) findViewById(R.id.tabs);
-                tabs.setupWithViewPager(mViewPager);
-//                mSectionsPagerAdapter.setCourses(courses);
-//                mSectionsPagerAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, error.getMessage());
-            }
-        });
-
     }
 
+    private void loadStatistics() {
+        LinearLayout statistics = (LinearLayout) findViewById(R.id.statistics);
+        double avg = UserCourses.getInstance().getAverageCalification();
+        int count = UserCourses.getInstance().getApprovedCount();
+        if (count > 0) {
+            TextView awardNumber = (TextView) findViewById(R.id.average);
+            TextView countTv = (TextView) findViewById(R.id.count);
+            countTv.setText(String.valueOf(count));
+            awardNumber.setText(String.valueOf(Math.round(avg * 100.0) / 100.0));
+            initializeCircleOfCompletion();
+        } else {
+            statistics.setVisibility(View.GONE);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void initializeCircleOfCompletion() {
+        double percent = UserCourses.getInstance().getCredits() / User.get().getPlan().getCredits();
+        CircleDisplay circleDisplay = (CircleDisplay) findViewById(R.id.circleDisplay);
+        circleDisplay.setAnimDuration(1000);
+        circleDisplay.setValueWidthPercent(55f);
+        circleDisplay.setTextSize(14f);
+        circleDisplay.setDrawText(true);
+        circleDisplay.setColor(getResources().getColor(R.color.accent, null));
+        circleDisplay.setDrawInnerCircle(true);
+        circleDisplay.setFormatDigits(1);
+        circleDisplay.setTouchEnabled(true);
+        circleDisplay.setSelectionListener(this);
+        circleDisplay.setStepSize(0.5f);
+        if (percent > 0) {
+            circleDisplay.setUnit("%");
+            circleDisplay.showValue(Math.round(percent * 100), 100f, true);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -124,6 +173,21 @@ public class MyPlanActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(Cathedra item, String courseName, String teachers) {
 
+    }
+
+    @Override
+    public void onSelectionUpdate(float val, float maxval) {
+
+    }
+
+    @Override
+    public void onValueSelected(float val, float maxval) {
+
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        this.loadStatistics();
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

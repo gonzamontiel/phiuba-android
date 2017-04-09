@@ -8,9 +8,12 @@ import java.util.List;
  * Created by Gonzalo Montiel on 11/20/16.
  */
 public class Plan {
+    private static final int DEFAULT_CRED = 240;
     private String code;
     private String name = "";
     private String link = "";
+    private int credits;
+    private List<Branch> branches;
 
     private static HashMap<String, Plan> plans = new HashMap<String, Plan>();
     private static HashMap<String, String> planShortNames = new HashMap<String, String>();
@@ -110,6 +113,28 @@ public class Plan {
             names.add(p.getShortName());
         }
         return names;
+    }
+
+    public ApprovalCondition[] getAllConditions() {
+        return new ApprovalCondition[]{
+                new CreditCondition(credits)
+        };
+    }
+
+    public double getCredits() {
+        return credits > 0 ? credits : DEFAULT_CRED;
+    }
+
+    public void setCredits(int credits) {
+        this.credits = credits;
+    }
+
+    public List<Branch> getBranches() {
+        return branches;
+    }
+
+    public void setBranches(List<Branch> branchis) {
+        this.branches = branchis;
     }
 }
 

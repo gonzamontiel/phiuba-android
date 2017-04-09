@@ -81,4 +81,13 @@ public class User {
 
     public static void initialize() {
     }
+
+    public int getTotalCredits() {
+        // TODO return total amount of approved credits
+        return 0;
+    }
+
+    public Plan getPlan() {
+        return plan;
+    }
 }

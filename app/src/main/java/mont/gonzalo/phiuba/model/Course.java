@@ -19,6 +19,7 @@ public class Course implements Serializable {
     private List<String> correlatives;
     private List<Cathedra> cathedras;
     private boolean isComplete;
+    private int credits;
 
     public Course(String cCode, String cName) {
         this.planCode = User.get().getPlanCode();
@@ -154,5 +155,9 @@ public class Course implements Serializable {
             sample_data = cc;
         }
         return sample_data;
+    }
+
+    public int getCredits() {
+        return credits;
     }
 }
