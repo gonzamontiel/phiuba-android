@@ -1,20 +1,30 @@
 package mont.gonzalo.phiuba.layout;
 
+import android.app.Dialog;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.tubb.smrv.SwipeMenuLayout;
+import com.tubb.smrv.listener.SimpleSwipeSwitchListener;
 
 import java.util.List;
 
 import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.layout.CoursesFragment.OnListFragmentInteractionListener;
 import mont.gonzalo.phiuba.model.Course;
+import mont.gonzalo.phiuba.model.UserCourses;
 
 public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecyclerViewAdapter.CourseViewHolder> {
 
@@ -56,16 +66,32 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
     @Override
     public void onBindViewHolder(final CourseViewHolder holder, int position) {
         holder.mItem = mCourses.get(position);
-        holder.courseName.setText(mCourses.get(position).getName());
-        holder.courseDepartment.setText(mCourses.get(position).getDepto());
-        holder.courseIcon.setImageResource(mCourses.get(position).getImageResource());
+        holder.courseName.setText(holder.mItem.getName());
+        holder.courseDepartment.setText(holder.mItem.getDepto());
+        holder.courseIcon.setImageResource(holder.mItem.getImageResource());
         holder.status.setBackgroundColor(ActivityContext.get().getResources().getColor(
-                mCourses.get(position).getColorId(), null
+                holder.mItem.getColorId(), null
         ));
 
-        holder.rv.setOnClickListener(new View.OnClickListener() {
+        int calif = UserCourses.getInstance().getCalification(holder.mItem);
+        if (calif > 0) {
+            if (calif  >= 4 && calif  < 6) {
+                holder.awardIcon.setImageResource(R.drawable.bronce);
+            } else if (calif >= 6 && calif < 8) {
+                holder.awardIcon.setImageResource(R.drawable.plata);
+            } else {
+                holder.awardIcon.setImageResource(R.drawable.oro);
+            }
+            holder.award.setVisibility(View.VISIBLE);
+            holder.awardCalification.setVisibility(View.VISIBLE);
+            holder.awardCalification.setText(String.valueOf(calif));
+        }
+
+        holder.sml.setSwipeListener(new CourseSwipeListener(holder.mItem));
+        holder.sml.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("click", "click");
                 if (null != mListener) {
                     Animation animation1 = new AlphaAnimation(0.3f, 1.0f);
                     animation1.setDuration(200);
@@ -75,13 +101,6 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
             }
         });
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                setPosition(holder.getPosition());
-                return false;
-            }
-        });
     }
 
     @Override
@@ -89,37 +108,109 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
         return mCourses.size();
     }
 
-    public class CourseViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
+    public class CourseViewHolder extends RecyclerView.ViewHolder {
         public final View rv;
         public final TextView courseName;
         public final TextView courseDepartment;
         public final ImageView courseIcon;
         public final View status;
+        public final View award;
+        public final TextView awardCalification;
+        public final ImageView awardIcon;
         public Course mItem;
+        public SwipeMenuLayout sml;
 
         public CourseViewHolder(View itemView) {
             super(itemView);
             rv = itemView.findViewById(R.id.course_card_view);
-            rv.setOnCreateContextMenuListener(this);
             courseName = (TextView)itemView.findViewById(R.id.course_name);
             courseDepartment = (TextView)itemView.findViewById(R.id.course_description);
             courseIcon = (ImageView)itemView.findViewById(R.id.course_icon);
             status = itemView.findViewById(R.id.status);
+            award = itemView.findViewById(R.id.course_award_container);
+            awardCalification = (TextView) itemView.findViewById(R.id.course_award_calif);
+            awardIcon = (ImageView)itemView.findViewById(R.id.course_award);
+            sml = (SwipeMenuLayout) itemView.findViewById(R.id.sml);
         }
 
         @Override
         public String toString() {
             return super.toString() + " '" + courseName.getText() + "'";
         }
+    }
+
+    private class CourseSwipeListener extends SimpleSwipeSwitchListener {
+        private Course course;
+
+        public CourseSwipeListener(Course mItem) {
+            this.course = mItem;
+        }
 
         @Override
-        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-            menu.setHeaderTitle(R.string.course_context_title);
-            menu.add(0, R.string.course_context_favourite, 1, v.getResources().getString(R.string.course_context_favourite));
-            menu.add(0, R.string.course_context_approved, 1, v.getResources().getString(R.string.course_context_approved));
-            menu.add(0, R.string.course_context_studying, 1, v.getResources().getString(R.string.course_context_studying));
-            menu.add(0, R.string.course_context_schedule, 2, v.getResources().getString(R.string.course_context_schedule));
-            menu.add(0, R.string.course_context_department, 3, v.getResources().getString(R.string.course_context_department));
+        public void endMenuOpened(SwipeMenuLayout swipeMenuLayout) {
+            View v = swipeMenuLayout.findViewById(R.id.smMenuViewRight);
+            ImageView  done = (ImageView) v.findViewById(R.id.sml_action_done);
+            done.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    v.post(new Runnable() {
+                        public void run() {
+                            showCalifDialog();
+                        }
+                    });
+                }
+            });
+
+            ImageView studying = (ImageView) v.findViewById(R.id.sml_action_studying);
+            studying.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UserCourses.getInstance().addStudying(course);
+                    Toast.makeText(ActivityContext.get(), "Agregando " + course.getName() + " como estudiando.", Toast.LENGTH_LONG).show();
+                }
+            });
+
+            ImageView star = (ImageView) v.findViewById(R.id.sml_action_star);
+            star.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UserCourses.getInstance().addFavourite(course);
+                    Toast.makeText(ActivityContext.get(), "Agregando " + course.getName() + " como favorita.", Toast.LENGTH_LONG).show();
+                }
+            });
         }
+
+        public void showCalifDialog() {
+            final Dialog d = new Dialog(ActivityContext.get());
+            d.setTitle("Nota");
+            d.setContentView(R.layout.calification_dialog);
+            ImageButton bDone = (ImageButton) d.findViewById(R.id.buttonDone);
+            ImageButton bCancel = (ImageButton) d.findViewById(R.id.buttonCancel);
+
+            final NumberPicker np = (NumberPicker) d.findViewById(R.id.numberPicker);
+            np.setMaxValue(10);
+            np.setMinValue(4);
+            np.setWrapSelectorWheel(false);
+            bDone.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (course != null) {
+                        UserCourses.getInstance().addApproved(course, np.getValue());
+                        Toast.makeText(ActivityContext.get(),
+                                "Agregando " + course.getName() + " como aprobada con " + np.getValue(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                    d.dismiss();
+                }
+            });
+            bCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    d.dismiss();
+                }
+            });
+            d.show();
+        }
+
     }
 }
