@@ -23,7 +23,7 @@ import mont.gonzalo.phiuba.model.UserCourses;
 public class SIUImporter {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void loadApprovedCourses(WebView myWebView) {
+    public void loadApprovedCourses(final WebView myWebView) {
         myWebView.evaluateJavascript(
                 "(function() { return ('<html>' + window.frames[3].document.body.innerHTML + '</html>'); })();",
                 new ValueCallback<String>() {
