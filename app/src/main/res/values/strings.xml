@@ -149,6 +149,6 @@
         No hay materias en esta sección aún.
     </string>
     <string name="myplan_placeholder_text">
-        Probá agregarlas desde el menú contextual en el listado de Materias, o importando tu Historia Académica desde SIU (beta)
+        Probá agregarlas haciendo swipe a la izquierda en la materia que quieras, o importando tu Historia Académica desde SIU (beta)
     </string>
 </resources>
