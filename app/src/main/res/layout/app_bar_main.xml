@@ -21,8 +21,8 @@
 
             <ProgressBar
                 android:id="@+id/progress_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="end"
                 android:foregroundGravity="center"
                 android:indeterminate="true"
