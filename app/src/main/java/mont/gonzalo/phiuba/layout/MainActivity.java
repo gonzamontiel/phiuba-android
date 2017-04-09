@@ -394,7 +394,7 @@ public class MainActivity extends AppCompatActivity
                 showConnectionIndicator();
             }
         }
-        progressBar.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.GONE);
     }
 
     public void showDepartment(Department dep) {
