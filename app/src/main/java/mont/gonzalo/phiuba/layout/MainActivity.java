@@ -165,6 +165,17 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        String shortName = User.get().getPlan().getShortName();
+
+        int count = 0;
+        for (String name: Plan.getAvailableNames()) {
+            if (name == shortName) {
+                break;
+            }
+            count++;
+        }
+        spinner.setSelection(count);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             private boolean firstTime = true;
 
