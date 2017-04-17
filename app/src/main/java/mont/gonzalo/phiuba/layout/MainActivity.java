@@ -73,9 +73,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ActivityContext.set(this);
 
-        progressBar = (ProgressBar) findViewById(R.id.progress_spinner);
-        progressBar.setVisibility(View.VISIBLE);
-
+        showProgressBar();
         DataFetcher.getInstance().addObserver(this);
 
         User.initialize();
@@ -95,6 +93,18 @@ public class MainActivity extends AppCompatActivity
         // Check connection and show snack message if necessary
         checkNetwork();
 
+    }
+
+    private void showProgressBar() {
+        progressBar = (ProgressBar) findViewById(R.id.progress_spinner);
+        progressBar.setVisibility(View.VISIBLE);
+        // Hide after 5 seconds
+        new android.os.Handler().postDelayed(
+            new Runnable() {
+                public void run() {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }, 5000);
     }
 
     private void initializeDrawer() {
