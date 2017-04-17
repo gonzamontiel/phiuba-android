@@ -137,11 +137,9 @@ public class MainActivity extends AppCompatActivity
 
     private void fillSpinnerWithPlans(NavigationView navigationView) {
         final Spinner spinner = (Spinner) navigationView.getHeaderView(0).findViewById(R.id.spinner);
-
         DataFetcher.getInstance().getPlans(new Callback<List<Plan>>() {
             @Override
             public void success(List<Plan> plans, Response response) {
-                Log.d("plans", String.valueOf(plans));
                 Plan.setAvailablePlans(plans);
                 ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.menu_spinner_item_first, Plan.getAvailableNames());
                 spinnerArrayAdapter.setDropDownViewResource(R.layout.menu_spinner_item);
@@ -151,22 +149,28 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void failure(RetrofitError error) {
                 String[] defaults = new String[] {Plan.getDefault()};
-                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.menu_spinner_item, defaults);
-                spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.menu_spinner_item_first, defaults);
+                spinnerArrayAdapter.setDropDownViewResource(R.layout.menu_spinner_item);
                 spinner.setAdapter(spinnerArrayAdapter);
             }
         });
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            private boolean firstTime = true;
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (firstTime) {
+                    firstTime = false;
+                    return;
+                }
                 String data = spinner.getItemAtPosition(position).toString();
                 Plan p = Plan.byShortName(data);
                 User.get().selectPlan(p);
-                Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
                 UserCourses.getInstance().updateCourses();
                 currentFragment.reset();
                 drawer.closeDrawers();
+                Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
             }
 
             @Override
