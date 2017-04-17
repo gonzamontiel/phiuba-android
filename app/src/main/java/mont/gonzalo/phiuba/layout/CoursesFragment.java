@@ -20,7 +20,6 @@ import mont.gonzalo.phiuba.api.DataFetcher;
 import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.Department;
 import mont.gonzalo.phiuba.model.User;
-import mont.gonzalo.phiuba.model.UserCourses;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -130,19 +129,6 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
             return super.onContextItemSelected(item);
         }
         switch (item.getItemId()) {
-            case R.string.course_context_favourite:
-                opcion = R.string.favourite;
-                UserCourses.getInstance().addFavourite(course);
-                break;
-            case R.string.course_context_studying:
-                opcion = R.string.studying;
-                UserCourses.getInstance().addStudying(course);
-                break;
-            case R.string.course_context_approved:
-                opcion = R.string.approved;
-                Integer calif = 10; // FIXME Launch popup to select calif
-                UserCourses.getInstance().addApproved(course, calif);
-                break;
             case R.string.course_context_department:
                 DataFetcher.getInstance().getDepartment(course.getDepCode(), new Callback<Department>() {
                     @Override

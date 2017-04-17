@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -20,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -27,16 +29,10 @@ import java.util.Observable;
 import java.util.Observer;
 
 import mont.gonzalo.phiuba.R;
-import mont.gonzalo.phiuba.api.DataFetcher;
 import mont.gonzalo.phiuba.model.Cathedra;
 import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.User;
 import mont.gonzalo.phiuba.model.UserCourses;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-
-import static android.content.ContentValues.TAG;
 
 public class MyPlanActivity extends AppCompatActivity
         implements CoursesFragment.OnListFragmentInteractionListener,
@@ -58,33 +54,35 @@ public class MyPlanActivity extends AppCompatActivity
         setTitle(getString(R.string.my_plan_title));
         ActivityContext.set(this);
         initializaToolbar();
-        loadStatistics();
-        initializeCourses();
         loadFloatingButton();
         UserCourses.getInstance().addObserver(this);
+        if (UserCourses.getInstance().isReady()) {
+            initializeCourses();
+            loadStatistics();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        UserCourses.getInstance().saveToSharedPrefs();
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    private void initializeCourses() {
+        if (mSectionsPagerAdapter == null) {
+            mSectionsPagerAdapter = new SectionsPagerAdapter(
+                    getSupportFragmentManager(),
+                    UserCourses.getInstance().getAll());
+            mViewPager = (ViewPager) findViewById(R.id.container);
+            mViewPager.setAdapter(mSectionsPagerAdapter);
+            tabs = (TabLayout) findViewById(R.id.tabs);
+            tabs.setupWithViewPager(mViewPager);
+        }
     }
 
     private void initializaToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-    }
-
-    private void initializeCourses() {
-        DataFetcher.getInstance().getCourses(User.get().getPlanCode(), new Callback<List<Course>>() {
-            @Override
-            public void success(List<Course> courses, Response response) {
-                mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), courses);
-                mViewPager = (ViewPager) findViewById(R.id.container);
-                mViewPager.setAdapter(mSectionsPagerAdapter);
-                tabs = (TabLayout) findViewById(R.id.tabs);
-                tabs.setupWithViewPager(mViewPager);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, error.getMessage());
-            }
-        });
     }
 
     private void loadFloatingButton() {
@@ -96,7 +94,7 @@ public class MyPlanActivity extends AppCompatActivity
                 new AlertDialog.Builder(app)
                         .setMessage(getString(R.string.myplan_confirm_import_text))
                         .setTitle(getString(R.string.myplan_confirm_import_title))
-                        .setPositiveButton("Ok, no drama!", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Importar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(app, ImportSIUActivity.class);
@@ -112,16 +110,13 @@ public class MyPlanActivity extends AppCompatActivity
     private void loadStatistics() {
         LinearLayout statistics = (LinearLayout) findViewById(R.id.statistics);
         double avg = UserCourses.getInstance().getAverageCalification();
-        int count = UserCourses.getInstance().getApprovedCount();
-        if (count > 0) {
-            TextView awardNumber = (TextView) findViewById(R.id.average);
-            TextView countTv = (TextView) findViewById(R.id.count);
-            countTv.setText(String.valueOf(count));
-            awardNumber.setText(String.valueOf(Math.round(avg * 100.0) / 100.0));
-            initializeCircleOfCompletion();
-        } else {
-            statistics.setVisibility(View.GONE);
-        }
+        double count = UserCourses.getInstance().getApprovedCount();
+        TextView awardNumber = (TextView) findViewById(R.id.average);
+        TextView countTv = (TextView) findViewById(R.id.count);
+        countTv.setText(String.valueOf(count));
+        awardNumber.setText(String.valueOf(Math.round(avg * 100.0) / 100.0));
+        initializeCircleOfCompletion();
+        statistics.setVisibility(View.VISIBLE);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -138,10 +133,13 @@ public class MyPlanActivity extends AppCompatActivity
         circleDisplay.setTouchEnabled(true);
         circleDisplay.setSelectionListener(this);
         circleDisplay.setStepSize(0.5f);
-        if (percent > 0) {
-            circleDisplay.setUnit("%");
-            circleDisplay.showValue(Math.round(percent * 100), 100f, true);
-        }
+        circleDisplay.setUnit("%");
+        circleDisplay.showValue(Math.round(percent * 100), 100f, true);
+    }
+
+    public void hideProgressBar() {
+        ProgressBar p = (ProgressBar) findViewById(R.id.progress);
+        p.setVisibility(View.GONE);
     }
 
     @Override
@@ -157,7 +155,6 @@ public class MyPlanActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -187,7 +184,9 @@ public class MyPlanActivity extends AppCompatActivity
 
     @Override
     public void update(Observable o, Object arg) {
-        this.loadStatistics();
+        hideProgressBar();
+        initializeCourses();
+        loadStatistics();
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

@@ -33,11 +33,10 @@ public class CathedrasCombination implements Serializable {
 
     public void fillWith(UserCourses userCourses) {
         maxCombinations = 1;
-        for (String course: userCourses.getStudyingCourses().keySet()) {
-            UserCourse uc = userCourses.getStudyingCourses().get(course);
-            List<Cathedra> css = uc.getCourse().getCathedras();
-            cathedras.put(course, css);
-            sizes.put(course, css.size());
+        for (String courseCode: userCourses.getStudyingCourses().keySet()) {
+            List<Cathedra> css = userCourses.getCourse(courseCode).getCathedras();
+            cathedras.put(courseCode, css);
+            sizes.put(courseCode, css.size());
             maxCombinations *= css.size();
         }
         Set<Map.Entry<String, Integer>> set = sizes.entrySet();

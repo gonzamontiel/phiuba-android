@@ -12,10 +12,10 @@ import retrofit.http.Query;
  */
 public interface CourseAPI {
     @GET("/api/courses")
-    public void get(@Query("planCode") String plan, Callback<List<Course>> response);
+    void get(@Query("planCode") String plan, Callback<List<Course>> response);
 
     @GET("/api/courses")
-    public void search(@Query("search") String query, @Query("planCode") String plan, Callback<List<Course>> response);
+    void search(@Query("search") String query, @Query("planCode") String plan, Callback<List<Course>> response);
 
     @GET("/api/courses")
     void byDepartment(@Query("depCode") String depCode, Callback<List<Course>> response);

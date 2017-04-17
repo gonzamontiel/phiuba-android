@@ -2,6 +2,7 @@ package mont.gonzalo.phiuba.layout;
 
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 
@@ -68,15 +69,17 @@ public class SIUImporter {
                         e.printStackTrace();
                     }
 
-                    Integer calification = null;
+                    Double calification = null;
+                    boolean last = (i == rows.size() - 1);
                     try {
-                        calification = Integer.parseInt(calif);
+                        calification = Double.parseDouble(calif);
+                        UserCourses.getInstance().addApproved(new Course(code, name), calification, last);
                     } catch (NumberFormatException e) {
-                        calification = 0;
+                        Log.d("SIUImporter", "Coutse could not be added, calification was: " + calif);
                     }
-                    UserCourses.getInstance().addApproved(new Course(code, name), calification);
                 }
             }
+            UserCourses.getInstance().saveToSharedPrefs();
         }
     }
 }

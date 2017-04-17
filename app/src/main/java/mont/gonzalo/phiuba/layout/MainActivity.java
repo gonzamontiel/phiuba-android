@@ -48,6 +48,7 @@ import mont.gonzalo.phiuba.model.Event;
 import mont.gonzalo.phiuba.model.News;
 import mont.gonzalo.phiuba.model.Plan;
 import mont.gonzalo.phiuba.model.User;
+import mont.gonzalo.phiuba.model.UserCourses;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity
     private SearchableFragment currentFragment;
     private ProgressBar progressBar;
     private DrawerLayout drawer;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,15 +85,16 @@ public class MainActivity extends AppCompatActivity
         showFloatingButton();
         initializeDrawer();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(getDefaultItemSelected());
         navigationView.setNavigationItemSelectedListener(this);
-
         fillSpinnerWithPlans(navigationView);
         // Search on keystrokes
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 
         // Check connection and show snack message if necessary
         checkNetwork();
+
     }
 
     private void initializeDrawer() {
@@ -138,6 +141,7 @@ public class MainActivity extends AppCompatActivity
         DataFetcher.getInstance().getPlans(new Callback<List<Plan>>() {
             @Override
             public void success(List<Plan> plans, Response response) {
+                Log.d("plans", String.valueOf(plans));
                 Plan.setAvailablePlans(plans);
                 ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.menu_spinner_item_first, Plan.getAvailableNames());
                 spinnerArrayAdapter.setDropDownViewResource(R.layout.menu_spinner_item);
@@ -160,6 +164,7 @@ public class MainActivity extends AppCompatActivity
                 Plan p = Plan.byShortName(data);
                 User.get().selectPlan(p);
                 Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
+                UserCourses.getInstance().updateCourses();
                 currentFragment.reset();
                 drawer.closeDrawers();
             }
@@ -173,6 +178,10 @@ public class MainActivity extends AppCompatActivity
 
     private Class getDefaultFragmentClass() {
         return NewsFragment.class;
+    }
+
+    private int getDefaultItemSelected() {
+        return R.id.nav_events;
     }
 
     private void checkNetwork() {
@@ -251,6 +260,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_depts) {
             newOne = DepartmentsFragment.newInstance(1, this);
         } else if (id == R.id.nav_myplan) {
+            UserCourses.getInstance().printSummary();
             Intent intent = new Intent(this, MyPlanActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_myweek) {

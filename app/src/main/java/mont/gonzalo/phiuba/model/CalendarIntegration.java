@@ -15,7 +15,6 @@ import java.util.HashMap;
 public class CalendarIntegration {
     private static final HashMap<String, String> daysHash = createDaysHash();
     private static final String TAG = "CalendarIntegration";
-    private static final int Jan = 1;
 
     private static HashMap<String, String> createDaysHash() {
         HashMap<String, String> hash = new HashMap<String, String>();

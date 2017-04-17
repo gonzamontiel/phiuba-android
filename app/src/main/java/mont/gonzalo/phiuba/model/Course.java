@@ -9,6 +9,7 @@ import java.util.List;
  */
 public class Course implements Serializable {
     public static final String COURSE_DODE_TAG = "course_code";
+    private static final int DEFAULT_CREDITS = 6;
     private String code;
     private String depCode;
     private String planCode;
@@ -16,16 +17,14 @@ public class Course implements Serializable {
     private String link;
     private String depto;
     private Boolean required;
+    private int credits;
     private List<String> correlatives;
     private List<Cathedra> cathedras;
-    private boolean isComplete;
-    private int credits;
 
     public Course(String cCode, String cName) {
         this.planCode = User.get().getPlanCode();
         this.name = cName;
         this.code = cCode;
-        this.isComplete = false;
     }
 
     public Course(String name, String depCode, String code, String depto) {
@@ -33,7 +32,6 @@ public class Course implements Serializable {
         this.code = code;
         this.depCode = depCode;
         this.depto = depto;
-        this.isComplete = false;
     }
 
     public List<Cathedra> getCathedras() {
@@ -158,6 +156,10 @@ public class Course implements Serializable {
     }
 
     public int getCredits() {
-        return credits;
+        return credits > 0 ? credits : DEFAULT_CREDITS;
+    }
+
+    public void setCredits(int credits) {
+        this.credits = credits;
     }
 }

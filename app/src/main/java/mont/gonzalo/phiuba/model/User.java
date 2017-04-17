@@ -20,7 +20,6 @@ public class User {
     private Plan plan;
     private String firstName;
     private String lastName;
-    private UserCourses userCourses;
 
     public User(String firstName, String lastName) {
         this.firstName = firstName;
@@ -83,7 +82,6 @@ public class User {
     }
 
     public int getTotalCredits() {
-        // TODO return total amount of approved credits
         return 0;
     }
 

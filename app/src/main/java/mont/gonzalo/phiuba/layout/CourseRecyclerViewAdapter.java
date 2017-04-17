@@ -12,10 +12,10 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.shawnlin.numberpicker.NumberPicker;
 import com.tubb.smrv.SwipeMenuLayout;
 import com.tubb.smrv.listener.SimpleSwipeSwitchListener;
 
@@ -73,21 +73,10 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
                 holder.mItem.getColorId(), null
         ));
 
-        int calif = UserCourses.getInstance().getCalification(holder.mItem);
-        if (calif > 0) {
-            if (calif  >= 4 && calif  < 6) {
-                holder.awardIcon.setImageResource(R.drawable.bronce);
-            } else if (calif >= 6 && calif < 8) {
-                holder.awardIcon.setImageResource(R.drawable.plata);
-            } else {
-                holder.awardIcon.setImageResource(R.drawable.oro);
-            }
-            holder.award.setVisibility(View.VISIBLE);
-            holder.awardCalification.setVisibility(View.VISIBLE);
-            holder.awardCalification.setText(String.valueOf(calif));
-        }
+        double calif = UserCourses.getInstance().getCalification(holder.mItem);
+        holder.updateAward(calif);
 
-        holder.sml.setSwipeListener(new CourseSwipeListener(holder.mItem));
+        holder.sml.setSwipeListener(new CourseSwipeListener(holder));
         holder.sml.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,6 +91,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
         });
 
     }
+
 
     @Override
     public int getItemCount() {
@@ -133,6 +123,24 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
             sml = (SwipeMenuLayout) itemView.findViewById(R.id.sml);
         }
 
+        public void updateAward(double calif) {
+            if (calif > 0) {
+                if (calif  >= 4 && calif  < 6) {
+                    awardIcon.setImageResource(R.drawable.bronce);
+                } else if (calif >= 6 && calif < 8) {
+                    awardIcon.setImageResource(R.drawable.plata);
+                } else {
+                    awardIcon.setImageResource(R.drawable.oro);
+                }
+                award.setVisibility(View.VISIBLE);
+                awardCalification.setVisibility(View.VISIBLE);
+                awardCalification.setText(String.valueOf(Math.round(calif)));
+            } else {
+                award.setVisibility(View.GONE);
+                awardCalification.setVisibility(View.GONE);
+            }
+        }
+
         @Override
         public String toString() {
             return super.toString() + " '" + courseName.getText() + "'";
@@ -141,9 +149,11 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
 
     private class CourseSwipeListener extends SimpleSwipeSwitchListener {
         private Course course;
+        private CourseViewHolder holder;
 
-        public CourseSwipeListener(Course mItem) {
-            this.course = mItem;
+        public CourseSwipeListener(CourseViewHolder holder) {
+            this.course = holder.mItem;
+            this.holder = holder;
         }
 
         @Override
@@ -166,6 +176,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
                 @Override
                 public void onClick(View v) {
                     UserCourses.getInstance().addStudying(course);
+                    holder.updateAward(-1);
                     Toast.makeText(ActivityContext.get(), "Agregando " + course.getName() + " como estudiando.", Toast.LENGTH_LONG).show();
                 }
             });
@@ -175,6 +186,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
                 @Override
                 public void onClick(View v) {
                     UserCourses.getInstance().addFavourite(course);
+                    holder.updateAward(-1);
                     Toast.makeText(ActivityContext.get(), "Agregando " + course.getName() + " como favorita.", Toast.LENGTH_LONG).show();
                 }
             });
@@ -182,20 +194,18 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
 
         public void showCalifDialog() {
             final Dialog d = new Dialog(ActivityContext.get());
-            d.setTitle("Nota");
             d.setContentView(R.layout.calification_dialog);
+
             ImageButton bDone = (ImageButton) d.findViewById(R.id.buttonDone);
             ImageButton bCancel = (ImageButton) d.findViewById(R.id.buttonCancel);
 
-            final NumberPicker np = (NumberPicker) d.findViewById(R.id.numberPicker);
-            np.setMaxValue(10);
-            np.setMinValue(4);
-            np.setWrapSelectorWheel(false);
+            final NumberPicker np = (NumberPicker) d.findViewById(R.id.number_picker);
             bDone.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (course != null) {
-                        UserCourses.getInstance().addApproved(course, np.getValue());
+                        holder.updateAward(np.getValue());
+                        UserCourses.getInstance().addApproved(course, (double) np.getValue());
                         Toast.makeText(ActivityContext.get(),
                                 "Agregando " + course.getName() + " como aprobada con " + np.getValue(),
                                 Toast.LENGTH_LONG).show();

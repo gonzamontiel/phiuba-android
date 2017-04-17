@@ -27,4 +27,8 @@ public enum CourseStatus {
         mapColors.put(AVAILABLE, R.color.course_available);
         mapColors.put(NOT_AVAILABLE, R.color.course_not_available);
     }
+
+    public static int getByStatus(CourseStatus courseStatus) {
+            return mapColors.get(courseStatus);
+    }
 }
