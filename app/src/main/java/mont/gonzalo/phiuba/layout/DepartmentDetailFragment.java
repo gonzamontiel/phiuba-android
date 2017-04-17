@@ -27,8 +27,7 @@ import retrofit.client.Response;
 
 public class DepartmentDetailFragment extends SearchableFragment implements Serializable {
     private static final String TAG = "DepartmentDetailFragment";
-    private OnListFragmentInteractionListener mListListener;
-    private Department mDepartment;
+    private transient OnListFragmentInteractionListener mListListener;
     private transient TextView nameTextView;
     private transient ImageView deptoIcon;
     private transient RecyclerView coursesView;
@@ -40,7 +39,7 @@ public class DepartmentDetailFragment extends SearchableFragment implements Seri
     private transient TextView caAuxTextView;
     private transient TextView caGraduatedTextView;
     private transient TextView caStudentsTextView;
-    private transient TextView descTextView;
+    private Department mDepartment;
 
     public DepartmentDetailFragment() {
     }
@@ -54,8 +53,17 @@ public class DepartmentDetailFragment extends SearchableFragment implements Seri
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("department", mDepartment);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mDepartment = (Department) savedInstanceState.getSerializable("department");
+        }
     }
 
     @Override
@@ -67,7 +75,6 @@ public class DepartmentDetailFragment extends SearchableFragment implements Seri
         deptoIcon = (ImageView) view.findViewById(R.id.icon);
         deptoIcon.setImageResource(mDepartment.getImageResource());
 
-        AutofitHelper.create(nameTextView);
         coursesView = (RecyclerView) view.findViewById(R.id.courses_view);
         availableCoursesTextView = (TextView) view.findViewById(R.id.availableCourses);
 
@@ -80,7 +87,8 @@ public class DepartmentDetailFragment extends SearchableFragment implements Seri
         caStudentsTextView = (TextView) view.findViewById(R.id.students);
 
         nameTextView.setText(mDepartment.getName());
-        codeTextView.setText( "COD: " + mDepartment.getCode() + (mDepartment.getAltCode().isEmpty()? "" : "(o " + mDepartment.getAltCode()+ " para nuevos planes)"));
+        AutofitHelper.create(nameTextView);
+        codeTextView.setText(mDepartment.getCode() + (mDepartment.getAltCode().isEmpty()? "" : " (" + mDepartment.getAltCode()+ " para nuevos planes)"));
         LayoutHelper.setTextViewHTML(contactInfoTextView, mDepartment.getContacto(), getActivity());
         mailtoTextView.setText(mDepartment.getMailto());
         caTeachersTextView.setText(mDepartment.getDocentesConsejo());
@@ -95,12 +103,11 @@ public class DepartmentDetailFragment extends SearchableFragment implements Seri
                 hs.addAll(courses);
                 courses.clear();
                 courses.addAll(hs);
-                Log.d("courses", String.valueOf(courses));
                 RecyclerView.Adapter adapter = new CourseRecyclerViewAdapter(courses,
                         (CoursesFragment.OnListFragmentInteractionListener) getActivity());
                 coursesView.setAdapter(adapter);
-                registerForContextMenu(coursesView);
-                availableCoursesTextView.setText(courses.size() + " materias.");
+                availableCoursesTextView.setText(courses.size() + " materias");
+                availableCoursesTextView.setVisibility(View.VISIBLE);
             }
 
             @Override

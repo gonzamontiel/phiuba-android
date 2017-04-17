@@ -110,12 +110,12 @@ public class Course implements Serializable {
         return Department.getIconByDepartmentCode(this.getDepCode());
     }
 
-    public boolean isAvailable(User user) {
-        return true;
+    public boolean isAvailable() {
+        return UserCourses.getInstance().isAvailable(this);
     }
 
     public int getColorId() {
-        return isAvailable(User.get())? CourseStatus.getByStatus(CourseStatus.AVAILABLE) :
+        return isAvailable()? CourseStatus.getByStatus(CourseStatus.AVAILABLE) :
                 CourseStatus.getByStatus(CourseStatus.NOT_AVAILABLE);
     }
 

@@ -57,6 +57,7 @@ public class UserCourses extends Observable implements Serializable {
 
     private UserCourses() {
         this("", "", "");
+        approvedCourses.put("CBC", 0.0);
     }
 
     private void loadCourses(final String jsonApproved, final String jsonStudying, final String jsonFavorite) {
@@ -78,6 +79,7 @@ public class UserCourses extends Observable implements Serializable {
                 if (!jsonFavorite.isEmpty()) {
                     favouriteCourses = gson.fromJson(jsonFavorite, favouriteCourses.getClass());
                 }
+                approvedCourses.put("CBC", 0.0);
                 _ready = true;
                 doNotifyObservers();
             }
@@ -235,21 +237,6 @@ public class UserCourses extends Observable implements Serializable {
         return -1;
     }
 
-    public static UserCourses getFromSharedPrefs() {
-        Context context = ActivityContext.get();
-        if (context != null) {
-            SharedPreferences mPrefs = context.getSharedPreferences(
-                    context.getResources().getString(R.string.shared_prefs), MODE_PRIVATE);
-            String key = context.getResources().getString(R.string.pref_user_courses);
-            String jsonApproved = mPrefs.getString(key + "_approved", "");
-            String jsonStudying = mPrefs.getString(key + "_studying", "");
-            String jsonFavorite = mPrefs.getString(key + "_favorite", "");
-            return new UserCourses(jsonApproved, jsonStudying, jsonFavorite);
-        } else {
-            return null;
-        }
-    }
-
     public List<Course> getAll() {
         return new ArrayList<Course>(loadedCourses.values());
     }
@@ -258,11 +245,20 @@ public class UserCourses extends Observable implements Serializable {
         return _ready;
     }
 
+    public Course getCourse(String courseCode) {
+        return loadedCourses.get(courseCode);
+    }
+
+    public void setCourses(List<Course> courses) {
+        for (Course c: courses) {
+            addCourse(c.getCode(), c);
+        }
+    }
+
     public void resetPrefs() {
         Context context = ActivityContext.get();
         SharedPreferences mPrefs = context.getSharedPreferences(
                 context.getResources().getString(R.string.shared_prefs), MODE_PRIVATE);
-
         SharedPreferences.Editor prefsEditor = mPrefs.edit();
         String key = context.getResources().getString(R.string.pref_user_courses);
         prefsEditor.remove(key + "_approved");
@@ -286,14 +282,19 @@ public class UserCourses extends Observable implements Serializable {
         prefsEditor.commit();
     }
 
-    public Course getCourse(String courseCode) {
-        return loadedCourses.get(courseCode);
-    }
 
-    public void setCourses(List<Course> courses) {
-        for (Course c: courses) {
-            addCourse(c.getCode(), c);
+    public static UserCourses getFromSharedPrefs() {
+        Context context = ActivityContext.get();
+        if (context != null) {
+            SharedPreferences mPrefs = context.getSharedPreferences(
+                    context.getResources().getString(R.string.shared_prefs), MODE_PRIVATE);
+            String key = context.getResources().getString(R.string.pref_user_courses);
+            String jsonApproved = mPrefs.getString(key + "_approved", "");
+            String jsonStudying = mPrefs.getString(key + "_studying", "");
+            String jsonFavorite = mPrefs.getString(key + "_favorite", "");
+            return new UserCourses(jsonApproved, jsonStudying, jsonFavorite);
+        } else {
+            return null;
         }
     }
-
 }

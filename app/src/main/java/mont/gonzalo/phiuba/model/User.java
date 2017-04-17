@@ -28,6 +28,7 @@ public class User {
 
     public void selectPlan(Plan plan) {
         this.plan = plan;
+        plan.saveToSharedPrefs();
     }
 
     public List<Course> getApprovedCourses() {
@@ -43,7 +44,7 @@ public class User {
     public static User getMock() {
         if (mock_instance == null) {
             mock_instance = new User("Harry", "Potter");
-            mock_instance.selectPlan(Plan.byCode(Plan.getDefault()));
+            mock_instance.plan = Plan.byCode(Plan.getFromSharedPrefs());
         }
         return mock_instance;
     }

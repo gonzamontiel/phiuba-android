@@ -89,7 +89,6 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
                 }
             }
         });
-
     }
 
 
@@ -163,11 +162,17 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
             done.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    v.post(new Runnable() {
-                        public void run() {
-                            showCalifDialog();
-                        }
-                    });
+                    if (course.isAvailable()) {
+                        v.post(new Runnable() {
+                            public void run() {
+                                showCalifDialog();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(ActivityContext.get(),
+                                "No podés cursar esta materia según tus correlativas. Chequea que tengas " + String.valueOf(course.getCorrelatives()) + " aprobadas",
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
             });
 

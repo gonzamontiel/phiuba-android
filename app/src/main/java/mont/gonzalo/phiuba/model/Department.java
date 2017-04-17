@@ -24,6 +24,7 @@ public class Department implements Serializable {
     String graduadosConsejo;
     @SerializedName("CA-alumnos")
     String alumnosConsejo;
+    private int materias = 10;
 
     public String getCode() {
         return code;
@@ -55,6 +56,10 @@ public class Department implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setMaterias(int materias) {
+        this.materias = materias;
     }
 
     public String getMailto() {
@@ -138,6 +143,6 @@ public class Department implements Serializable {
         } else if (contacto.contains("Heras")) {
             sede = "Las Heras";
         }
-        return "10 materias." + (!sede.isEmpty() ? "Sede " + sede : "");
+        return ( materias > 0 ? materias + " materias. " : "") + (!sede.isEmpty() ? "Sede " + sede : "");
     }
 }

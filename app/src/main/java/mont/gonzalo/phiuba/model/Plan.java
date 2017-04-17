@@ -1,8 +1,16 @@
 package mont.gonzalo.phiuba.model;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import mont.gonzalo.phiuba.R;
+import mont.gonzalo.phiuba.layout.ActivityContext;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Gonzalo Montiel on 11/20/16.
@@ -135,6 +143,25 @@ public class Plan {
 
     public void setBranches(List<Branch> branchis) {
         this.branches = branchis;
+    }
+
+    public static String getFromSharedPrefs() {
+        Context context = ActivityContext.get();
+        if (context != null) {
+            SharedPreferences mPrefs = context.getSharedPreferences(
+                    context.getResources().getString(R.string.shared_prefs), MODE_PRIVATE);
+            return mPrefs.getString("plan", getDefault());
+        }
+        return getDefault();
+    }
+
+    public void saveToSharedPrefs() {
+        Context context = ActivityContext.get();
+        SharedPreferences mPrefs = context.getSharedPreferences(
+                context.getResources().getString(R.string.shared_prefs), MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        prefsEditor.putString("plan", this.getCode());
+        prefsEditor.commit();
     }
 }
 
