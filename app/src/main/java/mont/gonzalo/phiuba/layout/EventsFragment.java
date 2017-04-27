@@ -28,7 +28,7 @@ public class EventsFragment extends SearchableFragment implements Serializable {
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
     private transient OnListFragmentInteractionListener mListListener;
-    private transient EventsRecyclerViewAdapter mAdapter;
+    private transient EventsAdapter mAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -74,7 +74,7 @@ public class EventsFragment extends SearchableFragment implements Serializable {
                 public void success(List<Event> events, Response response) {
                     Log.d(TAG, String.valueOf(events.get(0).getParsedDate()));
                     if (events.size() > 0) {
-                        mAdapter = new EventsRecyclerViewAdapter(events, mListListener);
+                        mAdapter = new EventsAdapter(events, mListListener);
                         recyclerView.setAdapter(mAdapter);
                         mListListener = (EventsFragment.OnListFragmentInteractionListener) getActivity();
                         registerForContextMenu(recyclerView);
@@ -115,7 +115,7 @@ public class EventsFragment extends SearchableFragment implements Serializable {
     public boolean onContextItemSelected(MenuItem item) {
         int position = -1;
         try {
-            position = ((EventsRecyclerViewAdapter)mAdapter).getPosition();
+            position = ((EventsAdapter)mAdapter).getPosition();
         } catch (Exception e) {
             Log.d(TAG, e.getLocalizedMessage(), e);
             return super.onContextItemSelected(item);

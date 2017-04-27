@@ -115,57 +115,51 @@ public class ScheduleSlot {
         List<WeekViewEvent> slots = new ArrayList<WeekViewEvent>();
 
         ScheduleSlot sslot = new ScheduleSlot();
-        sslot.setName("Física I");
+        sslot.setName(null);
         sslot.setColor("#64dd17");
         sslot.setDayOfWeek(1);
         sslot.setStartTime("19:00");
         sslot.setEndTime("22:00");
-        Log.d("mat", sslot.getName());
         slots.add(sslot.toWeekViewEvent());
 
         sslot = new ScheduleSlot();
-        sslot.setName("Física I");
+        sslot.setName(null);
         sslot.setColor("#64dd17");
         sslot.setDayOfWeek(4);
         sslot.setStartTime("19:00");
         sslot.setEndTime("22:00");
-        Log.d("mat", sslot.getName());
         slots.add(sslot.toWeekViewEvent());
 
         sslot = new ScheduleSlot();
-        sslot.setName("Análisis II");
+        sslot.setName(null);
         sslot.setColor("#64b5f6");
         sslot.setDayOfWeek(2);
         sslot.setStartTime("15:00");
         sslot.setEndTime("19:00");
-        Log.d("mat", sslot.getName());
         slots.add(sslot.toWeekViewEvent());
 
         sslot = new ScheduleSlot();
-        sslot.setName("Análisis II");
+        sslot.setName(null);
         sslot.setColor("#64b5f6");
         sslot.setDayOfWeek(3);
         sslot.setStartTime("19:00");
         sslot.setEndTime("23:00");
-        Log.d("mat", sslot.getName());
         slots.add(sslot.toWeekViewEvent());
 
         sslot = new ScheduleSlot();
-        sslot.setName("Algebra II");
+        sslot.setName(null);
         sslot.setColor("#e53935");
         sslot.setDayOfWeek(6);
         sslot.setStartTime("19:00");
         sslot.setEndTime("22:00");
-        Log.d("mat", sslot.getName());
         slots.add(sslot.toWeekViewEvent());
 
         sslot = new ScheduleSlot();
-        sslot.setName("Algebra II");
+        sslot.setName(null);
         sslot.setColor("#e53935");
         sslot.setDayOfWeek(4);
         sslot.setStartTime("14:00");
         sslot.setEndTime("18:00");
-        Log.d("mat", sslot.getName());
         slots.add(sslot.toWeekViewEvent());
 
         return slots;

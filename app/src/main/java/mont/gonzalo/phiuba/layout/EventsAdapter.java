@@ -16,7 +16,7 @@ import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.layout.EventsFragment.OnListFragmentInteractionListener;
 import mont.gonzalo.phiuba.model.Event;
 
-public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecyclerViewAdapter.EventViewHolder> {
+public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
 
     private final List<Event> mEvents;
     private final OnListFragmentInteractionListener mListener;
@@ -30,7 +30,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         this.position = position;
     }
 
-    public EventsRecyclerViewAdapter(List<Event> event, OnListFragmentInteractionListener mListener) {
+    public EventsAdapter(List<Event> event, OnListFragmentInteractionListener mListener) {
         mEvents = event;
         this.mListener = mListener;
     }

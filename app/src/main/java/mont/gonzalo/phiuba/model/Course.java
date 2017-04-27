@@ -1,14 +1,21 @@
 package mont.gonzalo.phiuba.model;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+
+import mont.gonzalo.phiuba.api.DataFetcher;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Gonzalo Montiel on 10/10/16.
  */
 public class Course implements Serializable {
-    public static final String COURSE_DODE_TAG = "course_code";
     private static final int DEFAULT_CREDITS = 6;
     private String code;
     private String depCode;
@@ -114,9 +121,30 @@ public class Course implements Serializable {
         return UserCourses.getInstance().isAvailable(this);
     }
 
+    public boolean isApproved() {
+        return UserCourses.getInstance().isApproved(this);
+    }
+
+    private boolean isStuding() {
+        return UserCourses.getInstance().isStudying(this);
+    }
+
+    private boolean isFinalExamPending() {
+        return UserCourses.getInstance().isFinalExamPending(this);
+    }
+
     public int getColorId() {
-        return isAvailable()? CourseStatus.getByStatus(CourseStatus.AVAILABLE) :
-                CourseStatus.getByStatus(CourseStatus.NOT_AVAILABLE);
+        CourseStatus status = CourseStatus.NOT_AVAILABLE;
+        if (isApproved()) {
+            status = CourseStatus.APPROVED;
+        } else if (isStuding()) {
+            status = CourseStatus.STUDYING;
+        } else if (isFinalExamPending()) {
+            status = CourseStatus.EXAM_PENDING;
+        } else if (isAvailable()) {
+            status = CourseStatus.AVAILABLE;
+        }
+        return CourseStatus.getByStatus(status);
     }
 
     @Override
@@ -162,4 +190,28 @@ public class Course implements Serializable {
     public void setCredits(int credits) {
         this.credits = credits;
     }
+
+    public void loadCathedrasAsync() {
+        DataFetcher.getInstance().getCathedras(getCode(), new Callback<List<Cathedra>>() {
+            @Override
+            public void success(List<Cathedra> cathedrasList, Response response) {
+                Log.d("cathedras list for " +  getName(), String.valueOf(cathedrasList));
+                if (cathedrasList.size() > 0) {
+                    cathedras = cathedrasList;
+                }
+                UserCourses.getInstance().saveToSharedPrefs();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+            }
+        });
+    }
+
+    public static class ComparatorByName implements Comparator<Course> {
+        @Override
+        public int compare(Course o1, Course o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+   }
 }

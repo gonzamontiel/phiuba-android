@@ -47,7 +47,7 @@ public class MyPlanFragment extends Fragment {
         int sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER);
         List<Course> tabCourses = getCoursesByState(sectionNumber);
         if (tabCourses.size() > 0) {
-            rv.setAdapter(new CourseRecyclerViewAdapter(tabCourses,
+            rv.setAdapter(new CoursesAdapter(tabCourses,
                     (CoursesFragment.OnListFragmentInteractionListener) getActivity()));
             rv.setVisibility(View.VISIBLE);
             placeHolder.setVisibility(View.GONE);

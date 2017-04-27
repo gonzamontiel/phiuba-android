@@ -12,6 +12,7 @@ public enum CourseStatus {
     DEFAULT,
     FAVOURITE,
     STUDYING,
+    EXAM_PENDING,
     APPROVED,
     AVAILABLE,
     NOT_AVAILABLE;
@@ -25,6 +26,7 @@ public enum CourseStatus {
         mapColors.put(STUDYING, R.color.course_studyng);
         mapColors.put(APPROVED, R.color.course_approved);
         mapColors.put(AVAILABLE, R.color.course_available);
+        mapColors.put(EXAM_PENDING, R.color.course_exam_pending);
         mapColors.put(NOT_AVAILABLE, R.color.course_not_available);
     }
 

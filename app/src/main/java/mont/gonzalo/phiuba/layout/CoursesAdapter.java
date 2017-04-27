@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,7 @@ import mont.gonzalo.phiuba.layout.CoursesFragment.OnListFragmentInteractionListe
 import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.UserCourses;
 
-public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecyclerViewAdapter.CourseViewHolder> {
+public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseViewHolder> {
 
     private final List<Course> mCourses;
     private final OnListFragmentInteractionListener mListener;
@@ -40,7 +39,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
         this.position = position;
     }
 
-    public CourseRecyclerViewAdapter(List<Course> courses, OnListFragmentInteractionListener mListener) {
+    public CoursesAdapter(List<Course> courses, OnListFragmentInteractionListener mListener) {
         mCourses = courses;
         this.mListener = mListener;
     }
@@ -80,7 +79,6 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
         holder.sml.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("click", "click");
                 if (null != mListener) {
                     Animation animation1 = new AlphaAnimation(0.3f, 1.0f);
                     animation1.setDuration(200);
@@ -144,6 +142,12 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
         public String toString() {
             return super.toString() + " '" + courseName.getText() + "'";
         }
+
+        @RequiresApi(api = Build.VERSION_CODES.M)
+        public void updateStatus() {
+            status.setBackgroundColor(ActivityContext.get().getColor(
+                    mItem.getColorId()));
+        }
     }
 
     private class CourseSwipeListener extends SimpleSwipeSwitchListener {
@@ -162,17 +166,17 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
             done.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (course.isAvailable()) {
-                        v.post(new Runnable() {
-                            public void run() {
-                                showCalifDialog();
-                            }
-                        });
-                    } else {
-                        Toast.makeText(ActivityContext.get(),
-                                "No podés cursar esta materia según tus correlativas. Chequea que tengas " + String.valueOf(course.getCorrelatives()) + " aprobadas",
-                                Toast.LENGTH_LONG).show();
-                    }
+                if (course.isAvailable()) {
+                    v.post(new Runnable() {
+                        public void run() {
+                            showCalifDialog();
+                        }
+                    });
+                } else {
+                    Toast.makeText(ActivityContext.get(),
+                            "Según tus materias aprobadas, no podrías cursar esta materia. Chequea que tengas aprobada/s: " + String.valueOf(course.getCorrelatives()),
+                            Toast.LENGTH_LONG).show();
+                }
                 }
             });
 
@@ -180,19 +184,37 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<CourseRecycl
             studying.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    UserCourses.getInstance().addStudying(course);
                     holder.updateAward(-1);
-                    Toast.makeText(ActivityContext.get(), "Agregando " + course.getName() + " como estudiando.", Toast.LENGTH_LONG).show();
+                    if (course.isAvailable()) {
+                        boolean success = UserCourses.getInstance().addStudying(course);
+                        if (success) {
+                            Toast.makeText(ActivityContext.get(),
+                                    "Agregando " + course.getName() + " como estudiando.",
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(ActivityContext.get(),
+                                    ActivityContext.get().getString(R.string.cant_add_studying_1) +
+                                            UserCourses.MAX_STUDYING_SIZE +
+                                            ActivityContext.get().getString(R.string.cant_add_studying_2),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(ActivityContext.get(),
+                                ActivityContext.get().getString(R.string.add_not_available_course)
+                                + String.valueOf(course.getCorrelatives()),
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
             });
 
-            ImageView star = (ImageView) v.findViewById(R.id.sml_action_star);
+            ImageView star = (ImageView) v.findViewById(R.id.sml_action_remove);
             star.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    UserCourses.getInstance().addFavourite(course);
+                    UserCourses.getInstance().removeCourse(course);
                     holder.updateAward(-1);
-                    Toast.makeText(ActivityContext.get(), "Agregando " + course.getName() + " como favorita.", Toast.LENGTH_LONG).show();
+                    holder.updateStatus();
+                    Toast.makeText(ActivityContext.get(), "Removiendo " + course.getName(), Toast.LENGTH_LONG).show();
                 }
             });
         }

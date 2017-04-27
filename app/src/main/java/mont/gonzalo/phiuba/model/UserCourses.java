@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
@@ -26,10 +27,11 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Gonzalo Montiel on 3/20/17.
  */
 public class UserCourses extends Observable implements Serializable {
+    public static final int MAX_STUDYING_SIZE = 6;
     private HashMap<String, Double> approvedCourses;
-    private HashMap<String, CathedraSchedule> studyingCourses;
-    private HashMap<String, CourseStatus> favouriteCourses;
+    private List<String> studyingCourses;
     private HashMap<String, Course> loadedCourses;
+    private List<Course> loadedCoursesArray;
 
     private static UserCourses _instance = null;
     private boolean _ready;
@@ -46,29 +48,25 @@ public class UserCourses extends Observable implements Serializable {
         return _instance;
     }
 
-    private UserCourses(String jsonApproved, String jsonStudying, String jsonFavorite) {
+    private UserCourses(String jsonApproved, String jsonStudying) {
         clearChanged();
         _ready = false;
         approvedCourses = new HashMap<>();
-        studyingCourses = new HashMap<>();
-        favouriteCourses = new HashMap<>();
-        loadCourses(jsonApproved, jsonStudying, jsonFavorite);
+        studyingCourses = new ArrayList<>();
+        loadCourses(jsonApproved, jsonStudying);
     }
 
     private UserCourses() {
-        this("", "", "");
+        this("", "");
         approvedCourses.put("CBC", 0.0);
     }
 
-    private void loadCourses(final String jsonApproved, final String jsonStudying, final String jsonFavorite) {
+    private void loadCourses(final String jsonApproved, final String jsonStudying) {
         loadedCourses = new HashMap<>();
         DataFetcher.getInstance().getCourses(User.get().getPlanCode(),new Callback<List<Course>>() {
             @Override
             public void success(List<Course> courses, Response response) {
-                // Load courses
-                for (Course c: courses) {
-                    addCourse(c.getCode(), c);
-                }
+                setCourses(courses);
                 Gson gson = new Gson();
                 if (!jsonApproved.isEmpty()) {
                     approvedCourses = gson.fromJson(jsonApproved, approvedCourses.getClass());
@@ -76,10 +74,8 @@ public class UserCourses extends Observable implements Serializable {
                 if (!jsonStudying.isEmpty()) {
                     studyingCourses = gson.fromJson(jsonStudying, studyingCourses.getClass());
                 }
-                if (!jsonFavorite.isEmpty()) {
-                    favouriteCourses = gson.fromJson(jsonFavorite, favouriteCourses.getClass());
-                }
                 approvedCourses.put("CBC", 0.0);
+                loadedCourses.put("CBC", new CourseCBC());
                 _ready = true;
                 doNotifyObservers();
             }
@@ -96,15 +92,15 @@ public class UserCourses extends Observable implements Serializable {
     }
 
     public void updateCourses() {
-        this.loadCourses("", "", "");
+        this.loadCourses("", "");
     }
 
     public void addApproved(Course c, Double calification, boolean shouldNotify) {
-        Log.d(c.getCode(), String.valueOf(calification));
         doAddApproved(c, calification);
         if (shouldNotify) {
             doNotifyObservers();
         }
+        saveToSharedPrefs();
     }
 
     public void addApproved(Course c, Double calification) {
@@ -113,7 +109,6 @@ public class UserCourses extends Observable implements Serializable {
 
     private void doAddApproved(Course c, Double calification) {
         this.studyingCourses.remove(c.getCode());
-        this.favouriteCourses.remove(c.getCode());
         this.approvedCourses.put(c.getCode(), calification);
         this.loadedCourses.put(c.getCode(), c);
     }
@@ -124,31 +119,23 @@ public class UserCourses extends Observable implements Serializable {
         clearChanged();
     }
 
-    public void addStudying(Course c) {
-        this.approvedCourses.remove(c.getCode());
-        this.favouriteCourses.remove(c.getCode());
-        this.studyingCourses.put(c.getCode(), null);
-        this.loadedCourses.put(c.getCode(), c);
-        doNotifyObservers();
-    }
-
-    public void addFavourite(Course c) {
-        this.studyingCourses.remove(c.getCode());
-        this.approvedCourses.remove(c.getCode());
-        this.favouriteCourses.put(c.getCode(), CourseStatus.FAVOURITE);
-        this.loadedCourses.put(c.getCode(), c);
-        doNotifyObservers();
+    public boolean addStudying(Course c) {
+        if (this.studyingCourses.size() <= MAX_STUDYING_SIZE) {
+            this.approvedCourses.remove(c.getCode());
+            this.studyingCourses.add(c.getCode());
+            this.loadedCourses.put(c.getCode(), c);
+            c.loadCathedrasAsync();
+            doNotifyObservers();
+            return true;
+        }
+        saveToSharedPrefs();
+        return false;
     }
 
     public void removeCourse(Course c) {
         this.studyingCourses.remove(c.getCode());
         this.approvedCourses.remove(c.getCode());
-        this.favouriteCourses.remove(c.getCode());
         doNotifyObservers();
-    }
-
-    public HashMap<String, Double> getApprovedCourses() {
-        return approvedCourses;
     }
 
     public double getAverageCalification() {
@@ -185,15 +172,10 @@ public class UserCourses extends Observable implements Serializable {
     }
 
     public void printSummary() {
-        Log.d("Studying", this.studyingCourses.keySet().toString());
+        Log.d("Studying", this.studyingCourses.toString());
         Log.d("Approved", this.approvedCourses.keySet().toString());
-        Log.d("Favourites", this.favouriteCourses.keySet().toString());
         Log.d("Average", String.valueOf(getAverageCalification()));
         Log.d("Total approved", String.valueOf(getApprovedCount()));
-    }
-
-    public HashMap<String, CathedraSchedule> getStudyingCourses() {
-        return studyingCourses;
     }
 
     public static List<Course> filterApproved(List<Course> mCourses) {
@@ -203,30 +185,38 @@ public class UserCourses extends Observable implements Serializable {
                 filtered.add(c);
             }
         }
+        Collections.sort(filtered, new Course.ComparatorByName());
         return filtered;
     }
 
     public static List<Course> filterStudying(List<Course> mCourses) {
         List<Course> filtered = new ArrayList<>();
         for (Course c: mCourses) {
-            if (UserCourses.getInstance().studyingCourses.containsKey(c.getCode())) {
+            if (UserCourses.getInstance().studyingCourses.contains(c.getCode())) {
                 filtered.add(c);
             }
         }
+        Collections.sort(filtered, new Course.ComparatorByName());
         return filtered;
-
     }
 
     public static List<Course> filterNotCoursed(List<Course> mCourses) {
         UserCourses ucs = UserCourses.getInstance();
-        List<Course> filtered = new ArrayList<>();
+        List<Course> filteredAv = new ArrayList<>();
+        List<Course> filteredNotAv = new ArrayList<>();
+        Collections.sort(mCourses, new Course.ComparatorByName());
         for (Course c: mCourses) {
             if (!ucs.approvedCourses.containsKey(c.getCode()) &&
-                    !ucs.studyingCourses.containsKey(c.getCode())) {
-                filtered.add(c);
+                    !ucs.studyingCourses.contains(c.getCode())) {
+                if (getInstance().isAvailable(c)) {
+                    filteredAv.add(c);
+                } else {
+                    filteredNotAv.add(c);
+                }
             }
         }
-        return filtered;
+        filteredAv.addAll(filteredNotAv);
+        return filteredAv;
     }
 
     public double getCalification(Course c) {
@@ -249,10 +239,18 @@ public class UserCourses extends Observable implements Serializable {
         return loadedCourses.get(courseCode);
     }
 
-    public void setCourses(List<Course> courses) {
-        for (Course c: courses) {
-            addCourse(c.getCode(), c);
+    public String getCourseName(String courseCode) {
+        return getCourse(courseCode).getName();
+    }
+
+    public HashMap<String, List<Cathedra>> getStudiyngCoursesWithCathedras() {
+        HashMap<String, List<Cathedra>> res = new HashMap<>();
+        for (String code: studyingCourses) {
+            if (loadedCourses.get(code) != null && !loadedCourses.get(code).getCathedras().isEmpty()) {
+                res.put(code, loadedCourses.get(code).getCathedras());
+            }
         }
+        return res;
     }
 
     public void resetPrefs() {
@@ -275,10 +273,8 @@ public class UserCourses extends Observable implements Serializable {
         String key = context.getResources().getString(R.string.pref_user_courses);
         prefsEditor.putString(key + "_approved" , gson.toJson(approvedCourses));
         prefsEditor.putString(key + "_studying" , gson.toJson(studyingCourses));
-        prefsEditor.putString(key + "_favorite" , gson.toJson(favouriteCourses));
         Log.d("Saving approved", gson.toJson(approvedCourses));
         Log.d("Saving studying", gson.toJson(studyingCourses));
-        Log.d("Saving favorite", gson.toJson(favouriteCourses));
         prefsEditor.commit();
     }
 
@@ -291,10 +287,43 @@ public class UserCourses extends Observable implements Serializable {
             String key = context.getResources().getString(R.string.pref_user_courses);
             String jsonApproved = mPrefs.getString(key + "_approved", "");
             String jsonStudying = mPrefs.getString(key + "_studying", "");
-            String jsonFavorite = mPrefs.getString(key + "_favorite", "");
-            return new UserCourses(jsonApproved, jsonStudying, jsonFavorite);
+            return new UserCourses(jsonApproved, jsonStudying);
         } else {
             return null;
         }
+    }
+
+    public List<Course> getLoadedCourses() {
+        return loadedCoursesArray;
+    }
+
+    public void setCourses(List<Course> courses) {
+        loadedCoursesArray = courses;
+        for (Course c: courses) {
+            addCourse(c.getCode(), c);
+        }
+    }
+
+    public ArrayList<Course> getCoursesByCodes(List<String> correlatives) {
+        ArrayList<Course> res = new ArrayList<>();
+        for (String code: correlatives) {
+            Course c = getCourse(code);
+            if (c != null) {
+                res.add(c);
+            }
+        }
+        return res ;
+    }
+
+    public boolean isApproved(Course course) {
+        return approvedCourses.containsKey(course.getCode()) && approvedCourses.get(course.getCode()) > 0;
+    }
+
+    public boolean isFinalExamPending(Course course) {
+        return approvedCourses.containsKey(course.getCode()) && approvedCourses.get(course.getCode()) < 0;
+    }
+
+    public boolean isStudying(Course course) {
+        return studyingCourses.contains(course.getCode());
     }
 }

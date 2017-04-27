@@ -63,4 +63,9 @@
         Probá agregarlas haciendo swipe a la izquierda en la materia que quieras, o importando tu Historia Académica desde SIU (beta)
     </string>
     <string name="pref_user_courses">user_courses</string>
+    <string name="requirements">Correlativas</string>
+    <string name="action_update">Actualizar</string>
+    <string name="add_not_available_course">"Según tus materias aprobadas, no podrías cursar esta materia. Chequeá que tengas aprobada/s: "</string>
+    <string name="cant_add_studying_1">"No se puede anotar a más de "</string>
+    <string name="cant_add_studying_2">" materias por cuatrimestre"</string>
 </resources>

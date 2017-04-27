@@ -20,6 +20,7 @@ import mont.gonzalo.phiuba.api.DataFetcher;
 import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.Department;
 import mont.gonzalo.phiuba.model.User;
+import mont.gonzalo.phiuba.model.UserCourses;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -31,7 +32,7 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
     private transient OnListFragmentInteractionListener mListListener;
-    private transient CourseRecyclerViewAdapter mAdapter;
+    private transient CoursesAdapter mAdapter;
     private transient RecyclerView recyclerView;
 
     /**
@@ -63,7 +64,6 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_course_list, container, false);
 
-        // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             recyclerView = (RecyclerView) view;
@@ -73,26 +73,34 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             mListListener = (OnListFragmentInteractionListener) getActivity();
-
-            DataFetcher.getInstance().getCourses(User.get().getPlanCode(),new Callback<List<Course>>() {
-                @Override
-                public void success(List<Course> courses, Response response) {
-                    if (courses.size() > 0) {
-//                        UserCourses.generateMagicCourses(courses);
-                        mAdapter = new CourseRecyclerViewAdapter(courses, mListListener);
-                        recyclerView.setAdapter(mAdapter);
-                        mListListener = (OnListFragmentInteractionListener) getActivity();
-                        registerForContextMenu(recyclerView);
+            if (!UserCourses.getInstance().isReady()) {
+                DataFetcher.getInstance().getCourses(User.get().getPlanCode(),new Callback<List<Course>>() {
+                    @Override
+                    public void success(List<Course> courses, Response response) {
+                        if (courses.size() > 0) {
+                            UserCourses.getInstance().setCourses(courses);
+                            loadCoursesToAdapter(courses);
+                        }
                     }
-                }
 
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.d(TAG, error.getMessage());
-                }
-            });
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.d(TAG, error.getMessage());
+                    }
+                });
+            } else {
+                List<Course> courses = UserCourses.getInstance().getLoadedCourses();
+                loadCoursesToAdapter(courses);
+            }
         }
         return view;
+    }
+
+    private void loadCoursesToAdapter(List<Course> courses) {
+        mAdapter = new CoursesAdapter(courses, mListListener);
+        recyclerView.setAdapter(mAdapter);
+        mListListener = (OnListFragmentInteractionListener) getActivity();
+        registerForContextMenu(recyclerView);
     }
 
     @Override
@@ -122,7 +130,7 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
         Course course;
         int opcion = 0;
         try {
-            position = ((CourseRecyclerViewAdapter)mAdapter).getPosition();
+            position = ((CoursesAdapter)mAdapter).getPosition();
             course = mAdapter.getCourse(position);
         } catch (Exception e) {
             Log.d(TAG, e.getLocalizedMessage(), e);
@@ -175,7 +183,7 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
         DataFetcher.getInstance().getCourses(User.get().getPlanCode(), new Callback<List<Course>>() {
             @Override
             public void success(List<Course> courses, Response response) {
-                recyclerView.setAdapter(mAdapter = new CourseRecyclerViewAdapter(courses, mListListener));
+                recyclerView.setAdapter(mAdapter = new CoursesAdapter(courses, mListListener));
             }
 
             @Override

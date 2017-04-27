@@ -10,14 +10,21 @@
     <color name="divider">#BDBDBD</color>
     <color name="course_default">#EEEEEE</color>
     <color name="course_added">#41c0f2</color>
-    <color name="course_approved">#64dd17</color>
-    <color name="course_studyng">#6a1b9a</color>
-    <color name="course_available">#CDDC39</color>
+    <color name="course_approved">#F4E99A</color>
+    <color name="course_studyng">#64b5f6</color>
+    <color name="course_exam_pending">#f9a825</color>
+    <color name="course_available">#ADE45B</color>
     <color name="course_not_available">#e53935</color>
 
-    <color name="material_1">#e53935</color>
-    <color name="material_2">#64dd17</color>
-    <color name="material_3">#b39ddb</color>
-    <color name="material_4">#64b5f6</color>
-    <color name="material_5">#f9a825</color>
+    <color name="material_1">#FFA891</color>
+    <color name="material_2">#F4E99A</color>
+    <color name="material_3">#ADE45B</color>
+    <color name="material_4">#89BABE</color>
+    <color name="material_5">#FFC472</color>
+    <color name="material_7">#ADE45B</color>
+    <color name="material_8">#DE9388</color>
+    <color name="material_6">#CAB888</color>
+    <color name="material_9">#AEC5DF</color>
+    <color name="material_10">#F8D040</color>
+
 </resources>

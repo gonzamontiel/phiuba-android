@@ -51,7 +51,7 @@ public class DataFetcher extends Observable {
         if (instance == null) {
             instance = new DataFetcher(PROD_ROOT_URL);
         }
-        Log.d("Connected to ", serverUrl);
+        Log.d(TAG, "Connected to " + serverUrl);
         return instance;
     }
 

@@ -28,7 +28,7 @@ public class NewsFragment extends SearchableFragment implements Serializable {
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
     private transient OnListFragmentInteractionListener mListListener;
-    private transient NewsRecyclerViewAdapter mAdapter;
+    private transient NewsAdapter mAdapter;
     private transient RecyclerView recyclerView;
 
     /**
@@ -96,7 +96,7 @@ public class NewsFragment extends SearchableFragment implements Serializable {
     public boolean onContextItemSelected(MenuItem item) {
         int position = -1;
         try {
-            position = ((NewsRecyclerViewAdapter)mAdapter).getPosition();
+            position = ((NewsAdapter)mAdapter).getPosition();
         } catch (Exception e) {
             Log.d(TAG, e.getLocalizedMessage(), e);
             return super.onContextItemSelected(item);
@@ -141,7 +141,7 @@ public class NewsFragment extends SearchableFragment implements Serializable {
         @Override
         public void success(List<News> newses, Response response) {
             if (newses.size() > 0) {
-                mAdapter = new NewsRecyclerViewAdapter(newses, mListListener);
+                mAdapter = new NewsAdapter(newses, mListListener);
                 recyclerView.setAdapter(mAdapter);
                 mListListener = (NewsFragment.OnListFragmentInteractionListener) getActivity();
                 registerForContextMenu(recyclerView);

@@ -1,82 +1,79 @@
 package mont.gonzalo.phiuba.model;
 
-import android.util.Log;
-
-import com.alamkanak.weekview.WeekViewEvent;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import mont.gonzalo.phiuba.tda.Node;
 
 /**
  * Created by Gonzalo Montiel on 3/20/17.
  */
 public class CathedrasCombination implements Serializable {
-    private HashMap<String, List<Cathedra>> cathedras;
-    private HashMap<String, Integer> sizes;
-    private HashMap<String, Integer> pointers;
-    List<Map.Entry<String, Integer>> sortedSizes;
-    private int maxCombinations;
+    private HashMap<String, List<Cathedra>> cathedrasByCourse;
+    private HashMap<String, Cathedra> cathedras;
+    private List<Cathedra> all;
+    private List<Cathedra> pinnedCathedras;
+    private Node<String> root;
+    private Node<String> leftmostLeaf = null;
 
+    private static CathedrasCombination _instance;
 
-    public CathedrasCombination() {
-        cathedras = new HashMap<String, List<Cathedra>>();
-        sizes = new HashMap<String, Integer>();
-        pointers = new HashMap<String, Integer>();
-        maxCombinations = 1;
+    public static CathedrasCombination getInstance() {
+        if (_instance == null) {
+            _instance = new CathedrasCombination();
+        }
+        return _instance;
     }
 
-    public void fillWith(UserCourses userCourses) {
-        maxCombinations = 1;
-        for (String courseCode: userCourses.getStudyingCourses().keySet()) {
-            List<Cathedra> css = userCourses.getCourse(courseCode).getCathedras();
-            cathedras.put(courseCode, css);
-            sizes.put(courseCode, css.size());
-            maxCombinations *= css.size();
-        }
-        Set<Map.Entry<String, Integer>> set = sizes.entrySet();
-        sortedSizes = new ArrayList<Map.Entry<String, Integer>>(set);
-        Collections.sort(sortedSizes, new SizesComparator());
+    private CathedrasCombination() {
+        cathedrasByCourse = UserCourses.getInstance().getStudiyngCoursesWithCathedras();
+        cathedras = new HashMap<>();
+    }
 
-        for (Map.Entry<String, Integer> entry: sortedSizes){
-            int size = entry.getValue();
-            String courseName = entry.getKey();
-            for (int i = 0; i < size; i++) {
-                Log.d(String.valueOf(i), cathedras.get(courseName).get(i).getTeachers());
-
+    public void buildTree() {
+        cathedras.clear();
+        root = new Node<>(null);
+        Node<String> node = root;
+        for (String code: cathedrasByCourse.keySet()) {
+            List<String> names = new ArrayList<>();
+            for (Cathedra cat: cathedrasByCourse.get(code)) {
+                String key = code + " - " + cat.getTeachers();
+                cathedras.put(key, cat);
+                names.add(key);
             }
+            node.addChildrenData(names);
+            node.copyChildrenToSiblings();
+            node = node.firstChild();
         }
+        leftmostLeaf = node;
     }
 
-    public HashMap<String, List<Cathedra>> getCathedras() {
-        return cathedras;
-    }
-
-    public Combination getNext(int n) {
-        return null;
-    }
-
-    public class Combination {
-        private final String courseName;
-        private final String teachers;
-        private final List<WeekViewEvent> events;
-
-        public Combination(String courseName, String teachers, List<WeekViewEvent> events) {
-            this.courseName = courseName;
-            this.teachers = teachers;
-            this.events = events;
+    public List<Cathedra> getAtPosition(int n) {
+        Node<String> nodeToFind = leftmostLeaf;
+        List<Cathedra> cathedrasComb = new ArrayList<>();
+        int count = 1;
+        while (nodeToFind != null && count++ < n) {
+            nodeToFind = nodeToFind.getRight();
         }
+        Node<String> parent = nodeToFind;
+        while (parent != null) {
+            cathedrasComb.add(cathedras.get(parent.getData()));
+            parent = parent.getParent();
+        }
+        return cathedrasComb;
     }
 
-    private class SizesComparator implements Comparator<Map.Entry<String, Integer>> {
-        @Override
-        public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-            return o2.getValue().compareTo(o1.getValue());
-        }
+    public void print() {
+        root.print();
+    }
+
+    private boolean schedulesCollision(List<Cathedra> cathedrasComb) {
+        return false;
+    }
+
+    public int getCombinationCount() {
+        return 5;
     }
 }

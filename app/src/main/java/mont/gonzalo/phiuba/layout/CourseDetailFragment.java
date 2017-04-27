@@ -18,11 +18,12 @@ import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.api.DataFetcher;
 import mont.gonzalo.phiuba.model.Cathedra;
 import mont.gonzalo.phiuba.model.Course;
+import mont.gonzalo.phiuba.model.UserCourses;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class CourseDetailFragment extends SearchableFragment implements Serializable {
+public class CourseDetailFragment extends SearchableFragment implements Serializable, CoursesFragment.OnListFragmentInteractionListener {
     private static final String TAG = "CourseDetailFragment";
     private transient OnFragmentInteractionListener mListener;
     private transient OnListFragmentInteractionListener mListListener;
@@ -54,9 +55,12 @@ public class CourseDetailFragment extends SearchableFragment implements Serializ
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_course_detail, container, false);
         final TextView schedulesTextView = (TextView) view.findViewById(R.id.schedulesText);
-        nameTextView = (TextView) view.findViewById(R.id.course_name);
-        deptoIcon = (ImageView) view.findViewById(R.id.coursed_depto_con);
+        final RecyclerView requirements = (RecyclerView) view.findViewById(R.id.requirements);
+        requirements.setAdapter(new MiniCoursesAdapter(
+                UserCourses.getInstance().getCoursesByCodes(mCourse.getCorrelatives()), this));
 
+        nameTextView = (TextView) view.findViewById(R.id.course_name);
+        deptoIcon = (ImageView) view.findViewById(R.id.coursed_depto_icon);
         deptoIcon.setImageResource(mCourse.getImageResource());
 
         AutofitHelper.create(nameTextView);
@@ -68,7 +72,7 @@ public class CourseDetailFragment extends SearchableFragment implements Serializ
             @Override
             public void success(List<Cathedra> cathedras, Response response) {
                 if (cathedras.size() > 0) {
-                    cathedrasView.setAdapter(new CathedrasRecyclerViewAdapter(cathedras, mCourse, mListListener));
+                    cathedrasView.setAdapter(new CathedrasAdapter(cathedras, mCourse, mListListener));
                     mListListener = (OnListFragmentInteractionListener) getActivity();
                     registerForContextMenu(cathedrasView);
                 } else {
@@ -131,6 +135,10 @@ public class CourseDetailFragment extends SearchableFragment implements Serializ
         return CoursesFragment.newInstance(1, (CoursesFragment.OnListFragmentInteractionListener) getActivity());
     }
 
+    @Override
+    public void onListFragmentInteraction(Course item) {
+
+    }
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Course course);

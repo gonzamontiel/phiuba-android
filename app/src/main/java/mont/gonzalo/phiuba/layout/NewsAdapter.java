@@ -17,7 +17,7 @@ import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.layout.NewsFragment.OnListFragmentInteractionListener;
 import mont.gonzalo.phiuba.model.News;
 
-public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.NewsViewHolder>
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder>
         implements Serializable
 {
 
@@ -33,7 +33,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         this.position = position;
     }
 
-    public NewsRecyclerViewAdapter(List<News> news, OnListFragmentInteractionListener mListener) {
+    public NewsAdapter(List<News> news, OnListFragmentInteractionListener mListener) {
         mNews = news;
         this.mListener = mListener;
     }

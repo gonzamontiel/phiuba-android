@@ -103,7 +103,7 @@ public class DepartmentDetailFragment extends SearchableFragment implements Seri
                 hs.addAll(courses);
                 courses.clear();
                 courses.addAll(hs);
-                RecyclerView.Adapter adapter = new CourseRecyclerViewAdapter(courses,
+                RecyclerView.Adapter adapter = new CoursesAdapter(courses,
                         (CoursesFragment.OnListFragmentInteractionListener) getActivity());
                 coursesView.setAdapter(adapter);
                 availableCoursesTextView.setText(courses.size() + " materias");

@@ -4,6 +4,12 @@ xmlns:tools="http://schemas.android.com/tools"
 tools:context=".HomeActivity">
 
     <item
+    android:id="@+id/action_update"
+    android:orderInCategory="100"
+    android:title="@string/action_update"
+    app:showAsAction="never" />
+
+    <item
     android:id="@+id/action_settings"
     android:orderInCategory="100"
     android:title="@string/action_settings"

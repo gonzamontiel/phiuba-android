@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/course_card_mini"
+    android:layout_width="wrap_content"
+    android:layout_height="30dp"
+    android:layout_margin="5dp"
+    android:clickable="true"
+    android:backgroundTint="#eee"
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardPreventCornerOverlap="true"
+    card_view:cardCornerRadius="4dp">
+
+    <View
+        android:id="@+id/status"
+        android:layout_width="4dp"
+        android:layout_height="match_parent"
+        android:background="@color/accent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
+            android:padding="5dp"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/view2"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerHorizontal="true"
+                android:elevation="12dp"
+                android:innerRadius="2dp"
+                android:padding="5dp"
+                android:shape="ring"
+                card_view:cardCornerRadius="10dp">
+
+                <ImageView
+                    android:id="@+id/course_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/dep63" />
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:id="@+id/course_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:breakStrategy="simple"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:padding="2dp"
+                android:text="62.03 - Análisis Matemático II A"
+                android:textColor="@color/primary_text"
+                android:textSize="14dp" />
+        </LinearLayout>
+</android.support.v7.widget.CardView>

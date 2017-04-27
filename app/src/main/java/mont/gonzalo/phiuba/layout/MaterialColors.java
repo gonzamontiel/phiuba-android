@@ -17,8 +17,13 @@ public class MaterialColors {
             R.color.material_2,
             R.color.material_3,
             R.color.material_4,
-            R.color.material_5)
-    );
+            R.color.material_5,
+            R.color.material_6,
+            R.color.material_7,
+            R.color.material_8,
+            R.color.material_9,
+            R.color.material_10
+    ));
 
     public static Integer getRandom() {
         Random r = new Random();

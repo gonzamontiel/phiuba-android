@@ -75,7 +75,7 @@ public class DepartmentsFragment extends SearchableFragment implements Serializa
                 @Override
                 public void success(List<Department> departments, Response response) {
                     if (departments.size() > 0) {
-                        mAdapter = new DepartmentRecyclerViewAdapter(departments, mListener);
+                        mAdapter = new DepartmentsAdapter(departments, mListener);
                         recyclerView.setAdapter(mAdapter);
                     }
                 }
@@ -115,7 +115,7 @@ public class DepartmentsFragment extends SearchableFragment implements Serializa
             @Override
             public void success(List<Department> departments, Response response) {
                 if (departments.size() > 0) {
-                    mAdapter = new DepartmentRecyclerViewAdapter(departments, mListener);
+                    mAdapter = new DepartmentsAdapter(departments, mListener);
                     recyclerView.setAdapter(mAdapter);
                 }
             }
@@ -131,7 +131,7 @@ public class DepartmentsFragment extends SearchableFragment implements Serializa
         DataFetcher.getInstance().getDepartments(new Callback<List<Department>>() {
             @Override
             public void success(List<Department> departments, Response response) {
-                mAdapter = new DepartmentRecyclerViewAdapter(departments, mListener);
+                mAdapter = new DepartmentsAdapter(departments, mListener);
                 recyclerView.setAdapter(mAdapter);
             }
             @Override

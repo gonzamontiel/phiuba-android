@@ -72,9 +72,12 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ActivityContext.set(this);
-
-        showProgressBar();
         DataFetcher.getInstance().addObserver(this);
+        initiate(savedInstanceState);
+    }
+
+    private void initiate(Bundle savedInstanceState) {
+        showProgressBar();
 
         User.initialize();
         Plan.initialize();
@@ -87,12 +90,10 @@ public class MainActivity extends AppCompatActivity
         navigationView.setCheckedItem(getDefaultItemSelected());
         navigationView.setNavigationItemSelectedListener(this);
         fillSpinnerWithPlans(navigationView);
-        // Search on keystrokes
+
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 
-        // Check connection and show snack message if necessary
         checkNetwork();
-
     }
 
     private void showProgressBar() {
@@ -154,6 +155,16 @@ public class MainActivity extends AppCompatActivity
                 ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.menu_spinner_item_first, Plan.getAvailableNames());
                 spinnerArrayAdapter.setDropDownViewResource(R.layout.menu_spinner_item);
                 spinner.setAdapter(spinnerArrayAdapter);
+
+                String shortName = User.get().getPlan().getShortName();
+                int count = 0;
+                for (String name: Plan.getAvailableNames()) {
+                    if (name == shortName) {
+                        break;
+                    }
+                    count++;
+                }
+                spinner.setSelection(count);
             }
 
             @Override
@@ -164,17 +175,6 @@ public class MainActivity extends AppCompatActivity
                 spinner.setAdapter(spinnerArrayAdapter);
             }
         });
-
-        String shortName = User.get().getPlan().getShortName();
-
-        int count = 0;
-        for (String name: Plan.getAvailableNames()) {
-            if (name == shortName) {
-                break;
-            }
-            count++;
-        }
-        spinner.setSelection(count);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             private boolean firstTime = true;
@@ -218,16 +218,22 @@ public class MainActivity extends AppCompatActivity
                 activeNetwork.isConnectedOrConnecting();
         if (!isConnected)
             showConnectionIndicator();
+        else
+            hideConnectionIndicator();
+    }
+
+    private void hideConnectionIndicator() {
+        final View viewForSnackBar = this.findViewById(android.R.id.content);
+        View v = viewForSnackBar.findViewById(R.id.disconnected_placeholder);
+        v.setVisibility(View.GONE);
     }
 
     private void showConnectionIndicator() {
         final View viewForSnackBar = this.findViewById(android.R.id.content);
         Snackbar.make(viewForSnackBar, R.string.disconnected_message, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            View v = viewForSnackBar.findViewById(R.id.disconnected_placeholder);
-            v.setVisibility(View.VISIBLE);
-        }
+        View v = viewForSnackBar.findViewById(R.id.disconnected_placeholder);
+        v.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -260,12 +266,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_update) {
+            initiate(null);
             return true;
         }
         return super.onOptionsItemSelected(item);

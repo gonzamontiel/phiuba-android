@@ -18,7 +18,7 @@ import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.model.Cathedra;
 import mont.gonzalo.phiuba.model.Course;
 
-public class CathedrasRecyclerViewAdapter extends RecyclerView.Adapter<CathedrasRecyclerViewAdapter.CathedraViewHolder> {
+public class CathedrasAdapter extends RecyclerView.Adapter<CathedrasAdapter.CathedraViewHolder> {
 
     private final List<Cathedra> mCathedras;
     private final CourseDetailFragment.OnListFragmentInteractionListener mListener;
@@ -34,7 +34,7 @@ public class CathedrasRecyclerViewAdapter extends RecyclerView.Adapter<Cathedras
         this.position = position;
     }
 
-    public CathedrasRecyclerViewAdapter(List<Cathedra> cathedras, Course c, CourseDetailFragment.OnListFragmentInteractionListener mListener) {
+    public CathedrasAdapter(List<Cathedra> cathedras, Course c, CourseDetailFragment.OnListFragmentInteractionListener mListener) {
         this.mCathedras = cathedras;
         this.mListener = mListener;
         this.mCourse = c;

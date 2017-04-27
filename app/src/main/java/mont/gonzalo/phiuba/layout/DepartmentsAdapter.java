@@ -15,7 +15,7 @@ import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.layout.DepartmentsFragment.OnListFragmentInteractionListener;
 import mont.gonzalo.phiuba.model.Department;
 
-public class DepartmentRecyclerViewAdapter extends RecyclerView.Adapter<DepartmentRecyclerViewAdapter.DepartmentViewHolder> {
+public class DepartmentsAdapter extends RecyclerView.Adapter<DepartmentsAdapter.DepartmentViewHolder> {
 
     private final List<Department> mDepartments;
     private final OnListFragmentInteractionListener mListener;
@@ -29,7 +29,7 @@ public class DepartmentRecyclerViewAdapter extends RecyclerView.Adapter<Departme
         this.position = position;
     }
 
-    public DepartmentRecyclerViewAdapter(List<Department> Departments, OnListFragmentInteractionListener mListener) {
+    public DepartmentsAdapter(List<Department> Departments, OnListFragmentInteractionListener mListener) {
         mDepartments = Departments;
         this.mListener = mListener;
     }
