@@ -1,10 +1,16 @@
 package mont.gonzalo.phiuba.model;
 
+import android.util.Log;
+
+import com.alamkanak.weekview.WeekViewEvent;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import mont.gonzalo.phiuba.api.DataFetcher;
+import mont.gonzalo.phiuba.layout.MaterialColors;
 import mont.gonzalo.phiuba.tda.Node;
 
 /**
@@ -13,10 +19,11 @@ import mont.gonzalo.phiuba.tda.Node;
 public class CathedrasCombination implements Serializable {
     private HashMap<String, List<Cathedra>> cathedrasByCourse;
     private HashMap<String, Cathedra> cathedras;
-    private List<Cathedra> all;
+    private HashMap<String, Integer> colors;
     private List<Cathedra> pinnedCathedras;
     private Node<String> root;
     private Node<String> leftmostLeaf = null;
+    private int combinations;
 
     private static CathedrasCombination _instance;
 
@@ -28,8 +35,9 @@ public class CathedrasCombination implements Serializable {
     }
 
     private CathedrasCombination() {
-        cathedrasByCourse = UserCourses.getInstance().getStudiyngCoursesWithCathedras();
+        cathedrasByCourse = new HashMap<>();
         cathedras = new HashMap<>();
+        colors =  new HashMap<>();
     }
 
     public void buildTree() {
@@ -40,12 +48,16 @@ public class CathedrasCombination implements Serializable {
             List<String> names = new ArrayList<>();
             for (Cathedra cat: cathedrasByCourse.get(code)) {
                 String key = code + " - " + cat.getTeachers();
-                cathedras.put(key, cat);
                 names.add(key);
+                cat.setColor(colors.get(code));
+                cathedras.put(key, cat);
+                combinations++;
             }
-            node.addChildrenData(names);
-            node.copyChildrenToSiblings();
-            node = node.firstChild();
+            if (!names.isEmpty()) {
+                node.addChildrenData(names);
+                node.copyChildrenToSiblings();
+                node = node.firstChild();
+            }
         }
         leftmostLeaf = node;
     }
@@ -62,6 +74,7 @@ public class CathedrasCombination implements Serializable {
             cathedrasComb.add(cathedras.get(parent.getData()));
             parent = parent.getParent();
         }
+        Log.d("Collision:", String.valueOf(schedulesCollision(cathedrasComb)));
         return cathedrasComb;
     }
 
@@ -69,11 +82,66 @@ public class CathedrasCombination implements Serializable {
         root.print();
     }
 
+    public void pinCathedra(Cathedra c) {
+        this.pinnedCathedras.add(c);
+    }
+
     private boolean schedulesCollision(List<Cathedra> cathedrasComb) {
+        for (Cathedra c1: cathedrasComb) {
+            if (c1 == null) {
+                break;
+            }
+            for (Cathedra c2: cathedrasComb) {
+                if (c2 == null) {
+                    break;
+                }
+                if (!c1.getCourseCode().equals(c2.getCourseCode()) &&
+                        collide(c1, c2)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
+    private boolean collide(Cathedra c1, Cathedra c2) {
+        for (WeekViewEvent event1: c1.toWeekEvents("")) {
+            for (WeekViewEvent event2 : c2.toWeekEvents("")) {
+                if (eventsCollide(event1, event2)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean eventsCollide(WeekViewEvent e1, WeekViewEvent e2) {
+        boolean isBefore = e1.getEndTime().before(e2.getStartTime());
+        boolean isAfter= e2.getEndTime().before(e1.getStartTime());
+        return !isBefore && !isAfter;
+    }
+
     public int getCombinationCount() {
-        return 5;
+        return combinations;
+    }
+
+    public void loadCathedrasSync() {
+        UserCourses uc = UserCourses.getInstance();
+        for (String code: uc.getStudyingCourses()) {
+            Course c = uc.getCourse(code);
+            if (c != null) {
+                c.setCathedras(DataFetcher.getInstance().getCathedrasSync(code));
+                cathedrasByCourse.put(code, c.getCathedras());
+                colors.put(code, getRandomColorNotTaken());
+            }
+        }
+    }
+
+    public Integer getRandomColorNotTaken() {
+        Integer color = MaterialColors.getRandom();
+        while (colors.containsKey(color)) {
+            color = MaterialColors.getRandom();
+        }
+        return color;
     }
 }

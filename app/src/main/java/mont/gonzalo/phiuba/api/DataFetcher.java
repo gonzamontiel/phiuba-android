@@ -78,6 +78,10 @@ public class DataFetcher extends Observable {
         this.courseApi.get(planCode, c);
     }
 
+    public List<Course> getCoursesSync(String planCode) {
+        return this.courseApi.getSync(planCode);
+    }
+
     public void searchCourses(String planCode, String plan, Callback<List<Course>> c) {
         this.courseApi.search(planCode, plan, c);
     }
@@ -148,4 +152,5 @@ public class DataFetcher extends Observable {
     public void setRunning(boolean running) {
         isRunning = running;
     }
+
 }

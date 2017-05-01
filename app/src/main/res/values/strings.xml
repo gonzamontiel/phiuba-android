@@ -68,4 +68,5 @@
     <string name="add_not_available_course">"Según tus materias aprobadas, no podrías cursar esta materia. Chequeá que tengas aprobada/s: "</string>
     <string name="cant_add_studying_1">"No se puede anotar a más de "</string>
     <string name="cant_add_studying_2">" materias por cuatrimestre"</string>
+    <string name="weekview_with">" con "</string>
 </resources>

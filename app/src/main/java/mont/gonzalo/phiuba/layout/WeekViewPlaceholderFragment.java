@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +35,8 @@ class WeekViewPlaceholderFragment extends Fragment {
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
+    private List<WeekViewEvent> events = new ArrayList<>();
+    private TextView title;
 
     public WeekViewPlaceholderFragment() {
     }
@@ -52,6 +53,15 @@ class WeekViewPlaceholderFragment extends Fragment {
         return fragment;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void toggleLabels(View view) {
+        if (view.isShown()) {
+            view.setVisibility(View.GONE);
+        } else {
+            view.setVisibility(View.VISIBLE);
+        }
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,11 +69,18 @@ class WeekViewPlaceholderFragment extends Fragment {
 
         int position = getArguments().getInt(ARG_SECTION_NUMBER);
         View rootView = inflater.inflate(R.layout.fragment_week_view, container, false);
-        TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+        final TextView textView = (TextView) rootView.findViewById(R.id.section_label);
 
-        final List<WeekViewEvent> events = new ArrayList<>();
-        String message = buildMultilineHeader(position, events);
+        String message = loadEventsForPosition(position);
         textView.setText(LayoutHelper.fromHtml(message));
+
+        title = (TextView) rootView.findViewById(R.id.section_title);
+        title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            toggleLabels(textView);
+            }
+        });
 
         WeekView weekView = (WeekView) rootView.findViewById(R.id.weekView);
         weekView.setDateTimeInterpreter(new CustomDateTimeInterpreter());
@@ -93,22 +110,25 @@ class WeekViewPlaceholderFragment extends Fragment {
         return rootView;
     }
 
-    @NonNull
-    private String buildMultilineHeader(int position, List<WeekViewEvent> events) {
+    private String loadEventsForPosition(int position) {
         String message = "<html>";
         for (Cathedra c: CathedrasCombination.getInstance().getAtPosition(position)) {
             if (c != null) {
-                int color = getResources().getColor(c.getColor(), null);
-                String hexColor = "#" + Integer.toHexString(color).substring(2);
-                Log.d("asd", hexColor);
-                String name = UserCourses.getInstance().getCourseName(c.getCourseCode());
-                String colorStr = "<span style='color: " + hexColor + ";'> •••• </span>";
-                message += colorStr;
-                message +=  name + " con " + "<strong>" + c.getTeachers() + "</strong><br>";
-                events.addAll(c.toWeekEvents(c.getCourseCode()));
+                message += buildHeaderMessage(c);
+                events.addAll(c.toWeekEvents(""));
             }
         }
         message += "</html>";
         return message;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @NonNull
+    private String buildHeaderMessage( Cathedra c) {
+        int color = getResources().getColor(c.getColor(), null);
+        String hexColor = "#" + Integer.toHexString(color).substring(2);
+        String name = UserCourses.getInstance().getCourseName(c.getCourseCode());
+        String colorStr = "<span style='color: " + hexColor + ";'> •••• </span>";
+        return colorStr + name + " " + getString(R.string.weekview_with) + " <strong>" + c.getTeachers() + "</strong><br>";
     }
 }

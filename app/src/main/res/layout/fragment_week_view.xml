@@ -7,31 +7,45 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:animateLayoutChanges="true"
     tools:context="mont.gonzalo.phiuba.layout.WeekViewPlaceholderFragment">
 
     <TextView
-        android:id="@+id/section_label"
+        android:id="@+id/section_title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:textSize="15dp"
+        android:textColor="#8f000000"
+        android:text="Horarios"/>
+
+    <TextView
+        android:id="@+id/section_label"
+        android:layout_below="@id/section_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 
     <com.alamkanak.weekview.WeekView
         android:id="@+id/weekView"
+        android:layout_below="@id/section_label"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/section_label"
+        android:layout_margin="10dp"
         app:eventTextColor="@android:color/white"
         app:textSize="10sp"
-        app:hourHeight="25dp"
-        app:headerColumnPadding="5dp"
+        app:hourHeight="30dp"
+        app:headerColumnPadding="6dp"
         app:headerColumnTextColor="#8f000000"
-        app:headerRowPadding="12dp"
-        app:columnGap="8dp"
+        app:headerRowPadding="15dp"
+        app:columnGap="5dp"
         app:firstDayOfWeek="monday"
         app:noOfVisibleDays="6"
-        app:headerRowBackgroundColor="#ffefefef"
+        app:headerRowBackgroundColor="#fefefe"
         app:dayBackgroundColor="#05000000"
         app:todayBackgroundColor="#1848adff"
         app:headerColumnBackground="#ffffffff"
-        app:horizontalFlingEnabled="false"/>
+        app:horizontalFlingEnabled="false"
+        android:visibility="gone"/>
 
 </RelativeLayout>

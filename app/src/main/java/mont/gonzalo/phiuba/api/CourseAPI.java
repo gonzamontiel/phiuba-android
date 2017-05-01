@@ -15,6 +15,9 @@ public interface CourseAPI {
     void get(@Query("planCode") String plan, Callback<List<Course>> response);
 
     @GET("/api/courses")
+    List<Course> getSync(@Query("planCode") String plan);
+
+    @GET("/api/courses")
     void search(@Query("search") String query, @Query("planCode") String plan, Callback<List<Course>> response);
 
     @GET("/api/courses")

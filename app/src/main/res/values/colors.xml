@@ -16,15 +16,15 @@
     <color name="course_available">#ADE45B</color>
     <color name="course_not_available">#e53935</color>
 
-    <color name="material_1">#FFA891</color>
-    <color name="material_2">#F4E99A</color>
-    <color name="material_3">#ADE45B</color>
-    <color name="material_4">#89BABE</color>
-    <color name="material_5">#FFC472</color>
-    <color name="material_7">#ADE45B</color>
-    <color name="material_8">#DE9388</color>
-    <color name="material_6">#CAB888</color>
-    <color name="material_9">#AEC5DF</color>
-    <color name="material_10">#F8D040</color>
+    <color name="material_1">#e2b3e0</color>
+    <color name="material_3">#a691a4</color>
+    <color name="material_4">#8997be</color>
+    <color name="material_7">#abde9a</color>
+    <color name="material_2">#fff98f</color>
+    <color name="material_5">#f5e3ab</color>
+    <color name="material_8">#f74d4d</color>
+    <color name="material_10">#f7ab60</color>
+    <color name="material_6">#dbef80</color>
+    <color name="material_9">#aedddf</color>
 
 </resources>

@@ -31,10 +31,16 @@ public class UserCourses extends Observable implements Serializable {
     private HashMap<String, Double> approvedCourses;
     private List<String> studyingCourses;
     private HashMap<String, Course> loadedCourses;
-    private List<Course> loadedCoursesArray;
 
+    private static List<Course> loadedCoursesArray;
     private static UserCourses _instance = null;
-    private boolean _ready;
+    private static boolean _ready = false;
+
+    public static UserCourses getInstanceSync() {
+        loadedCoursesArray = DataFetcher.getInstance().getCoursesSync(User.get().getPlanCode());
+        _ready = true;
+        return getInstance();
+    }
 
     public static UserCourses getInstance() {
         if (_instance == null) {
@@ -50,7 +56,6 @@ public class UserCourses extends Observable implements Serializable {
 
     private UserCourses(String jsonApproved, String jsonStudying) {
         clearChanged();
-        _ready = false;
         approvedCourses = new HashMap<>();
         studyingCourses = new ArrayList<>();
         loadCourses(jsonApproved, jsonStudying);
@@ -63,28 +68,36 @@ public class UserCourses extends Observable implements Serializable {
 
     private void loadCourses(final String jsonApproved, final String jsonStudying) {
         loadedCourses = new HashMap<>();
-        DataFetcher.getInstance().getCourses(User.get().getPlanCode(),new Callback<List<Course>>() {
-            @Override
-            public void success(List<Course> courses, Response response) {
-                setCourses(courses);
-                Gson gson = new Gson();
-                if (!jsonApproved.isEmpty()) {
-                    approvedCourses = gson.fromJson(jsonApproved, approvedCourses.getClass());
+        if (_ready && !loadedCoursesArray.isEmpty()) {
+            initialize(loadedCoursesArray, jsonApproved, jsonStudying);
+        } else {
+            DataFetcher.getInstance().getCourses(User.get().getPlanCode(),new Callback<List<Course>>() {
+                @Override
+                public void success(List<Course> courses, Response response) {
+                    initialize(courses, jsonApproved, jsonStudying);
                 }
-                if (!jsonStudying.isEmpty()) {
-                    studyingCourses = gson.fromJson(jsonStudying, studyingCourses.getClass());
-                }
-                approvedCourses.put("CBC", 0.0);
-                loadedCourses.put("CBC", new CourseCBC());
-                _ready = true;
-                doNotifyObservers();
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-                Log.d(TAG, error.getMessage());
-            }
-        });
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.d(TAG, error.getMessage());
+                }
+            });
+        }
+    }
+
+    private void initialize(List<Course> courses, String jsonApproved, String jsonStudying) {
+        setCourses(courses);
+        Gson gson = new Gson();
+        if (!jsonApproved.isEmpty()) {
+            approvedCourses = gson.fromJson(jsonApproved, approvedCourses.getClass());
+        }
+        if (!jsonStudying.isEmpty()) {
+            studyingCourses = gson.fromJson(jsonStudying, studyingCourses.getClass());
+        }
+        approvedCourses.put("CBC", 0.0);
+        loadedCourses.put("CBC", new CourseCBC());
+        _ready = true;
+        doNotifyObservers();
     }
 
     private void addCourse(String code, Course c) {
@@ -243,16 +256,6 @@ public class UserCourses extends Observable implements Serializable {
         return getCourse(courseCode).getName();
     }
 
-    public HashMap<String, List<Cathedra>> getStudiyngCoursesWithCathedras() {
-        HashMap<String, List<Cathedra>> res = new HashMap<>();
-        for (String code: studyingCourses) {
-            if (loadedCourses.get(code) != null && !loadedCourses.get(code).getCathedras().isEmpty()) {
-                res.put(code, loadedCourses.get(code).getCathedras());
-            }
-        }
-        return res;
-    }
-
     public void resetPrefs() {
         Context context = ActivityContext.get();
         SharedPreferences mPrefs = context.getSharedPreferences(
@@ -277,7 +280,6 @@ public class UserCourses extends Observable implements Serializable {
         Log.d("Saving studying", gson.toJson(studyingCourses));
         prefsEditor.commit();
     }
-
 
     public static UserCourses getFromSharedPrefs() {
         Context context = ActivityContext.get();
@@ -325,5 +327,9 @@ public class UserCourses extends Observable implements Serializable {
 
     public boolean isStudying(Course course) {
         return studyingCourses.contains(course.getCode());
+    }
+
+    public List<String> getStudyingCourses() {
+        return studyingCourses;
     }
 }
