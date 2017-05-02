@@ -87,13 +87,10 @@ public class ScheduleSlot {
         startTime.set(2007, Calendar.JANUARY, getDayOfWeek());
 
         SimpleDateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy G");
-        Log.d("start", formatter.format(startTime.getTime()));
 
         Calendar endTime = getUniqueWeekDate();
         endTime.setTimeInMillis(end.getTime());
         endTime.set(2007, Calendar.JANUARY, getDayOfWeek());
-
-        Log.d("end", formatter.format(endTime.getTime()));
 
         // Create an week view event.
         WeekViewEvent weekViewEvent = new WeekViewEvent();
