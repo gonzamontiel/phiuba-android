@@ -25,6 +25,11 @@ public class MaterialColors {
             R.color.material_10
     ));
 
+
+    public static Integer get(int n) {
+        return randomColors.get(n % randomColors.size());
+    }
+
     public static Integer getRandom() {
         Random r = new Random();
         r.setSeed(new Date().getTime());

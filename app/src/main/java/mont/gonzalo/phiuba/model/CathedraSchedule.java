@@ -130,6 +130,6 @@ public class CathedraSchedule implements Serializable, Calendable {
     }
 
     public int getDayOfWeek() {
-        return Arrays.asList(daysOfWeek).indexOf(getDay()) + 2;
+        return Arrays.asList(daysOfWeek).indexOf(getDay()) + 1;
     }
 }

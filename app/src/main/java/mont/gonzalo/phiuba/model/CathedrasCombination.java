@@ -38,10 +38,13 @@ public class CathedrasCombination implements Serializable {
         cathedrasByCourse = new HashMap<>();
         cathedras = new HashMap<>();
         colors =  new HashMap<>();
+        combinations = 1;
     }
 
     public void buildTree() {
         cathedras.clear();
+        cathedrasByCourse.clear();
+        Log.d("colors", String.valueOf(colors));
         root = new Node<>(null);
         Node<String> node = root;
         for (String code: cathedrasByCourse.keySet()) {
@@ -74,7 +77,7 @@ public class CathedrasCombination implements Serializable {
             cathedrasComb.add(cathedras.get(parent.getData()));
             parent = parent.getParent();
         }
-        Log.d("Collision:", String.valueOf(schedulesCollision(cathedrasComb)));
+        Log.d("Collision at pos"+ n + ":", String.valueOf(schedulesCollision(cathedrasComb)));
         return cathedrasComb;
     }
 
@@ -117,7 +120,7 @@ public class CathedrasCombination implements Serializable {
 
     private boolean eventsCollide(WeekViewEvent e1, WeekViewEvent e2) {
         boolean isBefore = e1.getEndTime().before(e2.getStartTime());
-        boolean isAfter= e2.getEndTime().before(e1.getStartTime());
+        boolean isAfter= e1.getStartTime().after(e2.getEndTime());
         return !isBefore && !isAfter;
     }
 
@@ -127,21 +130,25 @@ public class CathedrasCombination implements Serializable {
 
     public void loadCathedrasSync() {
         UserCourses uc = UserCourses.getInstance();
+        int n = 0;
         for (String code: uc.getStudyingCourses()) {
             Course c = uc.getCourse(code);
             if (c != null) {
                 c.setCathedras(DataFetcher.getInstance().getCathedrasSync(code));
                 cathedrasByCourse.put(code, c.getCathedras());
-                colors.put(code, getRandomColorNotTaken());
+                colors.put(code, MaterialColors.get(n));
             }
         }
     }
 
-    public Integer getRandomColorNotTaken() {
+    public void generateColorForCourse(String code) {
         Integer color = MaterialColors.getRandom();
-        while (colors.containsKey(color)) {
+        while (colors.containsValue(color)) {
             color = MaterialColors.getRandom();
         }
-        return color;
+    }
+
+    public boolean isEmpty() {
+        return cathedrasByCourse.keySet().isEmpty();
     }
 }

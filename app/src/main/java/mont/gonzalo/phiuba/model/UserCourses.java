@@ -148,6 +148,7 @@ public class UserCourses extends Observable implements Serializable {
     public void removeCourse(Course c) {
         this.studyingCourses.remove(c.getCode());
         this.approvedCourses.remove(c.getCode());
+        saveToSharedPrefs();
         doNotifyObservers();
     }
 

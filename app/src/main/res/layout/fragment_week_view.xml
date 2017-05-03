@@ -15,8 +15,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:textSize="15dp"
+        android:textSize="20dp"
+        android:textStyle="bold"
         android:textColor="#8f000000"
+        android:layout_marginBottom="5dp"
         android:text="Horarios"/>
 
     <TextView
@@ -25,13 +27,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-
     <com.alamkanak.weekview.WeekView
         android:id="@+id/weekView"
         android:layout_below="@id/section_label"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
         app:eventTextColor="@android:color/white"
         app:textSize="10sp"
         app:hourHeight="30dp"
@@ -45,7 +45,30 @@
         app:dayBackgroundColor="#05000000"
         app:todayBackgroundColor="#1848adff"
         app:headerColumnBackground="#ffffffff"
-        app:horizontalFlingEnabled="false"
-        android:visibility="gone"/>
+        app:horizontalFlingEnabled="false"/>
+
+    <ImageView
+        android:id="@+id/empty_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="80dp"
+        android:padding="20dp"
+        android:src="@drawable/emptybox"
+        android:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/empty_label"
+        android:layout_below="@id/empty_image"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:gravity="center|top"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:textColor="#8f000000"
+        android:layout_marginBottom="5dp"
+        android:text="Agregá materias con el botón de más abajo, o desde la sección Materias."
+        android:visibility="visible"/>
 
 </RelativeLayout>
