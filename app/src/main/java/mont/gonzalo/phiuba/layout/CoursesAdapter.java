@@ -30,6 +30,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
     private final List<Course> mCourses;
     private final OnListFragmentInteractionListener mListener;
     private int position;
+    private boolean menuEnabled;
 
     public int getPosition() {
         return position;
@@ -41,6 +42,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
 
     public CoursesAdapter(List<Course> courses, OnListFragmentInteractionListener mListener) {
         mCourses = courses;
+        menuEnabled = true;
         this.mListener = mListener;
     }
 
@@ -48,6 +50,14 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         mCourses.clear();
         mCourses.addAll(newItems);
         this.notifyDataSetChanged();
+    }
+
+    public void disableMenu() {
+        this.menuEnabled = false;
+    }
+
+    public void enableMenu() {
+        this.menuEnabled = true;
     }
 
     @Override
@@ -74,19 +84,34 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
 
         double calif = UserCourses.getInstance().getCalification(holder.mItem);
         holder.updateAward(calif);
+        holder.sml.setSwipeEnable(menuEnabled);
 
-        holder.sml.setSwipeListener(new CourseSwipeListener(holder));
-        holder.sml.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    Animation animation1 = new AlphaAnimation(0.3f, 1.0f);
-                    animation1.setDuration(200);
-                    v.startAnimation(animation1);
-                    mListener.onListFragmentInteraction(holder.mItem);
+        if (menuEnabled) {
+            holder.sml.setSwipeListener(new CourseSwipeListener(holder));
+            holder.sml.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != mListener) {
+                        Animation animation1 = new AlphaAnimation(0.3f, 1.0f);
+                        animation1.setDuration(200);
+                        v.startAnimation(animation1);
+                        mListener.onListFragmentInteraction(holder.mItem);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            holder.sml.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != mListener) {
+                        Animation animation1 = new AlphaAnimation(0.3f, 1.0f);
+                        animation1.setDuration(200);
+                        v.startAnimation(animation1);
+                        holder.itemView.setAlpha(0.7f);
+                    }
+                }
+            });
+        }
     }
 
 
