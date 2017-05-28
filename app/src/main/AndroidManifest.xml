@@ -14,40 +14,33 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-
-        <activity android:name=".layout.ImportSIUActivity"
+        <activity
+            android:name=".layout.ImportSIUActivity"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-
         <activity
             android:name=".layout.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".layout.MyPlanActivity"
             android:label="@string/title_activity_my_plan"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-
-        <activity android:name=".layout.CathedraActivity" />
         <activity
             android:name=".layout.WeekViewActivity"
             android:label="@string/title_activity_week_view"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
     </application>
 
 </manifest>
