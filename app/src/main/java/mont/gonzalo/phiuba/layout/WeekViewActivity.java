@@ -1,12 +1,15 @@
 package mont.gonzalo.phiuba.layout;
 
+import android.app.Dialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,11 +18,13 @@ import android.widget.ProgressBar;
 
 import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.model.CathedrasCombination;
+import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.UserCourses;
 
-public class WeekViewActivity extends AppCompatActivity {
+public class WeekViewActivity extends AppCompatActivity implements CoursesFragment.OnListFragmentInteractionListener {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ProgressBar progressBar;
+    private FloatingActionButton addButton;
     private ViewPager mViewPager;
 
     @Override
@@ -32,8 +37,30 @@ public class WeekViewActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         progressBar = (ProgressBar) findViewById(R.id.progress);
 
+        initFab();
+
         ActivityContext.set(this);
         rebuildTree();
+    }
+
+    private void initFab() {
+        addButton = (FloatingActionButton) findViewById(R.id.fab);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCoursesDialog();
+            }
+        });
+    }
+
+    private void openCoursesDialog() {
+        final Dialog dialog = new Dialog(this);
+        View view = getLayoutInflater().inflate(R.layout.fragment_course_list, null);
+        RecyclerView lv = (RecyclerView) view.findViewById(R.id.course_rv);
+        CoursesAdapter coursesAdapter = new CoursesAdapter(UserCourses.getInstance().getAvailableCourses(), this);
+        lv.setAdapter(coursesAdapter);
+        dialog.setContentView(view);
+        dialog.show();
     }
 
     private void rebuildTree() {
@@ -77,6 +104,11 @@ public class WeekViewActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onListFragmentInteraction(Course item) {
+
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
