@@ -233,6 +233,21 @@ public class UserCourses extends Observable implements Serializable {
         return filteredAv;
     }
 
+    public static List<Course> filterAvailable(List<Course> mCourses) {
+        UserCourses ucs = UserCourses.getInstance();
+        List<Course> filteredAv = new ArrayList<>();
+        Collections.sort(mCourses, new Course.ComparatorByName());
+        for (Course c: mCourses) {
+            if (!ucs.approvedCourses.containsKey(c.getCode()) &&
+                    !ucs.studyingCourses.contains(c.getCode())) {
+                if (getInstance().isAvailable(c)) {
+                    filteredAv.add(c);
+                }
+            }
+        }
+        return filteredAv;
+    }
+
     public double getCalification(Course c) {
         Double calif =  approvedCourses.get(c.getCode());
         if (calif != null) {
@@ -332,5 +347,9 @@ public class UserCourses extends Observable implements Serializable {
 
     public List<String> getStudyingCourses() {
         return studyingCourses;
+    }
+
+    public List<Course> getAvailableCourses() {
+        return filterAvailable(getAll());
     }
 }
