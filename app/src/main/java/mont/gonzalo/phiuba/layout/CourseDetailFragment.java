@@ -46,6 +46,14 @@ public class CourseDetailFragment extends SearchableFragment implements Serializ
     }
 
     @Override
+    public void loadFromIntent(Serializable data) {
+        if (data == null) return;
+        this.mCourse = (Course) data;
+        this.setListener((OnFragmentInteractionListener) getActivity());
+        this.setListListener((OnListFragmentInteractionListener) getActivity());
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }

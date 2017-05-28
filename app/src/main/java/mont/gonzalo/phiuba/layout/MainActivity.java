@@ -38,6 +38,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import mont.gonzalo.phiuba.R;
+import mont.gonzalo.phiuba.SettingsActivity;
 import mont.gonzalo.phiuba.api.DataFetcher;
 import mont.gonzalo.phiuba.model.CalendarIntegration;
 import mont.gonzalo.phiuba.model.Cathedra;
@@ -130,14 +131,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void applyDefaultFragment(Bundle savedInstanceState) {
-        // Set current fragment to be shown
+        Class fragmentClass = null;
         currentFragment = null;
+        Intent intent = getIntent();
         if (savedInstanceState != null) {
             currentFragment = (SearchableFragment) savedInstanceState.get(ACTIVE_FRAGMENT);
-        } else {
-            Class fragmentClass = getDefaultFragmentClass();
+        } else if (intent != null) {
+            fragmentClass = (Class) intent.getSerializableExtra(SPECIFIC_FRAGMENT);
+        }
+        if (currentFragment == null) {
+            fragmentClass = (fragmentClass == null) ? getDefaultFragmentClass() : fragmentClass;
             try {
                 currentFragment = (SearchableFragment) fragmentClass.newInstance();
+                currentFragment.loadFromIntent(intent.getSerializableExtra(SPECIFIC_FRAGMENT_DATA));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -268,6 +274,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
         if (id == R.id.action_update) {
@@ -319,6 +327,10 @@ public class MainActivity extends AppCompatActivity
     // Manage clicks inside Courses list view
     @Override
     public void onListFragmentInteraction(Course item) {
+        goToCourseItem(item);
+    }
+
+    private void goToCourseItem(Course item) {
         currentFragment = CourseDetailFragment.newInstance(this, this, item);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.flContent, currentFragment);
@@ -329,6 +341,10 @@ public class MainActivity extends AppCompatActivity
     // Manage clicks on News view
     @Override
     public void onListFragmentInteraction(News item) {
+        goToNewsItem(item);
+    }
+
+    private void goToNewsItem(News item) {
         currentFragment = NewsDetailFragment.newInstance(item);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.flContent, currentFragment);
@@ -367,6 +383,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Department item) {
+        goToDepartment(item);
+    }
+
+    private void goToDepartment(Department item) {
         currentFragment = DepartmentDetailFragment.newInstance(this, item);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.flContent, currentFragment);
@@ -376,6 +396,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Event item) {
+        goToEventItem();
+
+    }
+
+    private void goToEventItem() {
 //        currentFragment = EventDetailFragment.newInstance(this, this, item);
 //        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 //        transaction.replace(R.id.flContent, currentFragment);
@@ -439,10 +464,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showDepartment(Department dep) {
-        currentFragment = DepartmentDetailFragment.newInstance(this, dep);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.flContent, currentFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        goToDepartment(dep);
     }
 }
