@@ -144,9 +144,9 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         }
 
         @RequiresApi(api = Build.VERSION_CODES.M)
-        public void updateStatus() {
+        public void updateStatus(Course c) {
             status.setBackgroundColor(ActivityContext.get().getColor(
-                    mItem.getColorId()));
+                    c.getColorId()));
         }
     }
 
@@ -185,7 +185,11 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                 @Override
                 public void onClick(View v) {
                     holder.updateAward(-1);
-                    if (course.isAvailable()) {
+                    if (UserCourses.getInstance().isStudying(course)) {
+                        Toast.makeText(ActivityContext.get(),
+                                "Ya estás cursando " + course.getName(),
+                                Toast.LENGTH_LONG).show();
+                    } else if (course.isAvailable()) {
                         boolean success = UserCourses.getInstance().addStudying(course);
                         if (success) {
                             Toast.makeText(ActivityContext.get(),
@@ -213,7 +217,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                 public void onClick(View v) {
                     UserCourses.getInstance().removeCourse(course);
                     holder.updateAward(-1);
-                    holder.updateStatus();
+                    holder.updateStatus(course);
                     Toast.makeText(ActivityContext.get(), "Removiendo " + course.getName(), Toast.LENGTH_LONG).show();
                 }
             });
