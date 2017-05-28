@@ -29,14 +29,12 @@ import java.util.Observable;
 import java.util.Observer;
 
 import mont.gonzalo.phiuba.R;
-import mont.gonzalo.phiuba.model.Cathedra;
 import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.User;
 import mont.gonzalo.phiuba.model.UserCourses;
 
 public class MyPlanActivity extends AppCompatActivity
-        implements CoursesFragment.OnListFragmentInteractionListener,
-        CourseDetailFragment.OnFragmentInteractionListener, CourseDetailFragment.OnListFragmentInteractionListener, CircleDisplay.SelectionListener, Observer {
+        implements CoursesFragment.OnListFragmentInteractionListener, CircleDisplay.SelectionListener, Observer {
     private transient SectionsPagerAdapter mSectionsPagerAdapter;
     private transient ViewPager mViewPager;
     private transient TabLayout tabs;
@@ -160,16 +158,10 @@ public class MyPlanActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Course course) {
-    }
-
-    @Override
-    public void onFragmentInteraction(Course course) {
-
-    }
-
-    @Override
-    public void onListFragmentInteraction(Cathedra item, String courseName, String teachers) {
-
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(MainActivity.SPECIFIC_FRAGMENT, CourseDetailFragment.class);
+        intent.putExtra(MainActivity.SPECIFIC_FRAGMENT_DATA, course);
+        startActivity(intent);
     }
 
     @Override
