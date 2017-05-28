@@ -125,7 +125,7 @@ public class Course implements Serializable {
         return UserCourses.getInstance().isApproved(this);
     }
 
-    private boolean isStuding() {
+    private boolean isStudying() {
         return UserCourses.getInstance().isStudying(this);
     }
 
@@ -137,7 +137,7 @@ public class Course implements Serializable {
         CourseStatus status = CourseStatus.NOT_AVAILABLE;
         if (isApproved()) {
             status = CourseStatus.APPROVED;
-        } else if (isStuding()) {
+        } else if (isStudying()) {
             status = CourseStatus.STUDYING;
         } else if (isFinalExamPending()) {
             status = CourseStatus.EXAM_PENDING;
