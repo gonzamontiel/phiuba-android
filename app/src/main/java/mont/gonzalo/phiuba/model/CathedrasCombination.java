@@ -43,8 +43,6 @@ public class CathedrasCombination implements Serializable {
 
     public void buildTree() {
         cathedras.clear();
-        cathedrasByCourse.clear();
-        Log.d("colors", String.valueOf(colors));
         root = new Node<>(null);
         Node<String> node = root;
         for (String code: cathedrasByCourse.keySet()) {

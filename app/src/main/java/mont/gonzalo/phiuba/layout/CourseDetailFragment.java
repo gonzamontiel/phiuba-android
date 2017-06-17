@@ -23,7 +23,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class CourseDetailFragment extends SearchableFragment implements Serializable, CoursesFragment.OnListFragmentInteractionListener {
+public class CourseDetailFragment extends SearchableFragment implements Serializable {
     private static final String TAG = "CourseDetailFragment";
     private transient OnFragmentInteractionListener mListener;
     private transient OnListFragmentInteractionListener mListListener;
@@ -65,7 +65,7 @@ public class CourseDetailFragment extends SearchableFragment implements Serializ
         final TextView schedulesTextView = (TextView) view.findViewById(R.id.schedulesText);
         final RecyclerView requirements = (RecyclerView) view.findViewById(R.id.requirements);
         requirements.setAdapter(new MiniCoursesAdapter(
-                UserCourses.getInstance().getCoursesByCodes(mCourse.getCorrelatives()), this));
+                UserCourses.getInstance().getCoursesByCodes(mCourse.getCorrelatives()), (MiniCoursesAdapter.OnCorrelativeInteractionListener) getActivity()));
 
         nameTextView = (TextView) view.findViewById(R.id.course_name);
         deptoIcon = (ImageView) view.findViewById(R.id.coursed_depto_icon);
@@ -141,11 +141,6 @@ public class CourseDetailFragment extends SearchableFragment implements Serializ
     @Override
     public SearchableFragment getResultsFragment() {
         return CoursesFragment.newInstance(1, (CoursesFragment.OnListFragmentInteractionListener) getActivity());
-    }
-
-    @Override
-    public void onListFragmentInteraction(Course item) {
-
     }
 
     public interface OnFragmentInteractionListener {

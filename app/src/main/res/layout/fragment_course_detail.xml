@@ -66,9 +66,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:breakStrategy="balanced"
-        android:gravity="center"
+        android:gravity="left"
+        android:paddingLeft="5dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
         android:text="@string/requirements"
-        android:textColor="@color/primary_text"
+        android:textColor="#999"
         android:textSize="15dp"
         android:textStyle="bold" />
 
@@ -79,9 +82,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:breakStrategy="balanced"
-        android:gravity="center"
+        android:paddingLeft="5dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="6dp"
+        android:gravity="left"
         android:text="Horarios"
-        android:textColor="@color/primary_text"
+        android:textColor="#999"
         android:textSize="15dp"
         android:textStyle="bold" />
 

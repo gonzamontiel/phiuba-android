@@ -16,9 +16,9 @@ import mont.gonzalo.phiuba.model.Course;
 
 public class MiniCoursesAdapter extends RecyclerView.Adapter<MiniCoursesAdapter.ViewHolder> {
     private final List<Course> mCourses;
-    private final CoursesFragment.OnListFragmentInteractionListener mListener;
+    private final OnCorrelativeInteractionListener  mListener;
 
-    public MiniCoursesAdapter(List<Course> courses, CoursesFragment.OnListFragmentInteractionListener mListener) {
+    public MiniCoursesAdapter(List<Course> courses, OnCorrelativeInteractionListener  mListener) {
         mCourses = courses;
         this.mListener = mListener;
     }
@@ -33,9 +33,8 @@ public class MiniCoursesAdapter extends RecyclerView.Adapter<MiniCoursesAdapter.
     @Override
     public void onBindViewHolder(MiniCoursesAdapter.ViewHolder holder, int position) {
         Course course = mCourses.get(position);
-        holder.name.setText(course.getCode() + " - " + course.getName());
-        holder.icon.setImageResource(course.getImageResource());
-        holder.status.setBackgroundColor(ActivityContext.get().getColor(course.getColorId()));
+        holder.name.setText(course.getLongName());
+        holder.icon.setImageResource(course.getApprovedOrNotIcon());
     }
 
     @Override
@@ -46,13 +45,15 @@ public class MiniCoursesAdapter extends RecyclerView.Adapter<MiniCoursesAdapter.
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView name;
         private ImageView icon;
-        private View status;
 
         public ViewHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.course_name);
             icon = (ImageView) itemView.findViewById(R.id.course_icon);
-            status = itemView.findViewById(R.id.status);
         }
+    }
+
+    public interface OnCorrelativeInteractionListener {
+        void onCorrelativeInteraction(Course item);
     }
 }

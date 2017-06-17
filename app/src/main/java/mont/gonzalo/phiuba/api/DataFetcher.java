@@ -61,7 +61,7 @@ public class DataFetcher extends Observable {
                 .create();
         this.adapter = new RestAdapter.Builder()
                 .setEndpoint(serverUrl)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLogLevel(RestAdapter.LogLevel.NONE)
                 .setConverter(new GsonConverter(gson))
                 .build();
         this.courseApi = this.adapter.create(CourseAPI.class);

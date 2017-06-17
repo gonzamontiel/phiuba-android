@@ -56,7 +56,16 @@ import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        CoursesFragment.OnListFragmentInteractionListener, NewsFragment.OnListFragmentInteractionListener, CourseDetailFragment.OnFragmentInteractionListener, CourseDetailFragment.OnListFragmentInteractionListener, DepartmentsFragment.OnListFragmentInteractionListener, EventsFragment.OnListFragmentInteractionListener, SearchView.OnQueryTextListener, Observer, DepartmentDetailFragment.OnListFragmentInteractionListener {
+        CoursesFragment.OnListFragmentInteractionListener,
+        NewsFragment.OnListFragmentInteractionListener,
+        CourseDetailFragment.OnFragmentInteractionListener,
+        CourseDetailFragment.OnListFragmentInteractionListener,
+        DepartmentsFragment.OnListFragmentInteractionListener,
+        EventsFragment.OnListFragmentInteractionListener,
+        SearchView.OnQueryTextListener,
+        DepartmentDetailFragment.OnListFragmentInteractionListener,
+        MiniCoursesAdapter.OnCorrelativeInteractionListener,
+        Observer {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String ACTIVE_FRAGMENT = "active_fragment";
@@ -397,7 +406,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(Event item) {
         goToEventItem();
-
     }
 
     private void goToEventItem() {
@@ -465,5 +473,10 @@ public class MainActivity extends AppCompatActivity
 
     public void showDepartment(Department dep) {
         goToDepartment(dep);
+    }
+
+    @Override
+    public void onCorrelativeInteraction(Course item) {
+        goToCourseItem(item);
     }
 }

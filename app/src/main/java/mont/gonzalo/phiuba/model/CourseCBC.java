@@ -17,4 +17,14 @@ public class CourseCBC extends Course {
         setCredits(1);
         setCorrelatives(Arrays.asList(""));
     }
+
+    @Override
+    public String getLongName() {
+        return getName();
+    }
+
+    @Override
+    public boolean isApproved() {
+        return true;
+    }
 }

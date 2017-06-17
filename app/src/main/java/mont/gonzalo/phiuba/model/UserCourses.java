@@ -94,7 +94,7 @@ public class UserCourses extends Observable implements Serializable {
         if (!jsonStudying.isEmpty()) {
             studyingCourses = gson.fromJson(jsonStudying, studyingCourses.getClass());
         }
-        approvedCourses.put("CBC", 0.0);
+        approvedCourses.put("CBC", -1.0);
         loadedCourses.put("CBC", new CourseCBC());
         _ready = true;
         doNotifyObservers();

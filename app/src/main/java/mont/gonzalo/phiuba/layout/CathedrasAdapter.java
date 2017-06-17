@@ -60,7 +60,7 @@ public class CathedrasAdapter extends RecyclerView.Adapter<CathedrasAdapter.Cath
         holder.teachers.setText(holder.mItem.getTeachers());
         holder.schedulesText.setText(holder.mItem.getSchedulesAsMultilineText(res));
         holder.seatsText.setText(res.getString(R.string.seats) + ": " + holder.mItem.getSeats());
-        holder.color.setBackgroundColor(res.getColor(holder.mItem.getColor(), null));
+//        holder.color.setBackgroundColor(res.getColor(holder.mItem.getColor(), null));
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

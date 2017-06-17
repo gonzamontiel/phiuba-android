@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +38,7 @@ class WeekViewPlaceholderFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private List<WeekViewEvent> events = new ArrayList<>();
     private TextView title;
+    private View rootView;
 
     public WeekViewPlaceholderFragment() {
     }
@@ -70,15 +70,14 @@ class WeekViewPlaceholderFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         int position = getArguments().getInt(ARG_SECTION_NUMBER);
-        View rootView = inflater.inflate(R.layout.fragment_week_view, container, false);
+        this.rootView = inflater.inflate(R.layout.fragment_week_view, container, false);
         final TextView textViewLabel = (TextView) rootView.findViewById(R.id.section_label);
         final TextView textViewTitle = (TextView) rootView.findViewById(R.id.section_title);
 
         if (CathedrasCombination.getInstance().isEmpty()) {
-            Log.d("is empty", "YESSS");
-            showPlaceHolder(rootView);
+            togglePlaceHolder(true);
         } else {
-            Log.d("is empty", "NOTTTTTTTTTTTTT");
+            togglePlaceHolder(false);
             String message = loadEventsForPosition(position);
             textViewLabel.setText(LayoutHelper.fromHtml(message));
             textViewTitle.setText("Horarios • Combinación Nro. " + position);
@@ -118,17 +117,19 @@ class WeekViewPlaceholderFragment extends Fragment {
         return rootView;
     }
 
-    private void showPlaceHolder(View rootView) {
-        TextView emptyMessage = (TextView) rootView.findViewById(R.id.empty_label);
-        ImageView emptyPlaceholder = (ImageView) rootView.findViewById(R.id.empty_image);
-        WeekView weekView = (WeekView) rootView.findViewById(R.id.weekView);
-        TextView textViewLabel = (TextView) rootView.findViewById(R.id.section_label);
-        TextView textViewTitle = (TextView) rootView.findViewById(R.id.section_title);
-        emptyMessage.setVisibility(View.VISIBLE);
-        emptyPlaceholder.setVisibility(View.VISIBLE);
-        weekView.setVisibility(View.GONE);
-        textViewLabel.setVisibility(View.GONE);
-        textViewTitle.setVisibility(View.GONE);
+    private void togglePlaceHolder(boolean show) {
+        if (rootView != null) {
+            TextView emptyMessage = (TextView) rootView.findViewById(R.id.empty_label);
+            ImageView emptyPlaceholder = (ImageView) rootView.findViewById(R.id.empty_image);
+            WeekView weekView = (WeekView) rootView.findViewById(R.id.weekView);
+            TextView textViewLabel = (TextView) rootView.findViewById(R.id.section_label);
+            TextView textViewTitle = (TextView) rootView.findViewById(R.id.section_title);
+            emptyMessage.setVisibility(show ? View.VISIBLE : View.GONE);
+            emptyPlaceholder.setVisibility(show ? View.VISIBLE : View.GONE);
+            weekView.setVisibility(show ? View.GONE : View.VISIBLE);
+            textViewLabel.setVisibility(show ? View.GONE : View.VISIBLE);
+            textViewTitle.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
     }
 
     private String loadEventsForPosition(int position) {

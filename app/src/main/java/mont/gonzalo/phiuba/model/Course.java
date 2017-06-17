@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.api.DataFetcher;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -206,6 +207,14 @@ public class Course implements Serializable {
             public void failure(RetrofitError error) {
             }
         });
+    }
+
+    public int getApprovedOrNotIcon() {
+        return isApproved() ? R.drawable.tick : R.drawable.cross;
+    }
+
+    public String getLongName() {
+        return getCode() + " - " + getName();
     }
 
     public static class ComparatorByName implements Comparator<Course> {
