@@ -10,10 +10,10 @@
     <color name="divider">#BDBDBD</color>
     <color name="course_default">#EEEEEE</color>
     <color name="course_added">#41c0f2</color>
-    <color name="course_approved">#F4E99A</color>
-    <color name="course_studyng">#64b5f6</color>
-    <color name="course_exam_pending">#f9a825</color>
-    <color name="course_available">#ADE45B</color>
+    <color name="course_approved">#fff069</color>
+    <color name="course_studyng">#ffc05a</color>
+    <color name="course_exam_pending">#75abe6</color>
+    <color name="course_available">#b7ef64</color>
     <color name="course_not_available">#e53935</color>
 
     <color name="material_1">#e2b3e0</color>

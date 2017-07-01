@@ -334,11 +334,15 @@ public class UserCourses extends Observable implements Serializable {
     }
 
     public boolean isApproved(Course course) {
-        return approvedCourses.containsKey(course.getCode()) && approvedCourses.get(course.getCode()) > 0;
+        return approvedCourses.containsKey(course.getCode())
+            && approvedCourses.get(course.getCode()) != null
+            && approvedCourses.get(course.getCode()) > 0;
     }
 
     public boolean isFinalExamPending(Course course) {
-        return approvedCourses.containsKey(course.getCode()) && approvedCourses.get(course.getCode()) < 0;
+        return approvedCourses.containsKey(course.getCode()) &&
+                (approvedCourses.get(course.getCode()) == null ||
+                approvedCourses.get(course.getCode()) < 0);
     }
 
     public boolean isStudying(Course course) {

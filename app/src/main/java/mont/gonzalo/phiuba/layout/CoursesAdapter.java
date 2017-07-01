@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -252,18 +254,37 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
             final Dialog d = new Dialog(ActivityContext.get());
             d.setContentView(R.layout.calification_dialog);
 
+            final NumberPicker np = (NumberPicker) d.findViewById(R.id.number_picker);
+            final CheckBox finalCheckBox = (CheckBox) d.findViewById(R.id.finalCheck);
             ImageButton bDone = (ImageButton) d.findViewById(R.id.buttonDone);
             ImageButton bCancel = (ImageButton) d.findViewById(R.id.buttonCancel);
 
-            final NumberPicker np = (NumberPicker) d.findViewById(R.id.number_picker);
+            finalCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        np.setVisibility(View.GONE);
+                    } else {
+                        np.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+
             bDone.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (course != null) {
-                        holder.updateAward(np.getValue());
-                        UserCourses.getInstance().addApproved(course, (double) np.getValue());
+                        String successMessage;
+                        if (finalCheckBox.isChecked()) {
+                            successMessage = " como cursada aprobada, en final.";
+                            UserCourses.getInstance().addApproved(course, null);
+                        } else {
+                            successMessage = " como aprobada con " + np.getValue();
+                            holder.updateAward(np.getValue());
+                            UserCourses.getInstance().addApproved(course, (double) np.getValue());
+                        }
                         Toast.makeText(ActivityContext.get(),
-                                "Agregando " + course.getName() + " como aprobada con " + np.getValue(),
+                                "Agregando " + course.getName() + successMessage,
                                 Toast.LENGTH_LONG).show();
                     }
                     d.dismiss();

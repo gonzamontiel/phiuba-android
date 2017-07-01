@@ -1,22 +1,26 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="180dp"
+    android:layout_width="240dp"
     android:layout_height="wrap_content"
+    app:cardElevation="10dp"
     app:cardCornerRadius="5dp"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="25dp"
-            android:text="Nota"
+            android:padding="10dp"
+            android:textSize="22dp"
+            android:text="Calificación"
             android:gravity="center"
+            android:background="#eee"
             android:id="@+id/txtTitle" />
 
         <com.shawnlin.numberpicker.NumberPicker
@@ -34,30 +38,46 @@
             app:np_textSize="30dp"
             app:np_value="3" />
 
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/finalCheck"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Final pendiente"/>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:gravity="center"
+            android:gravity="right"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
             android:layout_height="wrap_content"
+            android:background="#eee"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/buttonCancel"
                 android:src="@drawable/ic_action_close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@color/primary"
+                android:elevation="5dp"
                 android:padding="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_gravity="center"
                 android:layout_toLeftOf="@+id/numberPicker" />
 
             <ImageButton
                 android:id="@+id/buttonDone"
                 android:src="@drawable/ic_action_done"
-                android:layout_width="wrap_content"
-                android:background="@android:color/transparent"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@color/accent"
+                android:layout_marginRight="10dp"
+                android:elevation="5dp"
                 android:padding="10dp"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content"/>
+                android:layout_gravity="center" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>
