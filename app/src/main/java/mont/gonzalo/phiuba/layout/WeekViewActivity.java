@@ -1,8 +1,11 @@
 package mont.gonzalo.phiuba.layout;
 
 import android.app.Dialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,6 +20,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import mont.gonzalo.phiuba.R;
+import mont.gonzalo.phiuba.SettingsActivity;
 import mont.gonzalo.phiuba.model.CathedrasCombination;
 import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.UserCourses;
@@ -64,8 +68,10 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
     }
 
     private void rebuildTree() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         CathedrasCombination cc = CathedrasCombination.getInstance();
         CombinationsTreeBuilder builder = new CombinationsTreeBuilder();
+        builder.setAvoidCollisions(prefs.getBoolean("weekview_hide_collisions", true));
         builder.execute(cc);
     }
 
@@ -100,6 +106,8 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -133,6 +141,8 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
     }
 
     private class CombinationsTreeBuilder extends AsyncTask<CathedrasCombination, Integer, String> {
+        private boolean avoidCollisions;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -142,6 +152,7 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
         protected String doInBackground(CathedrasCombination[] comb) {
             UserCourses.getInstanceSync();
             comb[0].loadCathedrasSync();
+            comb[0].setAvoidCollisions(avoidCollisions);
             comb[0].buildTree();
             comb[0].print();
             return null;
@@ -152,6 +163,10 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
             super.onPostExecute(s);
             hideProgressBar();
             setSectionsAdapter();
+        }
+
+        public void setAvoidCollisions(boolean avoidCollisions) {
+            this.avoidCollisions = avoidCollisions;
         }
     }
 }

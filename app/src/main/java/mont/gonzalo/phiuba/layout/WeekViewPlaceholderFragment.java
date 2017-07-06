@@ -1,8 +1,10 @@
 package mont.gonzalo.phiuba.layout;
 
+import android.content.SharedPreferences;
 import android.graphics.RectF;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
@@ -74,6 +76,7 @@ class WeekViewPlaceholderFragment extends Fragment {
         final TextView textViewLabel = (TextView) rootView.findViewById(R.id.section_label);
         final TextView textViewTitle = (TextView) rootView.findViewById(R.id.section_title);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (CathedrasCombination.getInstance().isEmpty()) {
             togglePlaceHolder(true);
         } else {
@@ -82,6 +85,9 @@ class WeekViewPlaceholderFragment extends Fragment {
             textViewLabel.setText(LayoutHelper.fromHtml(message));
             textViewTitle.setText("Horarios • Combinación Nro. " + position);
             title = (TextView) rootView.findViewById(R.id.section_title);
+            if (prefs.getBoolean("weekview_auto_hide_cathedras", false)) {
+                textViewLabel.setVisibility(View.GONE);
+            }
             title.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

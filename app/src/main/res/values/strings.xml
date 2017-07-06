@@ -97,7 +97,7 @@
     </string-array>
 
     <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
+    <string name="pref_header_myplan">Mi plan de estudios</string>
 
     <string name="pref_title_sync_frequency">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">
@@ -134,14 +134,15 @@
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
     <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
-
-    <string name="pref_title_new_message_notifications">New message notifications</string>
+    <string name="pref_header_weekview">Mi Semana</string>
 
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
 
-    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="pref_weekview_auto_hide_title">Ocultar nombres de cátedra</string>
+    <string name="pref_weekview_auto_hide_summary">Permite ocultar los nombres de las cátedras y así dar más espacio a la grilla de horarios </string>
+    <string name="pref_weekview_hide_collections_title">Evitar superposición</string>
+    <string name="pref_weekview_hide_collections_summary">Excluye de las alternativas de horarios aquellas con superposición de cursadas</string>
     <string name="comm">Comunicate</string>
     <string name="nav_share_text">Compartir</string>
     <string name="nav_send_text">Contacto</string>

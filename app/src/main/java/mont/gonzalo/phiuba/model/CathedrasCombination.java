@@ -1,7 +1,5 @@
 package mont.gonzalo.phiuba.model;
 
-import android.util.Log;
-
 import com.alamkanak.weekview.WeekViewEvent;
 
 import java.io.Serializable;
@@ -26,6 +24,7 @@ public class CathedrasCombination implements Serializable {
     private int combinations;
 
     private static CathedrasCombination _instance;
+    private boolean avoidCollisions;
 
     public static CathedrasCombination getInstance() {
         if (_instance == null) {
@@ -75,7 +74,9 @@ public class CathedrasCombination implements Serializable {
             cathedrasComb.add(cathedras.get(parent.getData()));
             parent = parent.getParent();
         }
-        Log.d("Collision at pos"+ n + ":", String.valueOf(schedulesCollision(cathedrasComb)));
+        if (schedulesCollide(cathedrasComb) && avoidCollisions) {
+            return getAtPosition(n + 1);
+        }
         return cathedrasComb;
     }
 
@@ -87,7 +88,7 @@ public class CathedrasCombination implements Serializable {
         this.pinnedCathedras.add(c);
     }
 
-    private boolean schedulesCollision(List<Cathedra> cathedrasComb) {
+    private boolean schedulesCollide(List<Cathedra> cathedrasComb) {
         for (Cathedra c1: cathedrasComb) {
             if (c1 == null) {
                 break;
@@ -134,19 +135,24 @@ public class CathedrasCombination implements Serializable {
             if (c != null) {
                 c.setCathedras(DataFetcher.getInstance().getCathedrasSync(code));
                 cathedrasByCourse.put(code, c.getCathedras());
-                colors.put(code, MaterialColors.get(n));
+                colors.put(code, MaterialColors.get(n++));
             }
         }
     }
 
-    public void generateColorForCourse(String code) {
+    public Integer generateColorForCourse(String code) {
         Integer color = MaterialColors.getRandom();
         while (colors.containsValue(color)) {
             color = MaterialColors.getRandom();
         }
+        return color;
     }
 
     public boolean isEmpty() {
         return cathedrasByCourse.keySet().isEmpty();
+    }
+
+    public void setAvoidCollisions(boolean avoidCollisions) {
+        this.avoidCollisions = avoidCollisions;
     }
 }

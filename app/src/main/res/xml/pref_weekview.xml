@@ -1,0 +1,15 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="weekview_hide_collisions"
+        android:title="@string/pref_weekview_hide_collections_title"
+        android:summary="@string/pref_weekview_hide_collections_summary" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="weekview_auto_hide_cathedras"
+        android:title="@string/pref_weekview_auto_hide_title"
+        android:summary="@string/pref_weekview_auto_hide_summary" />
+
+</PreferenceScreen>
