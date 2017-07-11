@@ -105,6 +105,7 @@ public class UserCourses extends Observable implements Serializable {
     }
 
     public void updateCourses() {
+        _ready = false;
         this.loadCourses("", "");
     }
 
