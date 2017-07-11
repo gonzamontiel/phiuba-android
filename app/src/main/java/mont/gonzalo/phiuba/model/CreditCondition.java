@@ -8,7 +8,7 @@ public class CreditCondition extends ApprovalCondition {
     }
 
     @Override
-    public boolean met(User u) {
+    public boolean isMetBy(User u) {
         return User.get().getTotalCredits() > credits;
     }
 }

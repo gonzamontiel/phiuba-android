@@ -5,11 +5,11 @@ package mont.gonzalo.phiuba.model;
  */
 
 public abstract class ApprovalCondition {
-    public abstract boolean met(User u);
+    public abstract boolean isMetBy(User u);
 
     public static boolean metAll(Plan p, User u) {
         for (ApprovalCondition c: p.getAllConditions()) {
-            if (!c.met(u)) {
+            if (!c.isMetBy(u)) {
                 return false;
             }
         }
