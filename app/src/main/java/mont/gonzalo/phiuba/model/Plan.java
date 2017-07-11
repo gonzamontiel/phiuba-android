@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class Plan {
     private String link = "";
     private int credits;
     private List<Branch> branches;
+    private List<ApprovalCondition> conditions;
 
     private static HashMap<String, Plan> plans = new HashMap<String, Plan>();
     private static HashMap<String, String> planShortNames = new HashMap<String, String>();
@@ -43,6 +45,27 @@ public class Plan {
         planShortNames.put("QUIMICA86", "Ing. Química 1986");
         planShortNames.put("SISTEMA14", "Lic. Sistemas 2014");
         planShortNames.put("SISTEMA86", "Lic. Sistemas 1986");
+    }
+
+    private static HashMap<String, ArrayList<String> > planTesisCode = new HashMap<>();
+    static {
+        planTesisCode.put("AGRIMEN86",  new ArrayList<>( Arrays.asList("70.00", "70.99")));
+        planTesisCode.put("ALIMENT86",  new ArrayList<>( Arrays.asList("76.90", "76.90")));
+        planTesisCode.put("CIVIL09",  new ArrayList<>( Arrays.asList("84.00", "84.99")));
+        planTesisCode.put("CIVIL86",  new ArrayList<>( Arrays.asList("64.00", "64.99")));
+        planTesisCode.put("ELECTRI09",  new ArrayList<>( Arrays.asList("85.00", "85.99")));
+        planTesisCode.put("ELECTRI86",  new ArrayList<>( Arrays.asList("65.00", "65.99")));
+        planTesisCode.put("ELECTRO09",  new ArrayList<>( Arrays.asList("86.00", "86.99")));
+        planTesisCode.put("ELECTRO86",  new ArrayList<>( Arrays.asList("66.00", "66.99")));
+        planTesisCode.put("INDUSTR11",  new ArrayList<>( Arrays.asList("91.00", "91.99")));
+        planTesisCode.put("INDUSTR86",  new ArrayList<>( Arrays.asList("72.00", "72.99")));
+        planTesisCode.put("INFORMA86",  new ArrayList<>( Arrays.asList("75.00", "75.99")));
+        planTesisCode.put("MECANIC86",  new ArrayList<>( Arrays.asList("67.00", "67.99")));
+        planTesisCode.put("NAVAL09",  new ArrayList<>( Arrays.asList("73.00", "73.99")));
+        planTesisCode.put("PETROLE09",  new ArrayList<>( Arrays.asList("", "")));
+        planTesisCode.put("QUIMICA86",  new ArrayList<>( Arrays.asList("76.00", "76.99")));
+        planTesisCode.put("SISTEMA14",  new ArrayList<>( Arrays.asList("", "")));
+        planTesisCode.put("SISTEMA86",  new ArrayList<>( Arrays.asList("", "75.32")));
     }
 
     Plan(String code) {
@@ -143,6 +166,24 @@ public class Plan {
 
     public void setBranches(List<Branch> branchis) {
         this.branches = branchis;
+    }
+
+    public String getTesisCode() {
+        return planTesisCode.get(this.getCode()).get(0);
+    }
+
+    public String getTPCode() {
+        return planTesisCode.get(this.getCode()).get(1);
+    }
+
+    public boolean isComplete() {
+        boolean meetAllConditions= true;
+        for (ApprovalCondition condition: conditions) {
+            meetAllConditions = meetAllConditions && condition.isMetBy(User.get());
+            if (!meetAllConditions)
+                break;
+        }
+        return meetAllConditions;
     }
 
     public static String getFromSharedPrefs() {

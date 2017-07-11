@@ -1,6 +1,9 @@
 package mont.gonzalo.phiuba.api;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.Patterns;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -8,7 +11,7 @@ import com.google.gson.GsonBuilder;
 import java.util.List;
 import java.util.Observable;
 
-import mont.gonzalo.phiuba.BuildConfig;
+import mont.gonzalo.phiuba.layout.ActivityContext;
 import mont.gonzalo.phiuba.model.Cathedra;
 import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.Department;
@@ -27,35 +30,43 @@ import retrofit.converter.GsonConverter;
 
 public class DataFetcher extends Observable {
     private static final String TEST_ROOT_URL = "http://10.0.2.2:3030";
-    private static final String PROD_ROOT_URL = "http://192.168.0.5:3030";
+    private static final String PROD_ROOT_IP = "192.168.0.5";
     private static final String TAG = "DataFetcher";
-    private final TestConnectionAPI testConnectionApi;
+    private TestConnectionAPI testConnectionApi;
     private RestAdapter adapter;
-    private final CourseAPI courseApi;
-    private final CathedraAPI cathedraAPI;
-    private final DepartmentAPI departmentAPI;
-    private final NewsAPI newsApi;
-    private final EventAPI eventApi;
-    private final PlansAPI plansApi;
+    private CourseAPI courseApi;
+    private CathedraAPI cathedraAPI;
+    private DepartmentAPI departmentAPI;
+    private NewsAPI newsApi;
+    private EventAPI eventApi;
+    private PlansAPI plansApi;
     private boolean isRunning;
 
     private static DataFetcher instance = null;
 
     public static DataFetcher getInstance() {
         String serverUrl;
-        if (BuildConfig.DEBUG) {
-            serverUrl = TEST_ROOT_URL;
-        } else {
-            serverUrl = PROD_ROOT_URL;
-        }
+//        if (BuildConfig.DEBUG) {
+//            serverUrl = TEST_ROOT_URL;
+//        } else {
+            serverUrl = getUrlFromPreferences();
+//        }
         if (instance == null) {
-            instance = new DataFetcher(PROD_ROOT_URL);
+            instance = new DataFetcher(serverUrl);
         }
-        Log.d(TAG, "Connected to " + serverUrl);
         return instance;
     }
 
     private DataFetcher(String serverUrl) {
+        createServerApis(serverUrl);
+    }
+
+    public void updateServer() {
+        createServerApis(getUrlFromPreferences());
+    }
+
+    private void createServerApis(String serverUrl) {
+        Log.d(TAG, "Connecting to " + serverUrl);
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                 .create();
@@ -72,6 +83,19 @@ public class DataFetcher extends Observable {
         this.plansApi = this.adapter.create(PlansAPI.class);
         this.testConnectionApi = this.adapter.create(TestConnectionAPI.class);
         test();
+    }
+
+    public static String getUrlFromPreferences() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ActivityContext.get());
+        String ip = prefs.getString("server_ip", PROD_ROOT_IP);
+        if (!Patterns.IP_ADDRESS.matcher(ip).matches()) {
+            ip = PROD_ROOT_IP;
+        }
+        return urlFromIp(ip);
+    }
+
+    private static String urlFromIp(String ip) {
+        return "http://" + ip + ":3030";
     }
 
     public void getCourses(String planCode, Callback<List<Course>> c) {
@@ -152,5 +176,4 @@ public class DataFetcher extends Observable {
     public void setRunning(boolean running) {
         isRunning = running;
     }
-
 }
