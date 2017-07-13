@@ -76,10 +76,8 @@
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
 
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
-    </string>
+    <string name="pref_title_notifications">Notificaciones de eventos</string>
+    <string name="pref_description_notifications">Notificarme sobre nuevos eventos que coincidan con mis términos guardados </string>
 
     <string name="pref_title_server_ip">IP del servidor</string>
     <string name="pref_default_server_ip">192.168.0.5</string>
@@ -146,4 +144,6 @@
     <string name="comm">Comunicate</string>
     <string name="nav_share_text">Compartir</string>
     <string name="nav_send_text">Contacto</string>
+    <string name="pref_title_event_keywords">Keywords a buscar </string>
+    <string name="pref_title_event_desc">Poné las palabras que quieras que aparezcan en los eventos sobre los que recibís notificaciones. Ejemplo \"Inscripciones\", \"petroleo\", etc, separadas pore espacios.</string>
 </resources>

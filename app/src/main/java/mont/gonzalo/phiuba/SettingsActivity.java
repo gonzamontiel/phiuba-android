@@ -16,8 +16,10 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.RingtonePreference;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 
 import java.util.List;
@@ -177,7 +179,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             onSharedPreferenceChanged(null, "");
 
             bindPreferenceSummaryToValue(findPreference("server_ip"));
-//            bindPreferenceSummaryToValue(findPreference("example_list"));
+            bindPreferenceSummaryToValue(findPreference("event_keywords"));
         }
 
         @Override
@@ -192,9 +194,15 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.M)
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            DataFetcher.getInstance().updateServer();
+            if (key.equals("server_ip")) {
+                DataFetcher.getInstance().updateServer();
+            } else if (key.equals("event_notif") && sharedPreferences.getBoolean("event_notif", false)) {
+                Log.d("SETTINGS", "notif enabled");
+                NotificationEventReceiver.setupAlarm(getContext());
+            }
         }
 
         @Override

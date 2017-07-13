@@ -16,4 +16,7 @@ public interface EventAPI {
 
     @GET("/api/events")
     public void search(@Query("search") String query, Callback<List<Event>> response);
+
+    @GET("/api/events")
+    List<Event> searchSync(@Query("search") String query);
 }

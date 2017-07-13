@@ -118,6 +118,10 @@ public class DataFetcher extends Observable {
         this.eventApi.get(c);
     }
 
+    public List<Event> searchEventsSync(String query) {
+        return this.eventApi.searchSync(query);
+    }
+
     public void searchEvents(String query, Callback<List<Event>> c) {
         this.eventApi.search(query, c);
     }
