@@ -17,6 +17,7 @@ import java.util.List;
 
 import mont.gonzalo.phiuba.api.DataFetcher;
 import mont.gonzalo.phiuba.layout.ActivityContext;
+import mont.gonzalo.phiuba.layout.EventsFragment;
 import mont.gonzalo.phiuba.layout.MainActivity;
 import mont.gonzalo.phiuba.model.Event;
 
@@ -77,7 +78,7 @@ public class NotificationIntentService extends IntentService {
         List<Event> eventList =  DataFetcher.getInstance().searchEventsSync(keywords);
         Integer lastSearchedEventsLength = prefs.getInt("last_searched_events", 0);
 
-        Log.d("Settings", "fetchie data del server y trajo " + eventList.size() +  " resultados, antes había " + lastSearchedEventsLength);
+        Log.d("Settings", "fetch data del server y trajo " + eventList.size() +  " resultados, antes había " + lastSearchedEventsLength);
 
         if (eventList.size() > lastSearchedEventsLength) {
             prefsEditor.putInt("last_searched_events", eventList.size());
@@ -86,12 +87,17 @@ public class NotificationIntentService extends IntentService {
             builder.setContentTitle("Hay novedades de la FIUBA que te pueden interesar!")
                     .setAutoCancel(true)
                     .setColor(getResources().getColor(R.color.accent, null))
-                    .setContentText("Entrá para verlos, aparecen porque especificaste los términos " + keywordsArr.toString())
+                    .setContentText("Hay nuevos eventos que coinciden con: " + keywords)
                     .setSmallIcon(R.drawable.ic_notifications_black_24dp);
+
+
+            Intent mainActivityIntent = new Intent(this, MainActivity.class);
+            mainActivityIntent.putExtra(MainActivity.SPECIFIC_FRAGMENT, EventsFragment.class);
+            mainActivityIntent.putExtra(MainActivity.SPECIFIC_FRAGMENT_DATA, keywords);
 
             PendingIntent pendingIntent = PendingIntent.getActivity(this,
                     NOTIFICATION_ID,
-                    new Intent(this, MainActivity.class),
+                    mainActivityIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
             builder.setContentIntent(pendingIntent);
             builder.setDeleteIntent(NotificationEventReceiver.getDeleteIntent(this));

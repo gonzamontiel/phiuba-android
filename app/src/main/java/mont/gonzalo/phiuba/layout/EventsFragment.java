@@ -154,6 +154,13 @@ public class EventsFragment extends SearchableFragment implements Serializable {
         }
     }
 
+    @Override
+    public void loadFromIntent(Serializable data) {
+        if (data == null) return;
+        String keywords = (String) data;
+        this.updateResults(keywords);
+    }
+
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(Event item);
     }
