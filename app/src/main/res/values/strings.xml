@@ -144,6 +144,9 @@
     <string name="comm">Comunicate</string>
     <string name="nav_share_text">Compartir</string>
     <string name="nav_send_text">Contacto</string>
-    <string name="pref_title_event_keywords">Keywords a buscar </string>
-    <string name="pref_title_event_desc">Poné las palabras que quieras que aparezcan en los eventos sobre los que recibís notificaciones. Ejemplo \"Inscripciones\", \"petroleo\", etc, separadas pore espacios.</string>
+    <string name="pref_title_event_keywords">Palabras a buscar </string>
+    <string name="pref_title_event_desc">Poné las palabras que quieras que aparezcan en los eventos sobre los que recibís notificaciones. Ejemplo \"Inscripciones\", \"quimica\",  \"civil\", etc, separadas pore espacios.
+        Tené en cuenta que se buscan los términos dentro del título y el texto de cada evento. </string>
+    <string name="pref_category_notifications">Notificaciones</string>
+    <string name="pref_category_network">Red</string>
 </resources>
