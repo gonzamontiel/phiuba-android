@@ -210,8 +210,13 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             if (key.equals("server_ip")) {
                 DataFetcher.getInstance().updateServer();
             } else if (key.equals("event_notif") && sharedPreferences.getBoolean("event_notif", false)) {
-                Log.d("SETTINGS", "notif enabled");
+                Log.d("SETTINGS", "Notifications enabled, running service.");
                 NotificationEventReceiver.setupAlarm(getContext());
+            } else if (key.equals("event_keywords")) {
+                Log.d("SETTINGS", "Reset counter to 0");
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("last_searched_events", 0);
+                editor.commit();
             }
         }
 
