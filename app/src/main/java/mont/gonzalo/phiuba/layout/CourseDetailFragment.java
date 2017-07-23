@@ -97,12 +97,6 @@ public class CourseDetailFragment extends SearchableFragment implements Serializ
         return view;
     }
 
-    public void onButtonPressed(Course course) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(course);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
