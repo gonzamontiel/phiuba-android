@@ -20,6 +20,9 @@ import mont.gonzalo.phiuba.layout.ActivityContext;
 import mont.gonzalo.phiuba.layout.EventsFragment;
 import mont.gonzalo.phiuba.layout.MainActivity;
 import mont.gonzalo.phiuba.model.Event;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Gonzalo Montiel on 7/12/17.
@@ -68,44 +71,45 @@ public class NotificationIntentService extends IntentService {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void processStartNotification() {
-        // Do something. For example, fetch fresh data from backend to create a rich notification?
-        if (DataFetcher.getInstance().isRunning()) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ActivityContext.get());
-            SharedPreferences.Editor prefsEditor = prefs.edit();
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ActivityContext.get());
+        final SharedPreferences.Editor prefsEditor = prefs.edit();
+        final String keywords = prefs.getString("event_keywords", "");
+        String[] keywordsArr = keywords.split(" ");
 
-            String keywords = prefs.getString("event_keywords", "");
-            String[] keywordsArr = keywords.split(" ");
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        final Intent mainActivityIntent = new Intent(this, MainActivity.class);
+        final PendingIntent deleteIntent = NotificationEventReceiver.getDeleteIntent(this);
+        final NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        final PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                NOTIFICATION_ID,
+                mainActivityIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
-            List<Event> eventList =  DataFetcher.getInstance().searchEventsSync(keywords);
-            Integer lastSearchedEventsLength = prefs.getInt("last_searched_events", 0);
+        DataFetcher.getInstance().searchEvents(keywords, new Callback<List<Event>>() {
+            @Override
+            public void success(List<Event> eventList, Response response) {
+                Integer lastSearchedEventsLength = prefs.getInt("last_searched_events", 0);
+                if (eventList.size() > lastSearchedEventsLength) {
+                    prefsEditor.putInt("last_searched_events", eventList.size());
+                    prefsEditor.commit();
+                    builder.setContentTitle("Hay novedades de la FIUBA que te pueden interesar!")
+                            .setAutoCancel(true)
+                            .setColor(getResources().getColor(R.color.accent, null))
+                            .setContentText("Hay nuevos eventos que coinciden con: " + keywords)
+                            .setSmallIcon(R.drawable.ic_notifications_black_24dp);
 
-            Log.d("Settings", "fetch data del server y trajo " + eventList.size() +  " resultados, antes había " + lastSearchedEventsLength);
+                    mainActivityIntent.putExtra(MainActivity.SPECIFIC_FRAGMENT, EventsFragment.class);
+                    mainActivityIntent.putExtra(MainActivity.SPECIFIC_FRAGMENT_DATA, keywords);
+                    builder.setContentIntent(pendingIntent);
+                    builder.setDeleteIntent(deleteIntent);
+                    manager.notify(NOTIFICATION_ID, builder.build());
+                }
 
-            if (eventList.size() > lastSearchedEventsLength) {
-                prefsEditor.putInt("last_searched_events", eventList.size());
-                prefsEditor.commit();
-                final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-                builder.setContentTitle("Hay novedades de la FIUBA que te pueden interesar!")
-                        .setAutoCancel(true)
-                        .setColor(getResources().getColor(R.color.accent, null))
-                        .setContentText("Hay nuevos eventos que coinciden con: " + keywords)
-                        .setSmallIcon(R.drawable.ic_notifications_black_24dp);
-
-
-                Intent mainActivityIntent = new Intent(this, MainActivity.class);
-                mainActivityIntent.putExtra(MainActivity.SPECIFIC_FRAGMENT, EventsFragment.class);
-                mainActivityIntent.putExtra(MainActivity.SPECIFIC_FRAGMENT_DATA, keywords);
-
-                PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                        NOTIFICATION_ID,
-                        mainActivityIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
-                builder.setContentIntent(pendingIntent);
-                builder.setDeleteIntent(NotificationEventReceiver.getDeleteIntent(this));
-
-                final NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-                manager.notify(NOTIFICATION_ID, builder.build());
             }
-        }
+
+            @Override
+            public void failure(RetrofitError error) {
+            }
+        });
     }
 }
