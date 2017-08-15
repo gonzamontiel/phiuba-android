@@ -69,41 +69,43 @@ public class NotificationIntentService extends IntentService {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void processStartNotification() {
         // Do something. For example, fetch fresh data from backend to create a rich notification?
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ActivityContext.get());
-        SharedPreferences.Editor prefsEditor = prefs.edit();
+        if (DataFetcher.getInstance().isRunning()) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ActivityContext.get());
+            SharedPreferences.Editor prefsEditor = prefs.edit();
 
-        String keywords = prefs.getString("event_keywords", "");
-        String[] keywordsArr = keywords.split(" ");
+            String keywords = prefs.getString("event_keywords", "");
+            String[] keywordsArr = keywords.split(" ");
 
-        List<Event> eventList =  DataFetcher.getInstance().searchEventsSync(keywords);
-        Integer lastSearchedEventsLength = prefs.getInt("last_searched_events", 0);
+            List<Event> eventList =  DataFetcher.getInstance().searchEventsSync(keywords);
+            Integer lastSearchedEventsLength = prefs.getInt("last_searched_events", 0);
 
-        Log.d("Settings", "fetch data del server y trajo " + eventList.size() +  " resultados, antes había " + lastSearchedEventsLength);
+            Log.d("Settings", "fetch data del server y trajo " + eventList.size() +  " resultados, antes había " + lastSearchedEventsLength);
 
-        if (eventList.size() > lastSearchedEventsLength) {
-            prefsEditor.putInt("last_searched_events", eventList.size());
-            prefsEditor.commit();
-            final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-            builder.setContentTitle("Hay novedades de la FIUBA que te pueden interesar!")
-                    .setAutoCancel(true)
-                    .setColor(getResources().getColor(R.color.accent, null))
-                    .setContentText("Hay nuevos eventos que coinciden con: " + keywords)
-                    .setSmallIcon(R.drawable.ic_notifications_black_24dp);
+            if (eventList.size() > lastSearchedEventsLength) {
+                prefsEditor.putInt("last_searched_events", eventList.size());
+                prefsEditor.commit();
+                final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+                builder.setContentTitle("Hay novedades de la FIUBA que te pueden interesar!")
+                        .setAutoCancel(true)
+                        .setColor(getResources().getColor(R.color.accent, null))
+                        .setContentText("Hay nuevos eventos que coinciden con: " + keywords)
+                        .setSmallIcon(R.drawable.ic_notifications_black_24dp);
 
 
-            Intent mainActivityIntent = new Intent(this, MainActivity.class);
-            mainActivityIntent.putExtra(MainActivity.SPECIFIC_FRAGMENT, EventsFragment.class);
-            mainActivityIntent.putExtra(MainActivity.SPECIFIC_FRAGMENT_DATA, keywords);
+                Intent mainActivityIntent = new Intent(this, MainActivity.class);
+                mainActivityIntent.putExtra(MainActivity.SPECIFIC_FRAGMENT, EventsFragment.class);
+                mainActivityIntent.putExtra(MainActivity.SPECIFIC_FRAGMENT_DATA, keywords);
 
-            PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                    NOTIFICATION_ID,
-                    mainActivityIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-            builder.setContentIntent(pendingIntent);
-            builder.setDeleteIntent(NotificationEventReceiver.getDeleteIntent(this));
+                PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                        NOTIFICATION_ID,
+                        mainActivityIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.setContentIntent(pendingIntent);
+                builder.setDeleteIntent(NotificationEventReceiver.getDeleteIntent(this));
 
-            final NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-            manager.notify(NOTIFICATION_ID, builder.build());
+                final NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.notify(NOTIFICATION_ID, builder.build());
+            }
         }
     }
 }
