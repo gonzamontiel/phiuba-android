@@ -7,7 +7,7 @@
     android:layout_height="30dp"
     android:layout_margin="5dp"
     android:clickable="true"
-    android:backgroundTint="#eee"
+    android:backgroundTint="#fff"
     android:foreground="?android:attr/selectableItemBackground"
     card_view:cardPreventCornerOverlap="true"
     card_view:cardCornerRadius="4dp">
