@@ -108,7 +108,7 @@ public class MyPlanActivity extends AppCompatActivity
     private void loadStatistics() {
         LinearLayout statistics = (LinearLayout) findViewById(R.id.statistics);
         double avg = UserCourses.getInstance().getAverageCalification();
-        double count = UserCourses.getInstance().getApprovedCount();
+        int count = UserCourses.getInstance().getApprovedCount();
         TextView awardNumber = (TextView) findViewById(R.id.average);
         TextView countTv = (TextView) findViewById(R.id.count);
         countTv.setText(String.valueOf(count));
