@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity
     private ProgressBar progressBar;
     private DrawerLayout drawer;
     private NavigationView navigationView;
+    private View viewForSnackBar;
+    private Snackbar snack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,10 +103,21 @@ public class MainActivity extends AppCompatActivity
         navigationView.setCheckedItem(getDefaultItemSelected());
         navigationView.setNavigationItemSelectedListener(this);
         fillSpinnerWithPlans(navigationView);
+        createSnackBar();
 
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 
         checkNetwork();
+
+        DataFetcher.getInstance().test();
+    }
+
+    private void createSnackBar() {
+        viewForSnackBar = this.findViewById(android.R.id.content);
+        snack = Snackbar.make(viewForSnackBar, R.string.disconnected_message, Snackbar.LENGTH_LONG)
+                .setAction("Action", null);
+        TextView textView = (TextView) snack.getView().findViewById(android.support.design.R.id.snackbar_text);
+        textView.setMaxLines(5);
     }
 
     private void showProgressBar() {
@@ -233,7 +246,6 @@ public class MainActivity extends AppCompatActivity
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
-        Log.d("is connected ", String.valueOf(isConnected));
         if (!isConnected)
             showConnectionIndicator();
         else
@@ -241,20 +253,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void hideConnectionIndicator() {
-        final View viewForSnackBar = this.findViewById(android.R.id.content);
+        snack.dismiss();
         View v = viewForSnackBar.findViewById(R.id.disconnected_placeholder);
         v.setVisibility(View.GONE);
     }
 
     private void showConnectionIndicator() {
-        final View viewForSnackBar = this.findViewById(android.R.id.content);
-        Snackbar snack = Snackbar.make(viewForSnackBar, R.string.disconnected_message, 15000)
-                .setAction("Action", null);
-
-        TextView textView = (TextView) snack.getView().findViewById(android.support.design.R.id.snackbar_text);
-        textView.setMaxLines(5);  // show multiple line
         snack.show();
-        
         View v = viewForSnackBar.findViewById(R.id.disconnected_placeholder);
         v.setVisibility(View.VISIBLE);
     }
@@ -474,6 +479,8 @@ public class MainActivity extends AppCompatActivity
             DataFetcher df = (DataFetcher) obs;
             if (!df.isRunning()) {
                 showConnectionIndicator();
+            } else {
+                hideConnectionIndicator();
             }
         }
         progressBar.setVisibility(View.GONE);
