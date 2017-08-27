@@ -194,11 +194,11 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                 @Override
                 public void onClick(View v) {
                 if (course.isAvailable()) {
-                    showCalifDialog();
-//                    v.post(new Runnable() {
-//                        public void run() {
-//                        }
-//                    });
+                    v.post(new Runnable() {
+                        public void run() {
+                            showCalifDialog();
+                        }
+                    });
                 } else {
                     Toast.makeText(ActivityContext.get(),
                             "Según tus materias aprobadas, no podrías cursar esta materia. Chequea que tengas aprobada/s: " + String.valueOf(course.getCorrelatives()),
