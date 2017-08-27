@@ -30,6 +30,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.Serializable;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ActivityContext.set(this);
         DataFetcher.getInstance().addObserver(this);
+        initializeDrawer();
         initiate(savedInstanceState);
     }
 
@@ -94,7 +96,6 @@ public class MainActivity extends AppCompatActivity
 
         applyDefaultFragment(savedInstanceState);
         showFloatingButton();
-        initializeDrawer();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setCheckedItem(getDefaultItemSelected());
@@ -231,6 +232,8 @@ public class MainActivity extends AppCompatActivity
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
+
+        Log.d("is connected ", String.valueOf(isConnected));
         if (!isConnected)
             showConnectionIndicator();
         else
@@ -245,8 +248,13 @@ public class MainActivity extends AppCompatActivity
 
     private void showConnectionIndicator() {
         final View viewForSnackBar = this.findViewById(android.R.id.content);
-        Snackbar.make(viewForSnackBar, R.string.disconnected_message, Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+        Snackbar snack = Snackbar.make(viewForSnackBar, R.string.disconnected_message, 15000)
+                .setAction("Action", null);
+
+        TextView textView = (TextView) snack.getView().findViewById(android.support.design.R.id.snackbar_text);
+        textView.setMaxLines(5);  // show multiple line
+        snack.show();
+        
         View v = viewForSnackBar.findViewById(R.id.disconnected_placeholder);
         v.setVisibility(View.VISIBLE);
     }
