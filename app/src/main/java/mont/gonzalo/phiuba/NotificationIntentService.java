@@ -104,7 +104,6 @@ public class NotificationIntentService extends IntentService {
                     builder.setDeleteIntent(deleteIntent);
                     manager.notify(NOTIFICATION_ID, builder.build());
                 }
-
             }
 
             @Override
