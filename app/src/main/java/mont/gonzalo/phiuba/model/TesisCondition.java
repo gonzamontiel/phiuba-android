@@ -6,7 +6,7 @@ public class TesisCondition extends ApprovalCondition {
     @Override
     public boolean isMetBy(User u) {
         String tesisCode = User.get().getPlan().getTesisCode();
-        if (tesisCode.isEmpty()) {
+        if (!tesisCode.isEmpty()) {
             return UserCourses.getInstance().isApproved(tesisCode);
         }
         return true;
