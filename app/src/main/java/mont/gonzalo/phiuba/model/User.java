@@ -83,7 +83,7 @@ public class User {
     }
 
     public int getTotalCredits() {
-        return 0;
+        return UserCourses.getInstance().getCredits();
     }
 
     public Plan getPlan() {

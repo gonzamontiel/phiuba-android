@@ -167,7 +167,7 @@ public class UserCourses extends Observable implements Serializable {
         return this.approvedCourses.keySet().size();
     }
 
-    public double getCredits() {
+    public int  getCredits() {
         int sum = 0;
         for (Course c: filterApproved(this.getAll())) {
             sum += c.getCredits();
@@ -176,14 +176,13 @@ public class UserCourses extends Observable implements Serializable {
     }
 
     public boolean isAvailable(Course c) {
-        boolean available = true;
         for (String corr: c.getCorrelatives()) {
-            if(!this.approvedCourses.containsKey(corr)) {
-                available = false;
-                break;
+            boolean userHasCorrelative = new CorrelativeCondition(corr).isMetBy(User.get());
+            if (!userHasCorrelative) {
+                return false;
             }
         }
-        return available;
+        return true;
     }
 
     public void printSummary() {
