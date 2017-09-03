@@ -28,6 +28,7 @@ public class CourseDetailFragment extends SearchableFragment implements Serializ
     private transient OnFragmentInteractionListener mListener;
     private transient OnListFragmentInteractionListener mListListener;
     private transient TextView nameTextView;
+    private transient TextView credits;
     private transient ImageView deptoIcon;
     private transient RecyclerView cathedrasView;
     private Course mCourse;
@@ -67,13 +68,14 @@ public class CourseDetailFragment extends SearchableFragment implements Serializ
         requirements.setAdapter(new MiniCoursesAdapter(
                 UserCourses.getInstance().getCoursesByCodes(mCourse.getCorrelatives()), (MiniCoursesAdapter.OnCorrelativeInteractionListener) getActivity()));
 
+        credits = (TextView) view.findViewById(R.id.course_credits);
         nameTextView = (TextView) view.findViewById(R.id.course_name);
         deptoIcon = (ImageView) view.findViewById(R.id.coursed_depto_icon);
         deptoIcon.setImageResource(mCourse.getImageResource());
 
         AutofitHelper.create(nameTextView);
         nameTextView.setText(mCourse.getName());
-
+        credits.setText("Créditos: " + mCourse.getCredits());
         cathedrasView = (RecyclerView) view.findViewById(R.id.cathedra_rv);
 
         DataFetcher.getInstance().getCathedras(mCourse.getCode(), new Callback<List<Cathedra>>() {
