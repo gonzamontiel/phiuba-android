@@ -109,9 +109,12 @@ public class MyPlanActivity extends AppCompatActivity
         LinearLayout statistics = (LinearLayout) findViewById(R.id.statistics);
         double avg = UserCourses.getInstance().getAverageCalification();
         int count = UserCourses.getInstance().getApprovedCount();
+        int totalCredits = UserCourses.getInstance().getCredits();
         TextView awardNumber = (TextView) findViewById(R.id.average);
         TextView countTv = (TextView) findViewById(R.id.count);
+        TextView creditsTv = (TextView) findViewById(R.id.credits);
         countTv.setText(String.valueOf(count));
+        creditsTv.setText(String.valueOf(totalCredits));
         awardNumber.setText(String.valueOf(Math.round(avg * 100.0) / 100.0));
         initializeCircleOfCompletion();
         statistics.setVisibility(View.VISIBLE);
@@ -179,6 +182,7 @@ public class MyPlanActivity extends AppCompatActivity
         hideProgressBar();
         initializeCourses();
         loadStatistics();
+        mSectionsPagerAdapter.notifyDataSetChanged();
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -193,6 +197,11 @@ public class MyPlanActivity extends AppCompatActivity
         public Fragment getItem(int position) {
             Log.d("Creating fragment. courses SIZE", String.valueOf(mCourses.size()));
             return MyPlanFragment.newInstance(position, mCourses);
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
 
         @Override
