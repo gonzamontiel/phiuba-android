@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private int getDefaultItemSelected() {
-        return R.id.nav_events;
+        return R.id.nav_news;
     }
 
     private void checkNetwork() {
