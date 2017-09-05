@@ -27,6 +27,10 @@ public class Node<T>{
         checkNeighbors();
     }
 
+    public void removeChild(Node<T> tNode) {
+        this.children.remove(tNode);
+    }
+
     public void addChildrenData(List<T> newChildrenData) {
         List<Node> nodes = new ArrayList<>();
         for (T t: newChildrenData) {
@@ -132,5 +136,18 @@ public class Node<T>{
             next.addChildren(newChildren);
             next = next.right;
         }
+    }
+
+    public void removeFromLeafs() {
+        if (!isLeaf()) {
+            return;
+        }
+        if (getRight() != null) {
+            getRight().setLeft(getLeft());
+        }
+        if (getLeft() != null) {
+            getLeft().setRight(getRight());
+        }
+        getParent().removeChild(this);
     }
 }
