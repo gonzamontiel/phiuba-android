@@ -9,7 +9,7 @@ public class CorrelativeCondition extends ApprovalCondition {
 
     @Override
     public boolean isMetBy(User u) {
-        if (isCourseCode()) {
+        if (isCourseCode() || isSpecialCourseCode()) {
             return UserCourses.getInstance().isApproved(corrCode);
         } else if (isCreditsCode()) {
             int credits = getCreditsFromCorrCode();
@@ -19,11 +19,15 @@ public class CorrelativeCondition extends ApprovalCondition {
     }
 
     public int getCreditsFromCorrCode() {
-        return  Integer.parseInt(corrCode.replaceAll("CRED(\\d+)", "$1"));
+        return Integer.parseInt(corrCode.replaceAll("CRED(\\d+)", "$1"));
     }
 
     public boolean isCourseCode() {
         return corrCode.matches("\\d\\d.\\d\\d");
+    }
+
+    public boolean isSpecialCourseCode() {
+        return corrCode.matches("CBC");
     }
 
     public boolean isCreditsCode() {
