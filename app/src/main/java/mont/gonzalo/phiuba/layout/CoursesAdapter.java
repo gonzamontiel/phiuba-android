@@ -211,7 +211,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
             studying.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    holder.updateAward(-1);
                     if (UserCourses.getInstance().isStudying(course)) {
                         Toast.makeText(ActivityContext.get(),
                                 "Ya estás cursando " + course.getName(),
@@ -219,6 +218,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                     } else if (course.isAvailable()) {
                         boolean success = UserCourses.getInstance().addStudying(course);
                         if (success) {
+                            holder.updateAward(-1);
                             Toast.makeText(ActivityContext.get(),
                                     "Agregando " + course.getName() + " como estudiando.",
                                     Toast.LENGTH_LONG).show();
