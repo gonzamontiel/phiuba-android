@@ -24,7 +24,7 @@ public class NewsDetailFragment extends SearchableFragment implements View.OnTou
     private transient TextView titleTextView;
     private transient TextView descTextView;
     private transient ImageView thumbnailView;
-    ScaleGestureDetector scaleGestureDetector;
+    private transient ScaleGestureDetector scaleGestureDetector;
 
     public NewsDetailFragment() {
         // Required empty public constructor
