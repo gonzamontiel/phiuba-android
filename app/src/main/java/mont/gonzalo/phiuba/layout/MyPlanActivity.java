@@ -182,7 +182,9 @@ public class MyPlanActivity extends AppCompatActivity
         hideProgressBar();
         initializeCourses();
         loadStatistics();
-        mSectionsPagerAdapter.notifyDataSetChanged();
+        if (mSectionsPagerAdapter != null) {
+            mSectionsPagerAdapter.notifyDataSetChanged();
+        }
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
