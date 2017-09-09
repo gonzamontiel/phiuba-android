@@ -15,6 +15,4 @@ public abstract class SearchableFragment extends Fragment {
     public abstract SearchableFragment getResultsFragment();
 
     public void loadFromSerializedData(Serializable data) {}
-
-    }
 }

@@ -55,8 +55,17 @@ public class CourseDetailFragment extends SearchableFragment implements Serializ
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("course", mCourse);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mCourse = (Course) savedInstanceState.getSerializable("course");
+        }
     }
 
     @Override
@@ -86,7 +95,7 @@ public class CourseDetailFragment extends SearchableFragment implements Serializ
                     mListListener = (OnListFragmentInteractionListener) getActivity();
                     registerForContextMenu(cathedrasView);
                 } else {
-                    schedulesTextView.setText(getActivity().getResources().getString(R.string.NO_SCHEDULES));
+                    schedulesTextView.setText(ActivityContext.get().getResources().getString(R.string.NO_SCHEDULES));
                 }
             }
 
