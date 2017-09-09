@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity
             fragmentClass = (fragmentClass == null) ? getDefaultFragmentClass() : fragmentClass;
             try {
                 currentFragment = (SearchableFragment) fragmentClass.newInstance();
-                currentFragment.loadFromIntent(intent.getSerializableExtra(SPECIFIC_FRAGMENT_DATA));
+                currentFragment.loadFromSerializedData(intent.getSerializableExtra(SPECIFIC_FRAGMENT_DATA));
             } catch (Exception e) {
                 e.printStackTrace();
             }

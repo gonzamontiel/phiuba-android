@@ -14,6 +14,7 @@ public abstract class SearchableFragment extends Fragment {
     public abstract void reset();
     public abstract SearchableFragment getResultsFragment();
 
-    public void loadFromIntent(Serializable data) {
+    public void loadFromSerializedData(Serializable data) {}
+
     }
 }
