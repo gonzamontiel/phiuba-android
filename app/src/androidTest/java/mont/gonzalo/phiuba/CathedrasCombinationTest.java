@@ -39,11 +39,6 @@ public class CathedrasCombinationTest {
         Cathedra cat3 = createCathedra3();
         Cathedra cat4 = createCathedra4();
 
-//        c1.setCathedras(Arrays.asList(cat1, cat2));
-//        c2.setCathedras(Arrays.asList(cat3, cat4));
-//        userCourses.addStudying(c1);
-//        userCourses.addStudying(c2);
-
         CathedrasCombination catComb = CathedrasCombination.getInstance();
         catComb.addCathedraByCourse(c1.getCode(), Arrays.asList(cat1, cat2));
         catComb.addCathedraByCourse(c2.getCode(), Arrays.asList(cat3, cat4));
@@ -59,10 +54,10 @@ public class CathedrasCombinationTest {
 
         catComb.removeCollisions();
 
-//        Assert.assertEquals(2, catComb.getCombinationCount());
-//
-//        Assert.assertEquals(Arrays.asList(cat1, cat3), catComb.getAtPosition(1));
-//        Assert.assertEquals(Arrays.asList(cat2, cat4), catComb.getAtPosition(2));
+        Assert.assertEquals(2, catComb.getCombinationCount());
+
+        Assert.assertEquals(Arrays.asList(cat3, cat1), catComb.getAtPosition(1));
+        Assert.assertEquals(Arrays.asList(cat4, cat2), catComb.getAtPosition(2));
     }
 
     private Cathedra createCathedra1() {

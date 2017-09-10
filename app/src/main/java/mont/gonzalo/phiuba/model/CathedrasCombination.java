@@ -1,5 +1,7 @@
 package mont.gonzalo.phiuba.model;
 
+import android.support.annotation.NonNull;
+
 import com.alamkanak.weekview.WeekViewEvent;
 
 import java.io.Serializable;
@@ -42,16 +44,17 @@ public class CathedrasCombination implements Serializable {
 
     public void buildTree() {
         cathedras.clear();
+        combinations = 1;
         root = new Node<>(null);
         Node<String> node = root;
         for (String code: cathedrasByCourse.keySet()) {
+            combinations *= cathedrasByCourse.get(code).size();
             List<String> names = new ArrayList<>();
             for (Cathedra cat: cathedrasByCourse.get(code)) {
                 String key = code + " - " + cat.getTeachers();
                 names.add(key);
                 cat.setColor(colors.get(code));
                 cathedras.put(key, cat);
-                combinations++;
             }
             if (!names.isEmpty()) {
                 node.addChildrenData(names);
@@ -61,7 +64,36 @@ public class CathedrasCombination implements Serializable {
         }
         leftmostLeaf = node;
     }
-    
+
+    public void removeCollisions() {
+        Node<String> currentLeaf = leftmostLeaf, rightLeaf;
+        combinations = 0;
+        while (currentLeaf != null) {
+            List<Cathedra> cathedrasComb = getCombinationFromLeaf(currentLeaf);
+            rightLeaf = currentLeaf.getRight();
+            if (schedulesCollide(cathedrasComb)) {
+                currentLeaf.removeFromLeafs();
+            } else {
+                combinations++;
+            }
+            currentLeaf = rightLeaf;
+        }
+    }
+
+    @NonNull
+    private List<Cathedra> getCombinationFromLeaf(Node<String> nodeToFind) {
+        List<Cathedra> cathedrasComb = new ArrayList<>();
+        Node<String> parent = nodeToFind;
+        while (parent != null) {
+            cathedrasComb.add(cathedras.get(parent.getData()));
+            parent = parent.getParent();
+        }
+        if (!cathedrasComb.isEmpty()) {
+            cathedrasComb.remove(cathedrasComb.size() - 1);
+        }
+        return cathedrasComb;
+    }
+
     public List<Cathedra> getAtPosition(int n) {
         Node<String> nodeToFind = leftmostLeaf;
         List<Cathedra> cathedrasComb = new ArrayList<>();
@@ -69,13 +101,7 @@ public class CathedrasCombination implements Serializable {
         while (nodeToFind != null && count++ < n) {
             nodeToFind = nodeToFind.getRight();
         }
-        Node<String> parent = nodeToFind;
-        while (parent != null) {
-            cathedrasComb.add(cathedras.get(parent.getData()));
-            parent = parent.getParent();
-        }
-        cathedrasComb.remove(cathedrasComb.size() - 1);
-        return cathedrasComb;
+        return getCombinationFromLeaf(nodeToFind);
     }
 
     public void print() {
