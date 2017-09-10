@@ -314,8 +314,6 @@ public class MainActivity extends AppCompatActivity
         Fragment newOne = null;
         if (id == R.id.nav_courses) {
             newOne = CoursesFragment.newInstance(1, this);
-        } else if (id == R.id.nav_events) {
-            newOne = EventsFragment.newInstance(1, this);
         } else if (id == R.id.nav_news) {
             newOne = NewsFragment.newInstance(1, this);
         } else if (id == R.id.nav_depts) {

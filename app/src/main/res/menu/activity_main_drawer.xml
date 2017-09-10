@@ -7,10 +7,6 @@
             android:icon="@drawable/ic_action_courses"
             android:title="@string/menu_courses" />
         <item
-            android:id="@+id/nav_events"
-            android:icon="@drawable/ic_menu_send"
-            android:title="@string/menu_events" />
-        <item
             android:id="@+id/nav_news"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_news" />
