@@ -51,13 +51,6 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
         rebuildTree();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-//        prefs.unregisterOnSharedPreferenceChangeListener(this);
-    }
-
     private void initFab() {
         addButton = (FloatingActionButton) findViewById(R.id.fab);
         addButton.setOnClickListener(new View.OnClickListener() {
