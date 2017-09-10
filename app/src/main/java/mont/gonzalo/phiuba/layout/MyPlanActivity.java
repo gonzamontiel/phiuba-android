@@ -16,7 +16,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -197,7 +196,6 @@ public class MyPlanActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
-            Log.d("Creating fragment. courses SIZE", String.valueOf(mCourses.size()));
             return MyPlanFragment.newInstance(position, mCourses);
         }
 
