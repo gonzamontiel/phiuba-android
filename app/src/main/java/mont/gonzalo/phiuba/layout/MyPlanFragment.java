@@ -1,6 +1,7 @@
 package mont.gonzalo.phiuba.layout;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,7 @@ import static mont.gonzalo.phiuba.layout.MyPlanActivity.TAB_STUDYING_ID;
  */
 public class MyPlanFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private List<Course> mCourses;
+    private ArrayList<Course> mCourses;
     public MyPlanFragment() {}
 
     public static MyPlanFragment newInstance(int sectionNumber, List<Course> mCourses) {
@@ -33,8 +35,22 @@ public class MyPlanFragment extends Fragment {
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
-        fragment.setCourses(mCourses);
+        fragment.setCourses((ArrayList<Course>) mCourses);
         return fragment;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("mcourses", (Serializable) mCourses);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mCourses = (ArrayList<Course>) savedInstanceState.getSerializable("mcourses");
+        }
     }
 
     @Override
@@ -57,7 +73,7 @@ public class MyPlanFragment extends Fragment {
         return rootView;
     }
 
-    public void setCourses(List<Course> mCourses) {
+    public void setCourses(ArrayList<Course> mCourses) {
         this.mCourses = mCourses;
     }
 
