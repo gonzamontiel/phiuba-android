@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import mont.gonzalo.phiuba.R;
@@ -132,6 +133,9 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("weekview_hide_collisions") || key.equals("weekview_auto_hide_cathedras")) {
+            if (mSectionsPagerAdapter != null) {
+                mSectionsPagerAdapter.notifyDataSetChanged();
+            }
             recreate();
         }
     }
@@ -142,8 +146,18 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
         }
 
         @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            return super.instantiateItem(container, position);
+        }
+
+        @Override
         public Fragment getItem(int position) {
             return WeekViewPlaceholderFragment.newInstance(position + 1, getCount());
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
 
         @Override
