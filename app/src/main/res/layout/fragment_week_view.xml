@@ -34,7 +34,7 @@
         android:layout_height="match_parent"
         app:eventTextColor="@android:color/white"
         app:textSize="10sp"
-        app:hourHeight="30dp"
+        app:hourHeight="22dp"
         app:headerColumnPadding="6dp"
         app:headerColumnTextColor="#8f000000"
         app:headerRowPadding="15dp"
