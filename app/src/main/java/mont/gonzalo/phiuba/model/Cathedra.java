@@ -105,4 +105,9 @@ public class Cathedra implements Serializable {
     public void setColor(Integer color) {
         this.color = color;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return ((Cathedra) obj).getTeachersKey() == this.getTeachersKey();
+    }
 }

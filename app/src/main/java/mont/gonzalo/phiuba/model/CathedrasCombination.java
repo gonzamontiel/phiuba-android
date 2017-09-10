@@ -37,7 +37,7 @@ public class CathedrasCombination implements Serializable {
         cathedrasByCourse = new HashMap<>();
         cathedras = new HashMap<>();
         colors =  new HashMap<>();
-        combinations = 1;
+        combinations = 0;
     }
 
     public void buildTree() {
@@ -61,7 +61,7 @@ public class CathedrasCombination implements Serializable {
         }
         leftmostLeaf = node;
     }
-
+    
     public List<Cathedra> getAtPosition(int n) {
         Node<String> nodeToFind = leftmostLeaf;
         List<Cathedra> cathedrasComb = new ArrayList<>();
@@ -74,9 +74,7 @@ public class CathedrasCombination implements Serializable {
             cathedrasComb.add(cathedras.get(parent.getData()));
             parent = parent.getParent();
         }
-        if (schedulesCollide(cathedrasComb) && avoidCollisions) {
-            return getAtPosition(n + 1);
-        }
+        cathedrasComb.remove(cathedrasComb.size() - 1);
         return cathedrasComb;
     }
 
@@ -140,6 +138,10 @@ public class CathedrasCombination implements Serializable {
         }
     }
 
+    public void addCathedraByCourse(String code, List<Cathedra> list) {
+        cathedrasByCourse.put(code, list);
+    }
+
     public Integer generateColorForCourse(String code) {
         Integer color = MaterialColors.getRandom();
         while (colors.containsValue(color)) {
@@ -155,4 +157,5 @@ public class CathedrasCombination implements Serializable {
     public void setAvoidCollisions(boolean avoidCollisions) {
         this.avoidCollisions = avoidCollisions;
     }
+
 }

@@ -8,7 +8,7 @@ import android.content.Context;
 public class ActivityContext {
     private static Context _context;
 
-    static void set(Context context) {
+    public static void set(Context context) {
         _context = context;
     }
 

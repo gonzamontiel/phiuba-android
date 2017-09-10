@@ -18,8 +18,8 @@ public class CathedraSchedule implements Serializable, Calendable {
     private String type;
     private String classroomCode;
 
-    private static String[] daysOfWeek = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes"};
-    CathedraSchedule() { }
+    private static String[] daysOfWeek = {"lunes", "martes", "miércoles", "jueves", "viernes"};
+    public CathedraSchedule() { }
 
     public String getDay() {
         return day;
@@ -130,6 +130,6 @@ public class CathedraSchedule implements Serializable, Calendable {
     }
 
     public int getDayOfWeek() {
-        return Arrays.asList(daysOfWeek).indexOf(getDay()) + 1;
+        return Arrays.asList(daysOfWeek).indexOf(getDay().toLowerCase()) + 1;
     }
 }
