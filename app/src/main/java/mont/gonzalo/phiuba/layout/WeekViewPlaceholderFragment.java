@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ class WeekViewPlaceholderFragment extends Fragment {
      * fragment.
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
+    private static final String ARG_COUNT = "arg_count";
     private List<WeekViewEvent> events = new ArrayList<>();
     private TextView title;
     private View rootView;
@@ -49,10 +51,11 @@ class WeekViewPlaceholderFragment extends Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static WeekViewPlaceholderFragment newInstance(int sectionNumber) {
+    public static WeekViewPlaceholderFragment newInstance(int sectionNumber, int count) {
         WeekViewPlaceholderFragment fragment = new WeekViewPlaceholderFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+        args.putInt(ARG_COUNT, count);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,6 +75,7 @@ class WeekViewPlaceholderFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         int position = getArguments().getInt(ARG_SECTION_NUMBER);
+        int count = getArguments().getInt(ARG_COUNT);
         this.rootView = inflater.inflate(R.layout.fragment_week_view, container, false);
         final TextView textViewLabel = (TextView) rootView.findViewById(R.id.section_label);
         final TextView textViewTitle = (TextView) rootView.findViewById(R.id.section_title);
@@ -83,7 +87,7 @@ class WeekViewPlaceholderFragment extends Fragment {
             togglePlaceHolder(false);
             String message = loadEventsForPosition(position);
             textViewLabel.setText(LayoutHelper.fromHtml(message));
-            textViewTitle.setText("Horarios • Combinación Nro. " + position);
+            textViewTitle.setText("Horarios • Combinación " + position + " de " + count);
             title = (TextView) rootView.findViewById(R.id.section_title);
             if (prefs.getBoolean("weekview_auto_hide_cathedras", false)) {
                 textViewLabel.setVisibility(View.GONE);
@@ -98,7 +102,7 @@ class WeekViewPlaceholderFragment extends Fragment {
             WeekView weekView = (WeekView) rootView.findViewById(R.id.weekView);
             weekView.setDateTimeInterpreter(new CustomDateTimeInterpreter());
             weekView.goToDate(ScheduleSlot.getUniqueWeekDate());
-            weekView.goToHour(12);
+            weekView.goToHour(22);
             weekView.setOnEventClickListener(new WeekView.EventClickListener() {
                 @Override
                 public void onEventClick(WeekViewEvent event, RectF eventRect) {

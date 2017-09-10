@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -25,7 +26,7 @@ import mont.gonzalo.phiuba.model.CathedrasCombination;
 import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.UserCourses;
 
-public class WeekViewActivity extends AppCompatActivity implements CoursesFragment.OnListFragmentInteractionListener {
+public class WeekViewActivity extends AppCompatActivity implements CoursesFragment.OnListFragmentInteractionListener, SharedPreferences.OnSharedPreferenceChangeListener {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ProgressBar progressBar;
     private FloatingActionButton addButton;
@@ -43,8 +44,18 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
 
         initFab();
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.registerOnSharedPreferenceChangeListener(this);
+
         ActivityContext.set(this);
         rebuildTree();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        prefs.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     private void initFab() {
@@ -96,6 +107,10 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
         mViewPager.setAdapter(mSectionsPagerAdapter);
     }
 
+    private void setNoCombinationsPlaceHolder() {
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_week_view, menu);
@@ -107,6 +122,8 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
+            intent.putExtra( PreferenceActivity.EXTRA_SHOW_FRAGMENT, SettingsActivity.WeekViewPreferenceFragment.class.getName() );
+            intent.putExtra( PreferenceActivity.EXTRA_NO_HEADERS, true );
             startActivity(intent);
             return true;
         }
@@ -119,6 +136,13 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
 
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("weekview_hide_collisions") || key.equals("weekview_auto_hide_cathedras")) {
+            recreate();
+        }
+    }
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -126,7 +150,7 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
 
         @Override
         public Fragment getItem(int position) {
-            return WeekViewPlaceholderFragment.newInstance(position + 1);
+            return WeekViewPlaceholderFragment.newInstance(position + 1, getCount());
         }
 
         @Override
@@ -136,7 +160,7 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return "Combiación número " + String.valueOf(position);
+            return "Combinación " + String.valueOf(position) + " de " + getCount();
         }
     }
 
@@ -154,7 +178,10 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
             comb[0].loadCathedrasSync();
             comb[0].setAvoidCollisions(avoidCollisions);
             comb[0].buildTree();
-            comb[0].print();
+            if (avoidCollisions) {
+                comb[0].removeCollisions();
+            }
+//            comb[0].print();
             return null;
         }
 
@@ -162,7 +189,11 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             hideProgressBar();
-            setSectionsAdapter();
+            if (CathedrasCombination.getInstance().getCombinationCount() > 0) {
+                setSectionsAdapter();
+            } else {
+                setNoCombinationsPlaceHolder();
+            }
         }
 
         public void setAvoidCollisions(boolean avoidCollisions) {
