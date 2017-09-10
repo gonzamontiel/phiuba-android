@@ -193,10 +193,12 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
             done.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                 if (course.isAvailable()) {
+                    showCalifDialog();
                     v.post(new Runnable() {
                         public void run() {
-                            showCalifDialog();
+//                            showCalifDialog();
                         }
                     });
                 } else {
@@ -298,6 +300,5 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
             });
             d.show();
         }
-
     }
 }
