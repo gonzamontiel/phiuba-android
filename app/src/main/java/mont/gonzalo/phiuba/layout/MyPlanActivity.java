@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -226,6 +227,15 @@ public class MyPlanActivity extends AppCompatActivity
 
         public void setCourses(List<Course> courses) {
             this.mCourses= courses;
+        }
+
+        @Override
+        public void finishUpdate(ViewGroup container) {
+            try{
+                super.finishUpdate(container);
+            } catch (NullPointerException nullPointerException){
+                System.out.println("Catch the NullPointerException in FragmentPagerAdapter.finishUpdate");
+            }
         }
     }
 }
