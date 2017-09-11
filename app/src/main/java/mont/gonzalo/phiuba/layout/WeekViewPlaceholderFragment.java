@@ -74,7 +74,7 @@ class WeekViewPlaceholderFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         int position = getArguments().getInt(ARG_SECTION_NUMBER);
-        int count = getArguments().getInt(ARG_COUNT);
+        int count = CathedrasCombination.getInstance().getCombinationCount();
         this.rootView = inflater.inflate(R.layout.fragment_week_view, container, false);
         final TextView textViewLabel = (TextView) rootView.findViewById(R.id.section_label);
         final TextView textViewTitle = (TextView) rootView.findViewById(R.id.section_title);
