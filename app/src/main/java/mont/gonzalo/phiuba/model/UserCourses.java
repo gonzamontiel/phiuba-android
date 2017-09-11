@@ -31,6 +31,7 @@ public class UserCourses extends Observable implements Serializable {
     private HashMap<String, Double> approvedCourses;
     private List<String> studyingCourses;
     private HashMap<String, Course> loadedCourses;
+    private HashMap<String, Course> savedloadedCourses;
 
     private static List<Course> loadedCoursesArray;
     private static UserCourses _instance = null;
@@ -57,6 +58,7 @@ public class UserCourses extends Observable implements Serializable {
     private UserCourses(String jsonApproved, String jsonStudying) {
         clearChanged();
         approvedCourses = new HashMap<>();
+        savedloadedCourses = new HashMap<>();
         studyingCourses = new ArrayList<>();
         loadCourses(jsonApproved, jsonStudying);
     }
@@ -67,6 +69,9 @@ public class UserCourses extends Observable implements Serializable {
     }
 
     private void loadCourses(final String jsonApproved, final String jsonStudying) {
+        if (loadedCourses != null && !loadedCourses.isEmpty()) {
+            savedloadedCourses.putAll(loadedCourses);
+        }
         loadedCourses = new HashMap<>();
         if (_ready && !loadedCoursesArray.isEmpty()) {
             initialize(loadedCoursesArray, jsonApproved, jsonStudying);
@@ -268,7 +273,8 @@ public class UserCourses extends Observable implements Serializable {
     }
 
     public Course getCourse(String courseCode) {
-        return loadedCourses.get(courseCode);
+        Course c = loadedCourses.get(courseCode);
+        return c != null ? c : savedloadedCourses.get(courseCode);
     }
 
     public String getCourseName(String courseCode) {
