@@ -177,6 +177,9 @@ public class UserCourses extends Observable implements Serializable {
 
     public boolean isAvailable(Course c) {
         for (String corr: c.getCorrelatives()) {
+            if (corr.isEmpty()) {
+                continue;
+            }
             boolean userHasCorrelative = new CorrelativeCondition(corr).isMetBy(User.get());
             if (!userHasCorrelative) {
                 return false;
