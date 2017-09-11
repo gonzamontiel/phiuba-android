@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity
         SearchView.OnQueryTextListener,
         DepartmentDetailFragment.OnListFragmentInteractionListener,
         MiniCoursesAdapter.OnCorrelativeInteractionListener,
+        SharedPreferences.OnSharedPreferenceChangeListener,
         Observer {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -301,7 +303,7 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         if (id == R.id.action_update) {
-            initiate(null);
+            recreate();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -491,5 +493,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onCorrelativeInteraction(Course item) {
         goToCourseItem(item);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("server_ip")) {
+            recreate();
+        }
     }
 }
