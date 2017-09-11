@@ -15,6 +15,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -131,11 +132,17 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("resuming", "activity");
+        if (mSectionsPagerAdapter != null) {
+            mSectionsPagerAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("weekview_hide_collisions") || key.equals("weekview_auto_hide_cathedras")) {
-            if (mSectionsPagerAdapter != null) {
-                mSectionsPagerAdapter.notifyDataSetChanged();
-            }
             recreate();
         }
     }
