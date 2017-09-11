@@ -4,9 +4,11 @@ import android.app.Dialog;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.CheckBox;
@@ -298,7 +300,12 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                     d.dismiss();
                 }
             });
-            d.show();
+            try {
+                d.show();
+            } catch (WindowManager.BadTokenException e) {
+                d.dismiss();
+                Log.e("CoursesAdapter", "Bad token trying to show calification dialog.", e);
+            }
         }
     }
 }
