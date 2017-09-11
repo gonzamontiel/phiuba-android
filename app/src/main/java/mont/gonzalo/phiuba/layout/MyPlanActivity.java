@@ -30,6 +30,7 @@ import java.util.Observer;
 
 import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.model.Course;
+import mont.gonzalo.phiuba.model.Plan;
 import mont.gonzalo.phiuba.model.User;
 import mont.gonzalo.phiuba.model.UserCourses;
 
@@ -49,7 +50,7 @@ public class MyPlanActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_plan);
-        setTitle(getString(R.string.my_plan_title));
+        setTitle(Plan.byCode(Plan.getFromSharedPrefs()).getShortName());
         ActivityContext.set(this);
         initializaToolbar();
         loadFloatingButton();
@@ -57,7 +58,13 @@ public class MyPlanActivity extends AppCompatActivity
         if (UserCourses.getInstance().isReady()) {
             initializeCourses();
             loadStatistics();
+            loadHeaderText();
         }
+    }
+
+    private void loadHeaderText() {
+        TextView header = (TextView) findViewById(R.id.header);
+        header.setText(getString(R.string.my_plan_title));
     }
 
     @Override
