@@ -147,6 +147,13 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
         }
     }
 
+    private void showFailingCourses() {
+        ArrayList failing = CathedrasCombination.getInstance().getFailingCourses();
+        if (!failing.isEmpty()) {
+            Toast.makeText(this, "Las siguientes materias fueron excluidas pues no tienen información de cátedras disponible: " + failing, Toast.LENGTH_LONG).show();
+        }
+    }
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -205,6 +212,7 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
             hideProgressBar();
             if (CathedrasCombination.getInstance().getCombinationCount() > 0) {
                 setSectionsAdapter();
+                showFailingCourses();
             } else {
                 setNoCombinationsPlaceHolder();
             }
