@@ -14,8 +14,12 @@ public class CourseCBC extends Course {
         setLink("");
         setDepto("CBC");
         setRequired(true);
-        setCredits(1);
         setCorrelatives(Arrays.asList(""));
+    }
+
+    @Override
+    public int getCredits() {
+        return 0;
     }
 
     @Override

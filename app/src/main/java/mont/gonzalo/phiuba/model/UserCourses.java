@@ -65,7 +65,7 @@ public class UserCourses extends Observable implements Serializable {
 
     private UserCourses() {
         this("", "");
-        approvedCourses.put("CBC", 10.0);
+        approvedCourses.put("CBC", 0.0);
     }
 
     private void loadCourses(final String jsonApproved, final String jsonStudying) {
@@ -99,7 +99,7 @@ public class UserCourses extends Observable implements Serializable {
         if (!jsonStudying.isEmpty()) {
             studyingCourses = gson.fromJson(jsonStudying, studyingCourses.getClass());
         }
-        approvedCourses.put("CBC", 10.0);
+        approvedCourses.put("CBC", 0.0);
         loadedCourses.put("CBC", new CourseCBC());
         _ready = true;
         doNotifyObservers();
@@ -160,16 +160,22 @@ public class UserCourses extends Observable implements Serializable {
 
     public double getAverageCalification() {
         double sum = 0;
-        for (Double calif: this.approvedCourses.values()) {
-            if (calif != null) {
-                sum += calif;
+        for (Course c: filterApproved(this.getAll())) {
+            if (!c.getCode().equals("CBC")) {
+                Double calif = this.approvedCourses.get(c.getCode());
+                if (calif != null) {
+                    sum += calif;
+                }
             }
         }
-        return sum / (double) getApprovedCount();
+        if (getApprovedCount() > 0) {
+            return sum / (double) getApprovedCount();
+        }
+        return 0;
     }
 
     public int getApprovedCount() {
-        return this.approvedCourses.keySet().size();
+        return filterApproved(this.getAll()).size() - 1;
     }
 
     public int  getCredits() {
@@ -349,7 +355,7 @@ public class UserCourses extends Observable implements Serializable {
     public boolean isApproved(String courseCode) {
         return approvedCourses.containsKey(courseCode)
                 && approvedCourses.get(courseCode) != null
-                && approvedCourses.get(courseCode) > 0;
+                && approvedCourses.get(courseCode) >= 0;
     }
 
     public boolean isFinalExamPending(Course course) {
