@@ -15,12 +15,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.SettingsActivity;
@@ -134,7 +135,6 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("resuming", "activity");
         if (mSectionsPagerAdapter != null) {
             mSectionsPagerAdapter.notifyDataSetChanged();
         }
@@ -157,11 +157,6 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            return super.instantiateItem(container, position);
         }
 
         @Override
@@ -197,12 +192,10 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
         protected String doInBackground(CathedrasCombination[] comb) {
             UserCourses.getInstanceSync();
             comb[0].loadCathedrasSync();
-            comb[0].setAvoidCollisions(avoidCollisions);
             comb[0].buildTree();
             if (avoidCollisions) {
                 comb[0].removeCollisions();
             }
-//            comb[0].print();
             return null;
         }
 
