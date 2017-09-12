@@ -217,6 +217,10 @@ public class Course implements Serializable {
         return getCode() + " - " + getName();
     }
 
+    public boolean hasCathedrasAvailable() {
+        return !this.cathedras.isEmpty();
+    }
+
     public static class ComparatorByName implements Comparator<Course> {
         @Override
         public int compare(Course o1, Course o2) {

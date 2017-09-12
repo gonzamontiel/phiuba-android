@@ -24,9 +24,8 @@ public class CathedrasCombination implements Serializable {
     private Node<String> root;
     private Node<String> leftmostLeaf = null;
     private int combinations;
-
+    private ArrayList<String> failingCourseCodes;
     private static CathedrasCombination _instance;
-    private boolean avoidCollisions;
 
     public static CathedrasCombination getInstance() {
         if (_instance == null) {
@@ -39,6 +38,7 @@ public class CathedrasCombination implements Serializable {
         cathedrasByCourse = new HashMap<>();
         cathedras = new HashMap<>();
         colors =  new HashMap<>();
+        failingCourseCodes = new ArrayList<>();
         combinations = 0;
     }
 
@@ -66,6 +66,9 @@ public class CathedrasCombination implements Serializable {
     }
 
     public void removeCollisions() {
+        if (isEmpty())
+            return;
+
         Node<String> currentLeaf = leftmostLeaf, rightLeaf;
         combinations = 0;
         while (currentLeaf != null) {
@@ -152,13 +155,19 @@ public class CathedrasCombination implements Serializable {
     }
 
     public void loadCathedrasSync() {
+        failingCourseCodes.clear();
+        cathedrasByCourse.clear();
         UserCourses uc = UserCourses.getInstance();
         int n = 0;
         for (String code: uc.getStudyingCourses()) {
             Course c = uc.getCourse(code);
             if (c != null) {
                 c.setCathedras(DataFetcher.getInstance().getCathedrasSync(code));
-                cathedrasByCourse.put(code, c.getCathedras());
+                if (c.hasCathedrasAvailable()) {
+                    cathedrasByCourse.put(code, c.getCathedras());
+                } else {
+                    failingCourseCodes.add(code);
+                }
                 colors.put(code, MaterialColors.get(n++));
             }
         }
@@ -180,8 +189,7 @@ public class CathedrasCombination implements Serializable {
         return cathedrasByCourse.keySet().isEmpty();
     }
 
-    public void setAvoidCollisions(boolean avoidCollisions) {
-        this.avoidCollisions = avoidCollisions;
+    public ArrayList<String> getFailingCourses() {
+        return failingCourseCodes;
     }
-
 }
