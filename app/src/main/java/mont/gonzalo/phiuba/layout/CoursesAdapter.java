@@ -198,11 +198,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
 
                 if (course.isAvailable()) {
                     showCalifDialog();
-                    v.post(new Runnable() {
-                        public void run() {
-//                            showCalifDialog();
-                        }
-                    });
                 } else {
                     Toast.makeText(ActivityContext.get(),
                             "Según tus materias aprobadas, no podrías cursar esta materia. Chequea que tengas aprobada/s: " + String.valueOf(course.getCorrelatives()),
@@ -255,7 +250,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         }
 
         public void showCalifDialog() {
-            final Dialog d = new Dialog(ActivityContext.get());
+            final Dialog d = new Dialog(holder.itemView.getContext());
             d.setContentView(R.layout.calification_dialog);
 
             final NumberPicker np = (NumberPicker) d.findViewById(R.id.number_picker);
@@ -300,12 +295,16 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                     d.dismiss();
                 }
             });
-            try {
-                d.show();
-            } catch (WindowManager.BadTokenException e) {
-                d.dismiss();
-                Log.e("CoursesAdapter", "Bad token trying to show calification dialog.", e);
-            }
+                holder.itemView.post(new Runnable() {
+                    public void run() {
+                        try {
+                            d.show();
+                        } catch (WindowManager.BadTokenException e) {
+                            d.dismiss();
+                            Log.e("CoursesAdapter", "Bad token trying to show calification dialog.", e);
+                        }
+                    }
+                });
         }
     }
 }
