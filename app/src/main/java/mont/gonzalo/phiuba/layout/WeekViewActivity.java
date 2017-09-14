@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -84,13 +85,13 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
 
     private void showProgressBar() {
         progressBar.setVisibility(View.VISIBLE);
-        // Hide after 5 seconds
+        // Hide after 30 seconds
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
                         progressBar.setVisibility(View.GONE);
                     }
-                }, 5000);
+                }, 30000);
     }
 
     private void hideProgressBar() {
@@ -98,13 +99,16 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
     }
 
     public void setSectionsAdapter() {
+        TextView v = (TextView) findViewById(R.id.nocomb);
+        v.setVisibility(View.GONE);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
     }
 
     private void setNoCombinationsPlaceHolder() {
-
+        TextView v = (TextView) findViewById(R.id.nocomb);
+        v.setVisibility(View.VISIBLE);
     }
 
     @Override

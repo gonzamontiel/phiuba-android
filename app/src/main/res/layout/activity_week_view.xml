@@ -50,4 +50,12 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/ic_action_add" />
 
+    <TextView
+        android:id="@+id/nocomb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:visibility="gone"
+        android:text="No se encontraron \n combinaciones sin superposición. \n\nProbá modificando los ajustes \nde la sección o con otras materias."/>
 </android.support.design.widget.CoordinatorLayout>
