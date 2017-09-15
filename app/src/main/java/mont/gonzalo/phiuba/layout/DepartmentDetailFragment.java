@@ -21,6 +21,7 @@ import mont.gonzalo.phiuba.api.DataFetcher;
 import mont.gonzalo.phiuba.model.Cathedra;
 import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.Department;
+import mont.gonzalo.phiuba.model.User;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -96,7 +97,7 @@ public class DepartmentDetailFragment extends SearchableFragment implements Seri
         caGraduatedTextView.setText(mDepartment.getGraduadosConsejo());
         caStudentsTextView.setText(mDepartment.getAlumnosConsejo());
 
-        DataFetcher.getInstance().getCoursesByDepartment(mDepartment.getCode(), new Callback<List<Course>>() {
+        DataFetcher.getInstance().getCoursesByDepartment(mDepartment.getCode(), User.get().getPlanCode(), new Callback<List<Course>>() {
             @Override
             public void success(List<Course> courses, Response response) {
                 Set<Course> hs = new LinkedHashSet<Course>();
