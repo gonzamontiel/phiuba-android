@@ -6,7 +6,6 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
-import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
