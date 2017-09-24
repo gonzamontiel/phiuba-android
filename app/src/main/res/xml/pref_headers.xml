@@ -12,4 +12,8 @@
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="@string/pref_header_weekview" />
 
+    <header
+        android:fragment="mont.gonzalo.phiuba.SettingsActivity$MyPlanPreferenceFragment"
+        android:icon="@drawable/ic_menu_manage"
+        android:title="@string/pref_header_myplan" />
 </preference-headers>
