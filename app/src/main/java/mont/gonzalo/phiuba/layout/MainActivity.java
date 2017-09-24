@@ -27,21 +27,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.SettingsActivity;
 import mont.gonzalo.phiuba.api.DataFetcher;
+import mont.gonzalo.phiuba.model.Branch;
 import mont.gonzalo.phiuba.model.CalendarIntegration;
 import mont.gonzalo.phiuba.model.Cathedra;
 import mont.gonzalo.phiuba.model.CathedraSchedule;
@@ -52,9 +48,6 @@ import mont.gonzalo.phiuba.model.News;
 import mont.gonzalo.phiuba.model.Plan;
 import mont.gonzalo.phiuba.model.User;
 import mont.gonzalo.phiuba.model.UserCourses;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -104,14 +97,35 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setCheckedItem(getDefaultItemSelected());
         navigationView.setNavigationItemSelectedListener(this);
-        fillSpinnerWithPlans(navigationView);
+        fillPlanInfo();
         createSnackBar();
-
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
-
         checkNetwork();
-
         DataFetcher.getInstance().test();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fillPlanInfo();
+    }
+
+    private void fillPlanInfo() {
+        TextView planView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.plan);
+        TextView branchView = (TextView) navigationView.getHeaderView(0).findViewById(R.id.branch);
+        Plan p = Plan.byCode(Plan.getFromSharedPrefs());
+        planView.setText(p.getShortName());
+        String branchName = Branch.getNameFromSharedPrefs();
+        if (!branchName.isEmpty()) {
+            branchView.setText(branchName);
+            branchView.setVisibility(View.VISIBLE);
+        }
+        planView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void createSnackBar() {
@@ -175,61 +189,6 @@ public class MainActivity extends AppCompatActivity
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, currentFragment).commit();
-    }
-
-    private void fillSpinnerWithPlans(NavigationView navigationView) {
-        final Spinner spinner = (Spinner) navigationView.getHeaderView(0).findViewById(R.id.spinner);
-        DataFetcher.getInstance().getPlans(new Callback<List<Plan>>() {
-            @Override
-            public void success(List<Plan> plans, Response response) {
-                Plan.setAvailablePlans(plans);
-                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.menu_spinner_item_first, Plan.getAvailableNames());
-                spinnerArrayAdapter.setDropDownViewResource(R.layout.menu_spinner_item);
-                spinner.setAdapter(spinnerArrayAdapter);
-
-                String shortName = User.get().getPlan().getShortName();
-                int count = 0;
-                for (String name: Plan.getAvailableNames()) {
-                    if (name == shortName) {
-                        break;
-                    }
-                    count++;
-                }
-                spinner.setSelection(count);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                String[] defaults = new String[] {Plan.getDefault()};
-                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.menu_spinner_item_first, defaults);
-                spinnerArrayAdapter.setDropDownViewResource(R.layout.menu_spinner_item);
-                spinner.setAdapter(spinnerArrayAdapter);
-            }
-        });
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            private boolean firstTime = true;
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (firstTime) {
-                    firstTime = false;
-                    return;
-                }
-                String data = spinner.getItemAtPosition(position).toString();
-                Plan p = Plan.byShortName(data);
-                User.get().selectPlan(p);
-                UserCourses.getInstance().updateCourses();
-                currentFragment.reset();
-                drawer.closeDrawers();
-                Toast.makeText(getApplicationContext(), data, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
     }
 
     private Class getDefaultFragmentClass() {
@@ -499,6 +458,9 @@ public class MainActivity extends AppCompatActivity
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("server_ip")) {
             recreate();
+        }
+        if (key.equals("pref_plan") || key.equals("pref_branch")) {
+            fillPlanInfo();
         }
     }
 }
