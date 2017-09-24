@@ -2,16 +2,14 @@ package mont.gonzalo.phiuba.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.layout.ActivityContext;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Gonzalo Montiel on 11/20/16.
@@ -21,9 +19,10 @@ public class Plan {
     private String code;
     private String name = "";
     private String link = "";
+    private Branch selectedBranch = null;
     private int credits;
-    private List<Branch> branches;
-    private List<ApprovalCondition> conditions;
+    private ArrayList<Branch> branches = new ArrayList<>();
+    private List<ApprovalCondition> conditions = new ArrayList<>();
 
     private static HashMap<String, Plan> plans = new HashMap<String, Plan>();
     private static HashMap<String, String> planShortNames = new HashMap<String, String>();
@@ -152,20 +151,16 @@ public class Plan {
         };
     }
 
+    public ArrayList<Branch> getBranches() {
+        return branches;
+    }
+
     public double getCredits() {
         return credits > 0 ? credits : DEFAULT_CRED;
     }
 
     public void setCredits(int credits) {
         this.credits = credits;
-    }
-
-    public List<Branch> getBranches() {
-        return branches;
-    }
-
-    public void setBranches(List<Branch> branchis) {
-        this.branches = branchis;
     }
 
     public String getTesisCode() {
@@ -189,20 +184,27 @@ public class Plan {
     public static String getFromSharedPrefs() {
         Context context = ActivityContext.get();
         if (context != null) {
-            SharedPreferences mPrefs = context.getSharedPreferences(
-                    context.getResources().getString(R.string.shared_prefs), MODE_PRIVATE);
-            return mPrefs.getString("plan", getDefault());
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            return prefs.getString("pref_plan", getDefault());
         }
         return getDefault();
     }
 
-    public void saveToSharedPrefs() {
-        Context context = ActivityContext.get();
-        SharedPreferences mPrefs = context.getSharedPreferences(
-                context.getResources().getString(R.string.shared_prefs), MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor = mPrefs.edit();
-        prefsEditor.putString("plan", this.getCode());
-        prefsEditor.commit();
+    public Branch getSelectedBranch() {
+        return selectedBranch;
+    }
+
+    public void setSelectedBranch(Branch selectedBranch) {
+        this.selectedBranch = selectedBranch;
+    }
+
+    public String getBranchName(String branchCode) {
+        for (Branch b: getBranches()) {
+            if (b.getCode().equals(branchCode)) {
+                return b.getName();
+            }
+        }
+        return "";
     }
 }
 
