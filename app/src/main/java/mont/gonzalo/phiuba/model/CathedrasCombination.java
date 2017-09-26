@@ -159,7 +159,7 @@ public class CathedrasCombination implements Serializable {
         cathedrasByCourse.clear();
         UserCourses uc = UserCourses.getInstance();
         int n = 0;
-        for (String code: uc.getStudyingCourses()) {
+        for (String code: uc.getStudyingCoursesCodes()) {
             Course c = uc.getCourse(code);
             if (c != null) {
                 c.setCathedras(DataFetcher.getInstance().getCathedrasSync(code));

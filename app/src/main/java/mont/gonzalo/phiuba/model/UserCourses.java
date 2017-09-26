@@ -128,7 +128,7 @@ public class UserCourses extends Observable implements Serializable {
     }
 
     private void doAddApproved(Course c, Double calification) {
-        this.getStudyingCourses().remove(c.getCode());
+        this.getStudyingCoursesCodes().remove(c.getCode());
         this.approvedCourses.put(c.getCode(), calification);
         this.loadedCourses.put(c.getCode(), c);
     }
@@ -140,7 +140,7 @@ public class UserCourses extends Observable implements Serializable {
     }
 
     public boolean addStudying(Course c) {
-        if (getStudyingCourses().size() <= MAX_STUDYING_SIZE) {
+        if (getStudyingCoursesCodes().size() <= MAX_STUDYING_SIZE) {
             this.approvedCourses.remove(c.getCode());
             addOrInitializeStudyingCourses(c.getCode());
             this.loadedCourses.put(c.getCode(), c);
@@ -163,7 +163,7 @@ public class UserCourses extends Observable implements Serializable {
     }
 
     public void removeCourse(Course c) {
-        this.getStudyingCourses().remove(c.getCode());
+        this.getStudyingCoursesCodes().remove(c.getCode());
         this.approvedCourses.remove(c.getCode());
         saveToSharedPrefs();
         doNotifyObservers();
@@ -231,7 +231,7 @@ public class UserCourses extends Observable implements Serializable {
     public static List<Course> filterStudying(List<Course> mCourses) {
         List<Course> filtered = new ArrayList<>();
         for (Course c: mCourses) {
-            if (UserCourses.getInstance().getStudyingCourses().contains(c.getCode())) {
+            if (UserCourses.getInstance().getStudyingCoursesCodes().contains(c.getCode())) {
                 filtered.add(c);
             }
         }
@@ -246,7 +246,7 @@ public class UserCourses extends Observable implements Serializable {
         Collections.sort(mCourses, new Course.ComparatorByName());
         for (Course c: mCourses) {
             if (!ucs.approvedCourses.containsKey(c.getCode()) &&
-                    !ucs.getStudyingCourses().contains(c.getCode())) {
+                    !ucs.getStudyingCoursesCodes().contains(c.getCode())) {
                 if (getInstance().isAvailable(c)) {
                     filteredAv.add(c);
                 } else {
@@ -264,7 +264,7 @@ public class UserCourses extends Observable implements Serializable {
         Collections.sort(mCourses, new Course.ComparatorByName());
         for (Course c: mCourses) {
             if (!ucs.approvedCourses.containsKey(c.getCode()) &&
-                    !ucs.getStudyingCourses().contains(c.getCode())) {
+                    !ucs.getStudyingCoursesCodes().contains(c.getCode())) {
                 if (getInstance().isAvailable(c)) {
                     filteredAv.add(c);
                 }
@@ -376,10 +376,10 @@ public class UserCourses extends Observable implements Serializable {
     }
 
     public boolean isStudying(Course course) {
-        return getStudyingCourses().contains(course.getCode());
+        return getStudyingCoursesCodes().contains(course.getCode());
     }
 
-    public List<String> getStudyingCourses() {
+    public List<String> getStudyingCoursesCodes() {
         String plan = Plan.getFromSharedPrefs();
         if (studyingCourses.get(plan) == null) {
             studyingCourses.put(plan, new ArrayList<String>());
@@ -390,4 +390,16 @@ public class UserCourses extends Observable implements Serializable {
     public List<Course> getAvailableCourses() {
         return filterAvailable(getAll());
     }
+
+    public List<Course> getStudyingCourses() {
+        return filterStudying(getAll());
+    }
+
+    public List<Course> getAvailableAndStudyingCourses() {
+        List<Course> result = getAvailableCourses();
+        result.addAll(getStudyingCourses());
+        Collections.sort(result, new Course.ComparatorByName());
+        return result;
+    }
+
 }

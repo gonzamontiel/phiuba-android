@@ -44,7 +44,7 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
         setContentView(R.layout.activity_week_view);
         setTitle("Mi semana");
 
-        coursesToAdd = new ArrayList();
+        coursesToAdd = (ArrayList<Course>) UserCourses.getInstance().getStudyingCourses();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -74,7 +74,8 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
         View view = getLayoutInflater().inflate(R.layout.simple_courses, null);
         RecyclerView coursesList = (RecyclerView) view.findViewById(R.id.simple_courses_rv);
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.add_selected);
-        WeekViewCoursesAdapter coursesAdapter = new WeekViewCoursesAdapter(UserCourses.getInstance().getAvailableCourses(), this);
+        WeekViewCoursesAdapter coursesAdapter = new WeekViewCoursesAdapter(
+                UserCourses.getInstance().getAvailableAndStudyingCourses(), this);
         coursesList.setLayoutManager(new LinearLayoutManager(this));
         coursesList.setAdapter(coursesAdapter);
         dialog.setContentView(view);

@@ -129,7 +129,7 @@ public class Course implements Serializable {
         return UserCourses.getInstance().isApproved(this);
     }
 
-    private boolean isStudying() {
+    public boolean isStudying() {
         return UserCourses.getInstance().isStudying(this);
     }
 

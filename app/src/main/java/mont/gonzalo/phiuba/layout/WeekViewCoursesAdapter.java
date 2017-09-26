@@ -43,6 +43,8 @@ public class WeekViewCoursesAdapter extends RecyclerView.Adapter<WeekViewCourses
     @Override
     public void onBindViewHolder(final CourseViewHolder holder, int position) {
         holder.mItem = mCourses.get(position);
+        holder.selected = holder.mItem.isStudying();
+        holder.changeSelectedColor(holder.selected ? R.color.course_added : R.color.course_default);
         holder.courseName.setText(holder.mItem.getName());
         holder.courseIcon.setImageResource(holder.mItem.getImageResource());
         holder.cardViewItem.setOnClickListener(new View.OnClickListener() {
@@ -76,8 +78,6 @@ public class WeekViewCoursesAdapter extends RecyclerView.Adapter<WeekViewCourses
             courseName = (TextView)itemView.findViewById(R.id.course_name);
             courseIcon = (ImageView)itemView.findViewById(R.id.course_icon);
             selectedIndicator = itemView.findViewById(R.id.selected_indicator);
-            selected = false;
-            changeSelectedColor(R.color.course_default);
         }
 
         @Override
