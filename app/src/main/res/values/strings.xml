@@ -149,4 +149,7 @@
     <string name="pref_title_branch">Orientación</string>
     <string name="default_plan">INFORMA86</string>
     <string name="default_branch">NONE</string>
+    <string name="pref_category_speech">Lector de voz</string>
+    <string name="pref_description_speech">Esta funcionalidad se activará al hacer un touch prolongado en cualquier titulo o descripcion de un evento. Otro touch prolongado parará la lectura.</string>
+    <string name="pref_title_speech">Lectura en eventos</string>
 </resources>
