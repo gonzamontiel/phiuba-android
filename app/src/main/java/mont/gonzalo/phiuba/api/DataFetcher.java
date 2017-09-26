@@ -31,7 +31,7 @@ import retrofit.converter.GsonConverter;
 public class DataFetcher extends Observable {
     private static final String TEST_ROOT_URL = "http://10.0.2.2:3030";
     private static final String PROD_ROOT_IP = "192.168.0.5";
-    private static final String TAG = "DataFetcher";
+    public static final String TAG = "DataFetcher";
     private TestConnectionAPI testConnectionApi;
     private RestAdapter adapter;
     private CourseAPI courseApi;

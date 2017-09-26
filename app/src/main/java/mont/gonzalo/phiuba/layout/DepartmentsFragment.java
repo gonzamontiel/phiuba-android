@@ -20,8 +20,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import static android.content.ContentValues.TAG;
-
 public class DepartmentsFragment extends SearchableFragment implements Serializable {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -81,7 +79,7 @@ public class DepartmentsFragment extends SearchableFragment implements Serializa
                 }
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.d(TAG, error.getMessage());
+                    Log.d(DataFetcher.TAG, error.getMessage());
                 }
             });
         }
@@ -121,7 +119,7 @@ public class DepartmentsFragment extends SearchableFragment implements Serializa
             }
             @Override
             public void failure(RetrofitError error) {
-                Log.d(TAG, error.getMessage());
+                Log.d(DataFetcher.TAG, error.getMessage());
             }
         });
     }
@@ -136,7 +134,7 @@ public class DepartmentsFragment extends SearchableFragment implements Serializa
             }
             @Override
             public void failure(RetrofitError error) {
-                Log.d(TAG, error.getMessage());
+                Log.d(DataFetcher.TAG, error.getMessage());
             }
         });
     }

@@ -25,8 +25,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import static android.content.ContentValues.TAG;
-
 public class CoursesFragment extends SearchableFragment implements Serializable {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -85,7 +83,7 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.d(TAG, error.getMessage());
+                        Log.d(DataFetcher.TAG, error.getMessage());
                     }
                 });
             } else {
@@ -133,7 +131,7 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
             position = ((CoursesAdapter)mAdapter).getPosition();
             course = mAdapter.getCourse(position);
         } catch (Exception e) {
-            Log.d(TAG, e.getLocalizedMessage(), e);
+            Log.d("CoursesFragment", e.getLocalizedMessage(), e);
             return super.onContextItemSelected(item);
         }
         switch (item.getItemId()) {
@@ -173,7 +171,7 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
             }
             @Override
             public void failure(RetrofitError error) {
-                Log.d(TAG, error.getMessage());
+                Log.d(DataFetcher.TAG, error.getMessage());
             }
         });
     }
@@ -187,7 +185,7 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
             }
 
             @Override
-            public void failure(RetrofitError error) {Log.d(TAG, error.getMessage());}
+            public void failure(RetrofitError error) {Log.d(DataFetcher.TAG, error.getMessage());}
         });
     }
 

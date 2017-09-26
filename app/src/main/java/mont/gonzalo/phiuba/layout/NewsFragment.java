@@ -21,8 +21,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import static android.content.ContentValues.TAG;
-
 public class NewsFragment extends SearchableFragment implements Serializable {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -98,7 +96,7 @@ public class NewsFragment extends SearchableFragment implements Serializable {
         try {
             position = ((NewsAdapter)mAdapter).getPosition();
         } catch (Exception e) {
-            Log.d(TAG, e.getLocalizedMessage(), e);
+            Log.d("NewsFragment", e.getLocalizedMessage(), e);
             return super.onContextItemSelected(item);
         }
         switch (item.getItemId()) {
@@ -133,7 +131,7 @@ public class NewsFragment extends SearchableFragment implements Serializable {
         }
         @Override
         public void failure(RetrofitError error) {
-            Log.d(TAG, error.getMessage());
+            Log.d(DataFetcher.TAG, error.getMessage());
         }
     }
 
@@ -150,7 +148,7 @@ public class NewsFragment extends SearchableFragment implements Serializable {
 
         @Override
         public void failure(RetrofitError error) {
-            Log.d(TAG, error.getMessage());
+            Log.d(DataFetcher.TAG, error.getMessage());
         }
     }
 }
