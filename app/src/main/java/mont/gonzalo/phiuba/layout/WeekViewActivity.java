@@ -87,6 +87,7 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
                 }
                 rebuildTree();
                 dialog.dismiss();
+                coursesToAdd.clear();
             }
         });
     }
