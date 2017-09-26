@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -27,6 +28,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -108,6 +111,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         fillPlanInfo();
+        currentFragment.reset();
     }
 
     private void fillPlanInfo() {
@@ -123,9 +127,30 @@ public class MainActivity extends AppCompatActivity
         planView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                v.startAnimation(clickAnimation());
+                launchPlanSettings(v);
             }
         });
+        branchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.startAnimation(clickAnimation());
+                launchPlanSettings(v);
+            }
+        });
+    }
+
+    private Animation clickAnimation() {
+        Animation animation = new AlphaAnimation(0.3f, 0.7f);
+        animation.setDuration(200);
+        return animation;
+    }
+
+    private void launchPlanSettings(View v) {
+        Intent intent = new Intent(v.getContext(), SettingsActivity.class);
+        intent.putExtra( PreferenceActivity.EXTRA_SHOW_FRAGMENT, SettingsActivity.MyPlanPreferenceFragment.class.getName() );
+        intent.putExtra( PreferenceActivity.EXTRA_NO_HEADERS, true );
+        startActivity(intent);
     }
 
     private void createSnackBar() {
