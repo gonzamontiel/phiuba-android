@@ -28,7 +28,6 @@ public class User {
 
     public void selectPlan(Plan plan) {
         this.plan = plan;
-        plan.saveToSharedPrefs();
     }
 
     public List<Course> getApprovedCourses() {

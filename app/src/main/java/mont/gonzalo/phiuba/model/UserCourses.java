@@ -29,7 +29,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class UserCourses extends Observable implements Serializable {
     public static final int MAX_STUDYING_SIZE = 6;
     private HashMap<String, Double> approvedCourses;
-    private List<String> studyingCourses;
+    private HashMap<String, ArrayList<String>> studyingCourses;
     private HashMap<String, Course> loadedCourses;
     private HashMap<String, Course> savedloadedCourses;
 
@@ -59,7 +59,8 @@ public class UserCourses extends Observable implements Serializable {
         clearChanged();
         approvedCourses = new HashMap<>();
         savedloadedCourses = new HashMap<>();
-        studyingCourses = new ArrayList<>();
+        studyingCourses = new HashMap<>();
+        studyingCourses.put(Plan.getFromSharedPrefs(), new ArrayList<String>());
         loadCourses(jsonApproved, jsonStudying);
     }
 
@@ -127,7 +128,7 @@ public class UserCourses extends Observable implements Serializable {
     }
 
     private void doAddApproved(Course c, Double calification) {
-        this.studyingCourses.remove(c.getCode());
+        this.getStudyingCourses().remove(c.getCode());
         this.approvedCourses.put(c.getCode(), calification);
         this.loadedCourses.put(c.getCode(), c);
     }
@@ -139,9 +140,9 @@ public class UserCourses extends Observable implements Serializable {
     }
 
     public boolean addStudying(Course c) {
-        if (this.studyingCourses.size() <= MAX_STUDYING_SIZE) {
+        if (getStudyingCourses().size() <= MAX_STUDYING_SIZE) {
             this.approvedCourses.remove(c.getCode());
-            this.studyingCourses.add(c.getCode());
+            addOrInitializeStudyingCourses(c.getCode());
             this.loadedCourses.put(c.getCode(), c);
             c.loadCathedrasAsync();
             doNotifyObservers();
@@ -151,8 +152,18 @@ public class UserCourses extends Observable implements Serializable {
         return false;
     }
 
+    private void addOrInitializeStudyingCourses(String code) {
+        String plan = Plan.getFromSharedPrefs();
+        ArrayList st = studyingCourses.get(plan);
+        if (st == null) {
+            st = new ArrayList();
+        }
+        st.add(code);
+        studyingCourses.put(plan, st);
+    }
+
     public void removeCourse(Course c) {
-        this.studyingCourses.remove(c.getCode());
+        this.getStudyingCourses().remove(c.getCode());
         this.approvedCourses.remove(c.getCode());
         saveToSharedPrefs();
         doNotifyObservers();
@@ -220,7 +231,7 @@ public class UserCourses extends Observable implements Serializable {
     public static List<Course> filterStudying(List<Course> mCourses) {
         List<Course> filtered = new ArrayList<>();
         for (Course c: mCourses) {
-            if (UserCourses.getInstance().studyingCourses.contains(c.getCode())) {
+            if (UserCourses.getInstance().getStudyingCourses().contains(c.getCode())) {
                 filtered.add(c);
             }
         }
@@ -235,7 +246,7 @@ public class UserCourses extends Observable implements Serializable {
         Collections.sort(mCourses, new Course.ComparatorByName());
         for (Course c: mCourses) {
             if (!ucs.approvedCourses.containsKey(c.getCode()) &&
-                    !ucs.studyingCourses.contains(c.getCode())) {
+                    !ucs.getStudyingCourses().contains(c.getCode())) {
                 if (getInstance().isAvailable(c)) {
                     filteredAv.add(c);
                 } else {
@@ -253,7 +264,7 @@ public class UserCourses extends Observable implements Serializable {
         Collections.sort(mCourses, new Course.ComparatorByName());
         for (Course c: mCourses) {
             if (!ucs.approvedCourses.containsKey(c.getCode()) &&
-                    !ucs.studyingCourses.contains(c.getCode())) {
+                    !ucs.getStudyingCourses().contains(c.getCode())) {
                 if (getInstance().isAvailable(c)) {
                     filteredAv.add(c);
                 }
@@ -365,11 +376,15 @@ public class UserCourses extends Observable implements Serializable {
     }
 
     public boolean isStudying(Course course) {
-        return studyingCourses.contains(course.getCode());
+        return getStudyingCourses().contains(course.getCode());
     }
 
     public List<String> getStudyingCourses() {
-        return studyingCourses;
+        String plan = Plan.getFromSharedPrefs();
+        if (studyingCourses.get(plan) == null) {
+            studyingCourses.put(plan, new ArrayList<String>());
+        }
+        return studyingCourses.get(plan);
     }
 
     public List<Course> getAvailableCourses() {

@@ -110,8 +110,8 @@ public class DataFetcher extends Observable {
         this.courseApi.search(planCode, plan, c);
     }
 
-    public void getCoursesByDepartment(String code, Callback<List<Course>> c) {
-        this.courseApi.byDepartment(code, c);
+    public void getCoursesByDepartment(String code, String planCode, Callback<List<Course>> c) {
+        this.courseApi.byDepartment(code, planCode, c);
     }
 
     public void getEvents(Callback<List<Event>> c) {

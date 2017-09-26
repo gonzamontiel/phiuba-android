@@ -21,5 +21,5 @@ public interface CourseAPI {
     void search(@Query("search") String query, @Query("planCode") String plan, Callback<List<Course>> response);
 
     @GET("/api/courses")
-    void byDepartment(@Query("depCode") String depCode, Callback<List<Course>> response);
+    void byDepartment(@Query("depCode") String depCode, @Query("planCode") String planCode, Callback<List<Course>> response);
 }

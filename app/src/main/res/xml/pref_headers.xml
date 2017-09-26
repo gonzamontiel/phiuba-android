@@ -4,17 +4,16 @@
 
     <header
         android:fragment="mont.gonzalo.phiuba.SettingsActivity$GeneralPreferenceFragment"
-        android:icon="@drawable/ic_info_black_24dp"
+        android:icon="@drawable/ic_settings"
         android:title="@string/pref_header_general" />
 
     <header
         android:fragment="mont.gonzalo.phiuba.SettingsActivity$WeekViewPreferenceFragment"
-        android:icon="@drawable/ic_notifications_black_24dp"
+        android:icon="@drawable/ic_action_calendar_month"
         android:title="@string/pref_header_weekview" />
 
     <header
         android:fragment="mont.gonzalo.phiuba.SettingsActivity$MyPlanPreferenceFragment"
-        android:icon="@drawable/ic_sync_black_24dp"
+        android:icon="@drawable/ic_school"
         android:title="@string/pref_header_myplan" />
-
 </preference-headers>

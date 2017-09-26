@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -35,12 +36,15 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
     private ProgressBar progressBar;
     private FloatingActionButton addButton;
     private ViewPager mViewPager;
+    private ArrayList<Course> coursesToAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_week_view);
         setTitle("Mi semana");
+
+        coursesToAdd = new ArrayList();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -67,12 +71,25 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
 
     private void openCoursesDialog() {
         final Dialog dialog = new Dialog(this);
-        View view = getLayoutInflater().inflate(R.layout.fragment_course_list, null);
-        RecyclerView lv = (RecyclerView) view.findViewById(R.id.course_rv);
-        CoursesAdapter coursesAdapter = new CoursesAdapter(UserCourses.getInstance().getAvailableCourses(), this);
-        lv.setAdapter(coursesAdapter);
+        View view = getLayoutInflater().inflate(R.layout.simple_courses, null);
+        RecyclerView coursesList = (RecyclerView) view.findViewById(R.id.simple_courses_rv);
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.add_selected);
+        WeekViewCoursesAdapter coursesAdapter = new WeekViewCoursesAdapter(UserCourses.getInstance().getAvailableCourses(), this);
+        coursesList.setLayoutManager(new LinearLayoutManager(this));
+        coursesList.setAdapter(coursesAdapter);
         dialog.setContentView(view);
         dialog.show();
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (Course c : coursesToAdd) {
+                    UserCourses.getInstance().addStudying(c);
+                }
+                rebuildTree();
+                dialog.dismiss();
+                coursesToAdd.clear();
+            }
+        });
     }
 
     private void rebuildTree() {
@@ -133,7 +150,11 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
 
     @Override
     public void onListFragmentInteraction(Course item) {
-
+        if (this.coursesToAdd.contains(item)) {
+            this.coursesToAdd.remove(item);
+        } else {
+            this.coursesToAdd.add(item);
+        }
     }
 
     @Override

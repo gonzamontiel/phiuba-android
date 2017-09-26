@@ -16,9 +16,15 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mont.gonzalo.phiuba.api.DataFetcher;
+import mont.gonzalo.phiuba.model.Branch;
+import mont.gonzalo.phiuba.model.Plan;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class SettingsActivity extends AppCompatPreferenceActivity {
     /**
@@ -127,7 +133,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     protected boolean isValidFragment(String fragmentName) {
         return PreferenceFragment.class.getName().equals(fragmentName)
                 || GeneralPreferenceFragment.class.getName().equals(fragmentName)
-                || WeekViewPreferenceFragment.class.getName().equals(fragmentName);
+                || WeekViewPreferenceFragment.class.getName().equals(fragmentName)
+                || MyPlanPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     /**
@@ -201,6 +208,84 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 return true;
             }
             return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public static class MyPlanPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_my_plan);
+            setHasOptionsMenu(true);
+            final ListPreference planListPreference = (ListPreference) findPreference("pref_plan");
+            final ListPreference branchListPreference = (ListPreference) findPreference("pref_branch");
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            branchListPreference.setSummary(prefs.getString("pref_branch_name", ""));
+
+            DataFetcher.getInstance().getPlans(new Callback<List<Plan>>() {
+                @Override
+                public void success(List<Plan> plans, Response response) {
+                    Plan.setAvailablePlans(plans);
+                    CharSequence[] entries = new CharSequence[plans.size()];
+                    CharSequence[] entryValues = new CharSequence[plans.size()];
+
+                    for (int i = 0; i < plans.size(); i++) {
+                        entryValues[i] = plans.get(i).getCode();
+                        entries[i] = plans.get(i).getShortName();
+                    }
+                    planListPreference.setEntries(entries);
+                    planListPreference.setEntryValues(entryValues);
+                    planListPreference.setSummary(Plan.byCode(planListPreference.getValue()).getShortName());
+                    fillBranchesPreference(Plan.byCode(planListPreference.getValue()), branchListPreference);
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                }
+            });
+
+            branchListPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    ListPreference listPreference = (ListPreference) preference;
+                    int index = listPreference.findIndexOfValue((String) newValue);
+                    preference.setSummary(index >= 0? listPreference.getEntries()[index]: null);
+                    Plan p = Plan.byCode(prefs.getString("pref_plan", Plan.getDefault()));
+                    prefs.edit().putString("pref_branch_name", p.getBranchName((String) newValue)).commit();
+                    return false;
+                }
+            });
+            planListPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    Plan plan = Plan.byCode(newValue.toString());
+                    fillBranchesPreference(plan, branchListPreference);
+                    planListPreference.setSummary(plan.getShortName());
+                    prefs.edit().putString("pref_branch", "").commit();
+                    prefs.edit().putString("pref_branch_name", "").commit();
+                    branchListPreference.setSummary("");
+                    return true;
+                }
+            });
+        }
+
+        private void fillBranchesPreference(Plan plan, ListPreference branchListPreference) {
+            ArrayList<Branch> branches = plan.getBranches();
+            if (!branches.isEmpty()) {
+                CharSequence[] entries = new CharSequence[branches.size()];
+                CharSequence[] entryValues = new CharSequence[branches.size()];
+                for (int i = 0; i < branches.size(); i++) {
+                    entryValues[i] = branches.get(i).getCode();
+                    entries[i] = branches.get(i).getName();
+                }
+                branchListPreference.setEntries(entries);
+                branchListPreference.setEntryValues(entryValues);
+            } else {
+                branchListPreference.setEntries(getActivity().getResources().getStringArray(
+                        R.array.branch_preference_default_entries));
+                branchListPreference.setEntryValues(getActivity().getResources().getStringArray(
+                            R.array.branch_preference_default_entry_values));
+            }
         }
     }
 }

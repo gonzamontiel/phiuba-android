@@ -1,5 +1,11 @@
 package mont.gonzalo.phiuba.model;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import mont.gonzalo.phiuba.layout.ActivityContext;
+
 /**
  * Created by Gonzalo Montiel on 4/6/17.
  */
@@ -31,4 +37,23 @@ public class Branch {
     public void setName(String name) {
         this.name = name;
     }
+
+    public static String getFromSharedPrefs() {
+        Context context = ActivityContext.get();
+        if (context != null) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            return prefs.getString("pref_branch", "");
+        }
+        return "";
+    }
+
+    public static String getNameFromSharedPrefs() {
+        Context context = ActivityContext.get();
+        if (context != null) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            return prefs.getString("pref_branch_name", "");
+        }
+        return "";
+    }
+
 }

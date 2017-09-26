@@ -1,5 +1,6 @@
 package mont.gonzalo.phiuba.layout;
 
+import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
@@ -14,6 +15,7 @@ import org.jsoup.select.Elements;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Observable;
 
 import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.UserCourses;
@@ -21,7 +23,12 @@ import mont.gonzalo.phiuba.model.UserCourses;
 /**
  * Created by Gonzalo Montiel on 4/2/17.
  */
-public class SIUImporter {
+public class SIUImporter extends Observable {
+    Context ctx;
+
+    SIUImporter(Context context) {
+        ctx = context;
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void loadApprovedCourses(final WebView myWebView) {
@@ -43,6 +50,7 @@ public class SIUImporter {
 
     public void parseHtml(String html) {
         Document doc = Jsoup.parse(html);
+        int addedCount = 1;
         if (doc.select("table caption") != null &&
                 doc.select("table caption").text().contains("Historia académica")) {
             Elements rows = doc.select("table").first().select("tr");
@@ -74,12 +82,16 @@ public class SIUImporter {
                     try {
                         calification = Double.parseDouble(calif);
                         UserCourses.getInstance().addApproved(new Course(code, name), calification, last);
+                        addedCount++;
                     } catch (NumberFormatException e) {
-                        Log.d("SIUImporter", "Coutse could not be added, calification was: " + calif);
+                        Log.d("SIUImporter", "Course could not be added, calification was: " + calif);
+                        addedCount--;
                     }
                 }
             }
             UserCourses.getInstance().saveToSharedPrefs();
+            setChanged();
+            notifyObservers();
         }
     }
 }

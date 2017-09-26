@@ -24,7 +24,8 @@ public class Course implements Serializable {
     private String name;
     private String link;
     private String depto;
-    private Boolean required;
+    private String type;
+    private boolean required = false;
     private int credits;
     private List<String> correlatives;
     private List<Cathedra> cathedras;
@@ -33,6 +34,7 @@ public class Course implements Serializable {
         this.planCode = User.get().getPlanCode();
         this.name = cName;
         this.code = cCode;
+        this.type = required ? "OBL" : "OPT";
     }
 
     public Course(String name, String depCode, String code, String depto) {
@@ -40,6 +42,7 @@ public class Course implements Serializable {
         this.code = code;
         this.depCode = depCode;
         this.depto = depto;
+        this.type = required ? "OBL" : "OPT";
     }
 
     public List<Cathedra> getCathedras() {
@@ -219,6 +222,22 @@ public class Course implements Serializable {
 
     public boolean hasCathedrasAvailable() {
         return !this.cathedras.isEmpty();
+    }
+
+    public String getTypeString() {
+        switch (type) {
+            case "OBL": return "Obligatoria";
+            case "OPT": return "Optativa";
+            default: return type.substring(0,1).toUpperCase() + type.substring(1).toLowerCase();
+        }
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public static class ComparatorByName implements Comparator<Course> {

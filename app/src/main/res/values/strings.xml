@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Fiuba</string>
+    <string name="app_name">Mi plan de estudios</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -69,7 +69,7 @@
     <string name="cant_add_studying_1">"No se puede anotar a más de "</string>
     <string name="cant_add_studying_2">" materias por cuatrimestre"</string>
     <string name="weekview_with">" con "</string>
-    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_settings">Ajustes</string>
 
     <!-- Strings related to Settings -->
 
@@ -115,16 +115,12 @@
         <item>-1</item>
     </string-array>
 
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
+    <string-array name="branch_preference_default_entries">
+        <item>Ninguna orientación</item>
     </string-array>
 
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+    <string-array name="branch_preference_default_entry_values">
+        <item>@string/default_branch</item>
     </string-array>
 
     <string-array name="multi_select_list_preference_default_value" />
@@ -149,4 +145,8 @@
         Tené en cuenta que se buscan los términos dentro del título y el texto de cada evento. </string>
     <string name="pref_category_notifications">Notificaciones</string>
     <string name="pref_category_network">Red</string>
+    <string name="pref_title_plan">Carrera y Plan </string>
+    <string name="pref_title_branch">Orientación</string>
+    <string name="default_plan">INFORMA86</string>
+    <string name="default_branch">NONE</string>
 </resources>
