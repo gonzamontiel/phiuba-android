@@ -219,8 +219,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             setHasOptionsMenu(true);
             final ListPreference planListPreference = (ListPreference) findPreference("pref_plan");
             final ListPreference branchListPreference = (ListPreference) findPreference("pref_branch");
-
-//            bindPreferenceSummaryToValue(branchListPreference);
+            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            branchListPreference.setSummary(prefs.getString("pref_branch_name", ""));
 
             DataFetcher.getInstance().getPlans(new Callback<List<Plan>>() {
                 @Override
@@ -250,7 +250,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     ListPreference listPreference = (ListPreference) preference;
                     int index = listPreference.findIndexOfValue((String) newValue);
                     preference.setSummary(index >= 0? listPreference.getEntries()[index]: null);
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     Plan p = Plan.byCode(prefs.getString("pref_plan", Plan.getDefault()));
                     prefs.edit().putString("pref_branch_name", p.getBranchName((String) newValue)).commit();
                     return false;
@@ -262,6 +261,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     Plan plan = Plan.byCode(newValue.toString());
                     fillBranchesPreference(plan, branchListPreference);
                     planListPreference.setSummary(plan.getShortName());
+                    prefs.edit().putString("pref_branch", "").commit();
+                    prefs.edit().putString("pref_branch_name", "").commit();
+                    branchListPreference.setSummary("");
                     return true;
                 }
             });
@@ -284,7 +286,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 branchListPreference.setEntryValues(getActivity().getResources().getStringArray(
                             R.array.branch_preference_default_entry_values));
             }
-            branchListPreference.setSummary(branchListPreference.getEntry());
         }
     }
 }
