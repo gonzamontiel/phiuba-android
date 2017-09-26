@@ -25,9 +25,8 @@
         android:title="@string/pref_category_network"
         android:key="pref_key_notifications_network">
         <EditTextPreference
-            android:capitalize="words"
             android:defaultValue="@string/pref_default_server_ip"
-            android:inputType="textCapWords"
+            android:inputType="phone"
             android:key="server_ip"
             android:maxLines="1"
             android:selectAllOnFocus="true"
