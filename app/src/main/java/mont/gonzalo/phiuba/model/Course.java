@@ -101,8 +101,12 @@ public class Course implements Serializable {
         this.depto = depto;
     }
 
-    public Boolean getRequired() {
-        return required;
+    public Boolean isRequired() {
+        return type.equals("OBL") || isFromCurrentBranch(Branch.getFromSharedPrefs());
+    }
+
+    public boolean isFromCurrentBranch(String branchCode) {
+        return type.equals(branchCode);
     }
 
     public void setRequired(Boolean required) {

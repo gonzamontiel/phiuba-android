@@ -18,8 +18,10 @@ import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.UserCourses;
 
 import static mont.gonzalo.phiuba.layout.MyPlanActivity.TAB_APPROVED_ID;
-import static mont.gonzalo.phiuba.layout.MyPlanActivity.TAB_COMPLETE_ID;
+import static mont.gonzalo.phiuba.layout.MyPlanActivity.TAB_BRANCH_ID;
 import static mont.gonzalo.phiuba.layout.MyPlanActivity.TAB_NOT_COURSED_ID;
+import static mont.gonzalo.phiuba.layout.MyPlanActivity.TAB_OPT_ID;
+import static mont.gonzalo.phiuba.layout.MyPlanActivity.TAB_REQ_ID;
 import static mont.gonzalo.phiuba.layout.MyPlanActivity.TAB_STUDYING_ID;
 
 /**
@@ -85,9 +87,14 @@ public class MyPlanFragment extends Fragment {
                 return UserCourses.filterStudying(mCourses);
             case TAB_NOT_COURSED_ID:
                 return UserCourses.filterNotCoursed(mCourses);
-            case TAB_COMPLETE_ID:
+            case TAB_REQ_ID:
+                return UserCourses.filterRequired(mCourses);
+            case TAB_OPT_ID:
+                return UserCourses.filterOptional(mCourses);
+            case TAB_BRANCH_ID:
+                return UserCourses.filterFromBranch(mCourses);
+            default:
                 return mCourses;
         }
-        return new ArrayList<Course>();
     }
 }

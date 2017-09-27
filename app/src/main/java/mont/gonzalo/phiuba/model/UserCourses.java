@@ -273,6 +273,37 @@ public class UserCourses extends Observable implements Serializable {
         return filteredAv;
     }
 
+    public static List<Course> filterRequired(ArrayList<Course> mCourses) {
+        List<Course> filtered= new ArrayList<>();
+        for (Course c: mCourses) {
+            if (c.isRequired()) {
+                filtered.add(c);
+            }
+        }
+        return filtered;
+    }
+
+    public static List<Course> filterOptional(ArrayList<Course> mCourses) {
+        List<Course> filtered= new ArrayList<>();
+        for (Course c: mCourses) {
+            if (!c.isRequired()) {
+                filtered.add(c);
+            }
+        }
+        return filtered;
+    }
+
+    public static List<Course> filterFromBranch(ArrayList<Course> mCourses) {
+        List<Course> filtered= new ArrayList<>();
+        String branchCode = Branch.getFromSharedPrefs();
+        for (Course c: mCourses) {
+            if (c.isFromCurrentBranch(branchCode)) {
+                filtered.add(c);
+            }
+        }
+        return filtered;
+    }
+
     public double getCalification(Course c) {
         Double calif =  approvedCourses.get(c.getCode());
         if (calif != null) {

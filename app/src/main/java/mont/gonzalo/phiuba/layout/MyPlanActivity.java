@@ -43,7 +43,9 @@ public class MyPlanActivity extends AppCompatActivity
     public static final int TAB_APPROVED_ID = 0;
     public static final int TAB_STUDYING_ID = 1;
     public static final int TAB_NOT_COURSED_ID = 2;
-    public static final int TAB_COMPLETE_ID = 3;
+    public static final int TAB_REQ_ID= 3;
+    public static final int TAB_OPT_ID = 4;
+    public static final int TAB_BRANCH_ID = 5;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -214,7 +216,7 @@ public class MyPlanActivity extends AppCompatActivity
 
         @Override
         public int getCount() {
-            return 4;
+            return 6;
         }
 
         @Override
@@ -226,8 +228,12 @@ public class MyPlanActivity extends AppCompatActivity
                     return getString(R.string.myplan_tab_studying);
                 case TAB_NOT_COURSED_ID:
                     return getString(R.string.myplan_tab_not_coursed);
-                case TAB_COMPLETE_ID:
-                    return getString(R.string.myplan_tab_complete);
+                case TAB_REQ_ID:
+                    return getString(R.string.myplan_tab_required);
+                case TAB_OPT_ID:
+                    return getString(R.string.myplan_tab_optative);
+                case TAB_BRANCH_ID:
+                    return getString(R.string.myplan_tab_branch);
             }
             return null;
         }
