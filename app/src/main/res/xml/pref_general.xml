@@ -22,6 +22,17 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/pref_category_speech"
+        android:key="pref_key_speech_settings">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="speech_enabled"
+            android:summary="@string/pref_description_speech"
+            android:title="@string/pref_title_speech" />
+     </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/pref_category_network"
         android:key="pref_key_notifications_network">
         <EditTextPreference

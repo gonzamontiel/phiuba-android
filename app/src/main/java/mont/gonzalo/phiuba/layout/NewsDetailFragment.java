@@ -1,7 +1,6 @@
 package mont.gonzalo.phiuba.layout;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,14 +24,16 @@ public class NewsDetailFragment extends SearchableFragment implements View.OnTou
     private transient TextView descTextView;
     private transient ImageView thumbnailView;
     private transient ScaleGestureDetector scaleGestureDetector;
+    private transient View.OnLongClickListener listener;
 
     public NewsDetailFragment() {
         // Required empty public constructor
     }
 
-    public static NewsDetailFragment newInstance(News news) {
+    public static NewsDetailFragment newInstance(News news, View.OnLongClickListener listener) {
         NewsDetailFragment fragment = new NewsDetailFragment();
         fragment.setNews(news);
+        fragment.setListener(listener);
         return fragment;
     }
 
@@ -55,22 +56,12 @@ public class NewsDetailFragment extends SearchableFragment implements View.OnTou
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_news_detail, container, false);
-
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Log.v(TAG, "PARENT TOUCH");
-                v.findViewById(R.id.news_text).getParent()
-                        .requestDisallowInterceptTouchEvent(false);
-                return false;
-            }
-        });
-
         titleTextView = (TextView) view.findViewById(R.id.news_title);
         descTextView = (TextView) view.findViewById(R.id.news_text);
-        descTextView.setOnTouchListener(this);
         thumbnailView = (ImageView) view.findViewById(R.id.news_thumbnail);
         titleTextView.setText(mNews.getTitle());
+        titleTextView.setOnLongClickListener(getListener());
+        descTextView.setOnLongClickListener(getListener());
         LayoutHelper.setTextViewHTML(descTextView, mNews.getText(), getActivity());
         LayoutHelper.addImageToView(view.getContext(), mNews.getImg(), thumbnailView);
         return view;
@@ -98,6 +89,14 @@ public class NewsDetailFragment extends SearchableFragment implements View.OnTou
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         return this.scaleGestureDetector.onTouchEvent(event);
+    }
+
+    public View.OnLongClickListener getListener() {
+        return listener;
+    }
+
+    public void setListener(View.OnLongClickListener listener) {
+        this.listener = listener;
     }
 
     public class NewsOnScaleGestureListener extends SimpleOnScaleGestureListener {

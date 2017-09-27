@@ -10,6 +10,8 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -32,8 +34,10 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.Serializable;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -64,7 +68,7 @@ public class MainActivity extends AppCompatActivity
         DepartmentDetailFragment.OnListFragmentInteractionListener,
         MiniCoursesAdapter.OnCorrelativeInteractionListener,
         SharedPreferences.OnSharedPreferenceChangeListener,
-        Observer {
+        Observer, TextToSpeech.OnInitListener, View.OnLongClickListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String ACTIVE_FRAGMENT = "active_fragment";
@@ -78,6 +82,8 @@ public class MainActivity extends AppCompatActivity
     private View viewForSnackBar;
     private Snackbar snack;
 
+    private TextToSpeech textToSpeech;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +92,9 @@ public class MainActivity extends AppCompatActivity
         DataFetcher.getInstance().addObserver(this);
         initializeDrawer();
         initiate(savedInstanceState);
+
+        textToSpeech = new TextToSpeech(this, this);
+        textToSpeech.setLanguage(new Locale( "spa", "ESP" ));
     }
 
     private void initiate(Bundle savedInstanceState) {
@@ -105,6 +114,12 @@ public class MainActivity extends AppCompatActivity
         setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
         checkNetwork();
         DataFetcher.getInstance().test();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        textToSpeech.stop();
     }
 
     @Override
@@ -351,7 +366,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void goToNewsItem(News item) {
-        currentFragment = NewsDetailFragment.newInstance(item);
+        currentFragment = NewsDetailFragment.newInstance(item, this);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.flContent, currentFragment);
         transaction.addToBackStack(null);
@@ -487,5 +502,52 @@ public class MainActivity extends AppCompatActivity
         if (key.equals("pref_plan") || key.equals("pref_branch")) {
             fillPlanInfo();
         }
+    }
+
+    public TextToSpeech getTextToSpeech() {
+        return textToSpeech;
+    }
+
+    public void setTextToSpeech(TextToSpeech textToSpeech) {
+        this.textToSpeech = textToSpeech;
+    }
+
+    @Override
+    public void onInit(int status) {
+        if ( status == TextToSpeech.LANG_MISSING_DATA | status == TextToSpeech.LANG_NOT_SUPPORTED ) {
+            Toast.makeText(this, "El lector de voz falló, lengauje no soportado.", Toast.LENGTH_SHORT ).show();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void speak(CharSequence str) {
+        textToSpeech.speak(str, TextToSpeech.QUEUE_FLUSH, null, "");
+        textToSpeech.setSpeechRate( 0.0f );
+        textToSpeech.setPitch( 0.0f );
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onDestroy();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public boolean onLongClick(View v) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getBoolean("speech_enabled", false)) {
+            if (textToSpeech.isSpeaking()) {
+                textToSpeech.stop();
+            } else {
+                try {
+                    speak(((TextView) v).getText());
+                } catch (ClassCastException e) {}
+            }
+        }
+        return false;
     }
 }
