@@ -252,7 +252,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                     preference.setSummary(index >= 0? listPreference.getEntries()[index]: null);
                     Plan p = Plan.byCode(prefs.getString("pref_plan", Plan.getDefault()));
                     prefs.edit().putString("pref_branch_name", p.getBranchName((String) newValue)).commit();
-                    return false;
+                    return true;
                 }
             });
             planListPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
