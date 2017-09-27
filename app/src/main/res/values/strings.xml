@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mi plan de estudios</string>
+    <string name="app_name"> Mi carrera</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -149,4 +149,7 @@
     <string name="pref_title_branch">Orientación</string>
     <string name="default_plan">INFORMA86</string>
     <string name="default_branch">NONE</string>
+    <string name="myplan_tab_required">Obligatorias</string>
+    <string name="myplan_tab_optative">Optativas</string>
+    <string name="myplan_tab_branch">De orientación</string>
 </resources>
