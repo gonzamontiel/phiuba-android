@@ -31,4 +31,9 @@ public class CourseCBC extends Course {
     public boolean isApproved() {
         return true;
     }
+
+    @Override
+    public Boolean isRequired() {
+        return true;
+    }
 }

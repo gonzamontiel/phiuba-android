@@ -1,5 +1,7 @@
 package mont.gonzalo.phiuba.model;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.Serializable;
@@ -9,6 +11,7 @@ import java.util.List;
 
 import mont.gonzalo.phiuba.R;
 import mont.gonzalo.phiuba.api.DataFetcher;
+import mont.gonzalo.phiuba.layout.ActivityContext;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -102,10 +105,26 @@ public class Course implements Serializable {
     }
 
     public Boolean isRequired() {
-        return type.equals("OBL") || isFromCurrentBranch(Branch.getFromSharedPrefs());
+        return getType().equals("OBL") || isFromCurrentBranch() || isTesisOrTP();
     }
 
-    public boolean isFromCurrentBranch(String branchCode) {
+    private boolean isTesisOrTP() {
+        boolean isTesis = getCode().equals(User.get().getPlan().getTesisCode());
+        boolean isTP = getCode().equals(User.get().getPlan().getTPCode());
+        if (isTesis || isTP) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ActivityContext.get());
+            boolean tesisOptionSelected = prefs.getString("pref_tesis", "").equals("TESIS");
+            return (isTesis && tesisOptionSelected) ||
+            (isTP && !tesisOptionSelected);
+        }
+        return false;
+    }
+
+    public boolean isFromCurrentBranch() {
+        return isFromBranch(Branch.getFromSharedPrefs());
+    }
+
+    public boolean isFromBranch(String branchCode) {
         return type.equals(branchCode);
     }
 
@@ -229,11 +248,18 @@ public class Course implements Serializable {
     }
 
     public String getTypeString() {
-        switch (type) {
-            case "OBL": return "Obligatoria";
-            case "OPT": return "Optativa";
-            default: return type.substring(0,1).toUpperCase() + type.substring(1).toLowerCase();
+        String typeString;
+        switch (getType()) {
+            case "OBL": typeString = "Obligatoria"; break;
+            case "OPT": typeString = "Optativa"; break;
+            default:
+                if (isFromCurrentBranch()) {
+                    typeString = User.get().getPlan().getBranchName(type);
+                } else {
+                    typeString = "Optativa";
+                }
         }
+        return typeString;
     }
 
     public String getType() {
