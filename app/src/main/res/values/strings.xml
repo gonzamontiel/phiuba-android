@@ -115,6 +115,16 @@
         <item>-1</item>
     </string-array>
 
+    <string-array name="tesis_preference_entries">
+        <item>Tesis</item>
+        <item>Trabajo profesional</item>
+    </string-array>
+
+    <string-array name="tesis_preference_entry_values">
+        <item>TESIS</item>
+        <item>TPPROF</item>
+    </string-array>
+
     <string-array name="branch_preference_default_entries">
         <item>Ninguna orientación</item>
     </string-array>
@@ -150,11 +160,14 @@
     <string name="pref_category_speech">Lector de voz</string>
     <string name="pref_description_speech">Esta funcionalidad se activará al hacer un touch prolongado en cualquier titulo o descripcion de un evento. Otro touch prolongado parará la lectura.</string>
     <string name="pref_title_speech">Lectura en eventos</string>
+    <string name="pref_title_tesis">Final de carrera</string>
 
     <string name="default_plan">INFORMA86</string>
     <string name="default_branch">NONE</string>
+    <string name="default_tesis">TPPROF</string>
 
     <string name="myplan_tab_required">Obligatorias</string>
     <string name="myplan_tab_optative">Optativas</string>
     <string name="myplan_tab_branch">De orientación</string>
+    <string name="action_stats">Estadísticas</string>
 </resources>

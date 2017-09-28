@@ -1,11 +1,15 @@
 package mont.gonzalo.phiuba.layout;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -16,6 +20,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,13 +34,14 @@ import java.util.Observable;
 import java.util.Observer;
 
 import mont.gonzalo.phiuba.R;
+import mont.gonzalo.phiuba.SettingsActivity;
 import mont.gonzalo.phiuba.model.Course;
 import mont.gonzalo.phiuba.model.Plan;
 import mont.gonzalo.phiuba.model.User;
 import mont.gonzalo.phiuba.model.UserCourses;
 
 public class MyPlanActivity extends AppCompatActivity
-        implements CoursesFragment.OnListFragmentInteractionListener, CircleDisplay.SelectionListener, Observer {
+        implements CoursesFragment.OnListFragmentInteractionListener, SharedPreferences.OnSharedPreferenceChangeListener, Observer {
     private transient SectionsPagerAdapter mSectionsPagerAdapter;
     private transient ViewPager mViewPager;
     private transient TabLayout tabs;
@@ -51,15 +57,22 @@ public class MyPlanActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("Mypplan", "create");
         setContentView(R.layout.activity_my_plan);
-        setTitle(Plan.byCode(Plan.getFromSharedPrefs()).getShortName());
         ActivityContext.set(this);
         initializaToolbar();
         loadFloatingButton();
         UserCourses.getInstance().addObserver(this);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.registerOnSharedPreferenceChangeListener(this);
+        init();
+    }
+
+    private void init() {
+        setTitle(Plan.byCode(Plan.getFromSharedPrefs()).getShortName());
         if (UserCourses.getInstance().isReady()) {
             initializeCourses();
-            loadStatistics();
+            loadHeader();
             loadHeaderText();
         }
     }
@@ -114,7 +127,7 @@ public class MyPlanActivity extends AppCompatActivity
         });
     }
 
-    private void loadStatistics() {
+    private void loadHeader() {
         LinearLayout statistics = (LinearLayout) findViewById(R.id.statistics);
         double avg = UserCourses.getInstance().getAverageCalification();
         int count = UserCourses.getInstance().getApprovedCount();
@@ -140,11 +153,18 @@ public class MyPlanActivity extends AppCompatActivity
         circleDisplay.setColor(getResources().getColor(R.color.accent, null));
         circleDisplay.setDrawInnerCircle(true);
         circleDisplay.setFormatDigits(1);
-        circleDisplay.setTouchEnabled(true);
-        circleDisplay.setSelectionListener(this);
         circleDisplay.setStepSize(0.5f);
+        circleDisplay.setTouchEnabled(false);
         circleDisplay.setUnit("%");
         circleDisplay.showValue(Math.round(percent * 100), 100f, true);
+        circleDisplay.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Dialog d = new MyPlanStatisticsDialog(v.getContext());
+                d.show();
+                return false;
+            }
+        });
     }
 
     public void hideProgressBar() {
@@ -163,7 +183,15 @@ public class MyPlanActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            intent.putExtra( PreferenceActivity.EXTRA_SHOW_FRAGMENT, SettingsActivity.MyPlanPreferenceFragment.class.getName() );
+            intent.putExtra( PreferenceActivity.EXTRA_NO_HEADERS, true );
+            startActivity(intent);
             return true;
+        }
+        if (id == R.id.action_stats) {
+            Dialog d = new MyPlanStatisticsDialog(this);
+            d.show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -177,22 +205,19 @@ public class MyPlanActivity extends AppCompatActivity
     }
 
     @Override
-    public void onSelectionUpdate(float val, float maxval) {
-
-    }
-
-    @Override
-    public void onValueSelected(float val, float maxval) {
-
-    }
-
-    @Override
     public void update(Observable o, Object arg) {
         hideProgressBar();
         initializeCourses();
-        loadStatistics();
+        loadHeader();
         if (mSectionsPagerAdapter != null) {
             mSectionsPagerAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("pref_plan") || key.equals("pref_branch") || key.equals("pref_tesis")) {
+            UserCourses.getInstance().updateCourses();
         }
     }
 
@@ -236,10 +261,6 @@ public class MyPlanActivity extends AppCompatActivity
                     return getString(R.string.myplan_tab_branch);
             }
             return null;
-        }
-
-        public void setCourses(List<Course> courses) {
-            this.mCourses= courses;
         }
 
         @Override

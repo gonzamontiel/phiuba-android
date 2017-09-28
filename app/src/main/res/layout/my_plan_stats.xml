@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnCount="4"
+        android:rowCount="4">
+
+        <TextView
+            android:textColor="@color/primary_text"
+            android:id="@+id/approved"
+            android:layout_height="70dp"
+            android:layout_width="80dp"
+            android:layout_column="0"
+            android:layout_row="1"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Aprobadas" />
+
+        <TextView
+            android:textColor="@color/primary_text"
+            android:id="@+id/coursing"
+            android:layout_height="70dp"
+            android:layout_width="80dp"
+            android:layout_column="0"
+            android:layout_row="2"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Cursando" />
+
+        <TextView
+            android:textColor="@color/primary_text"
+            android:id="@+id/not_coursed"
+            android:layout_height="70dp"
+            android:layout_width="80dp"
+            android:layout_column="0"
+            android:layout_row="3"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="No cursadas" />
+
+
+        <TextView
+            android:textColor="@color/primary_text"
+            android:id="@+id/req"
+            android:layout_height="70dp"
+            android:layout_width="80dp"
+            android:layout_column="1"
+            android:layout_row="0"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Obligatorias" />
+
+        <TextView
+            android:textColor="@color/primary_text"
+            android:id="@+id/opt"
+            android:layout_height="70dp"
+            android:layout_width="80dp"
+            android:layout_column="2"
+            android:layout_row="0"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Optativas" />
+
+        <TextView
+            android:textColor="@color/primary_text"
+            android:id="@+id/orient"
+            android:layout_height="70dp"
+            android:layout_width="80dp"
+            android:layout_column="3"
+            android:layout_row="0"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="De orientación" />
+
+        <!-- BEGIN APPROVED -->
+        <RelativeLayout
+            android:id="@+id/aprov_req"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:layout_column="1"
+            android:layout_row="1"
+            android:padding="5dp">
+
+            <ProgressBar
+                android:id="@+id/aprov_req_prog"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:progressDrawable="@drawable/circular"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:progress="30"
+                android:max="100"/>
+
+            <TextView
+                android:textColor="@color/primary_text"
+                android:id="@+id/aprov_req_text"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_alignBottom="@id/aprov_req_prog"
+                android:layout_alignLeft="@id/aprov_req_prog"
+                android:layout_alignRight="@id/aprov_req_prog"
+                android:layout_alignTop="@id/aprov_req_prog"
+                android:gravity="center"
+                android:text="45"
+                android:textSize="18dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/aprov_opt"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:layout_column="2"
+            android:layout_row="1"
+            android:padding="5dp">
+
+            <ProgressBar
+                android:id="@+id/aprov_opt_prog"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:progressDrawable="@drawable/circular"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:progress="10" />
+
+            <TextView
+                android:textColor="@color/primary_text"
+                android:id="@+id/aprov_opt_text"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_alignBottom="@id/aprov_opt_prog"
+                android:layout_alignLeft="@id/aprov_opt_prog"
+                android:layout_alignRight="@id/aprov_opt_prog"
+                android:layout_alignTop="@id/aprov_opt_prog"
+                android:gravity="center"
+                android:text="45"
+                android:textSize="18dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/aprov_orient"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:layout_column="3"
+            android:layout_row="1"
+            android:padding="5dp">
+
+            <ProgressBar
+                android:id="@+id/aprov_orient_prog"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:progressDrawable="@drawable/circular"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:progress="80" />
+
+            <TextView
+                android:textColor="@color/primary_text"
+                android:id="@+id/aprov_orient_text"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_alignBottom="@id/aprov_orient_prog"
+                android:layout_alignLeft="@id/aprov_orient_prog"
+                android:layout_alignRight="@id/aprov_orient_prog"
+                android:layout_alignTop="@id/aprov_orient_prog"
+                android:gravity="center"
+                android:text="45"
+                android:textSize="18dp" />
+        </RelativeLayout>
+        <!-- END APPROVED -->
+
+
+        <!-- BEGIN STUDYING -->
+        <RelativeLayout
+            android:id="@+id/stud_req"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:layout_column="1"
+            android:layout_row="2"
+            android:padding="5dp">
+
+            <ProgressBar
+                android:id="@+id/stud_req_prog"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:progressDrawable="@drawable/circular"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:progress="30"
+                android:max="100"/>
+
+            <TextView
+                android:textColor="@color/primary_text"
+                android:id="@+id/stud_req_text"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_alignBottom="@id/stud_req_prog"
+                android:layout_alignLeft="@id/stud_req_prog"
+                android:layout_alignRight="@id/stud_req_prog"
+                android:layout_alignTop="@id/stud_req_prog"
+                android:gravity="center"
+                android:text="45"
+                android:textSize="18dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/stud_opt"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:layout_column="2"
+            android:layout_row="2"
+            android:padding="5dp">
+
+            <ProgressBar
+                android:id="@+id/stud_opt_prog"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:progressDrawable="@drawable/circular"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:progress="10" />
+
+            <TextView
+                android:textColor="@color/primary_text"
+                android:id="@+id/stud_opt_text"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_alignBottom="@id/stud_opt_prog"
+                android:layout_alignLeft="@id/stud_opt_prog"
+                android:layout_alignRight="@id/stud_opt_prog"
+                android:layout_alignTop="@id/stud_opt_prog"
+                android:gravity="center"
+                android:text="45"
+                android:textSize="18dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/stud_orient"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:layout_column="3"
+            android:layout_row="2"
+            android:padding="5dp">
+
+            <ProgressBar
+                android:id="@+id/stud_orient_prog"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:progressDrawable="@drawable/circular"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:progress="80" />
+
+            <TextView
+                android:textColor="@color/primary_text"
+                android:id="@+id/stud_orient_text"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_alignBottom="@id/stud_orient_prog"
+                android:layout_alignLeft="@id/stud_orient_prog"
+                android:layout_alignRight="@id/stud_orient_prog"
+                android:layout_alignTop="@id/stud_orient_prog"
+                android:gravity="center"
+                android:text="45"
+                android:textSize="18dp" />
+        </RelativeLayout>
+        <!-- END STUDYING -->
+
+        <!-- BEGIN NOT COURSED -->
+        <RelativeLayout
+            android:id="@+id/not_coursed_req"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:layout_column="1"
+            android:layout_row="3"
+            android:padding="5dp">
+
+            <ProgressBar
+                android:id="@+id/not_coursed_req_prog"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:progressDrawable="@drawable/circular"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:progress="30"
+                android:max="100"/>
+
+            <TextView
+                android:textColor="@color/primary_text"
+                android:id="@+id/not_coursed_req_text"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_alignBottom="@id/not_coursed_req_prog"
+                android:layout_alignLeft="@id/not_coursed_req_prog"
+                android:layout_alignRight="@id/not_coursed_req_prog"
+                android:layout_alignTop="@id/not_coursed_req_prog"
+                android:gravity="center"
+                android:text="45"
+                android:textSize="18dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/not_coursed_opt"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:layout_column="2"
+            android:layout_row="3"
+            android:padding="5dp">
+
+            <ProgressBar
+                android:id="@+id/not_coursed_opt_prog"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:progressDrawable="@drawable/circular"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:progress="10" />
+
+            <TextView
+                android:textColor="@color/primary_text"
+                android:id="@+id/not_coursed_opt_text"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_alignBottom="@id/not_coursed_opt_prog"
+                android:layout_alignLeft="@id/not_coursed_opt_prog"
+                android:layout_alignRight="@id/not_coursed_opt_prog"
+                android:layout_alignTop="@id/not_coursed_opt_prog"
+                android:gravity="center"
+                android:text="45"
+                android:textSize="18dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/not_coursed_orient"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
+            android:gravity="center"
+            android:layout_column="3"
+            android:layout_row="3"
+            android:padding="5dp">
+
+            <ProgressBar
+                android:id="@+id/not_coursed_orient_prog"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:progressDrawable="@drawable/circular"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:progress="80" />
+
+            <TextView
+                android:textColor="@color/primary_text"
+                android:id="@+id/not_coursed_orient_text"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_alignBottom="@id/not_coursed_orient_prog"
+                android:layout_alignLeft="@id/not_coursed_orient_prog"
+                android:layout_alignRight="@id/not_coursed_orient_prog"
+                android:layout_alignTop="@id/not_coursed_orient_prog"
+                android:gravity="center"
+                android:text="45"
+                android:textSize="18dp" />
+        </RelativeLayout>
+        <!-- END NOT COURSED  -->
+
+    </GridLayout>
+</LinearLayout>
