@@ -80,7 +80,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
     public void onBindViewHolder(final CourseViewHolder holder, int position) {
         holder.mItem = mCourses.get(position);
         holder.courseName.setText(holder.mItem.getName());
-        holder.courseDepartment.setText(holder.mItem.getDepto());
+        holder.courseDescription.setText(holder.mItem.getTypeString());
         holder.courseIcon.setImageResource(holder.mItem.getImageResource());
         holder.status.setBackgroundColor(ActivityContext.get().getResources().getColor(
                 holder.mItem.getColorId(), null
@@ -127,7 +127,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
     public class CourseViewHolder extends RecyclerView.ViewHolder {
         public final View rv;
         public final TextView courseName;
-        public final TextView courseDepartment;
+        public final TextView courseDescription;
         public final ImageView courseIcon;
         public final View status;
         public final View award;
@@ -140,7 +140,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
             super(itemView);
             rv = itemView.findViewById(R.id.course_card_view);
             courseName = (TextView)itemView.findViewById(R.id.course_name);
-            courseDepartment = (TextView)itemView.findViewById(R.id.course_description);
+            courseDescription = (TextView)itemView.findViewById(R.id.course_description);
             courseIcon = (ImageView)itemView.findViewById(R.id.course_icon);
             status = itemView.findViewById(R.id.status);
             award = itemView.findViewById(R.id.course_award_container);
