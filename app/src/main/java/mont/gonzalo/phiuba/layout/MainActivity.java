@@ -135,6 +135,7 @@ public class MainActivity extends AppCompatActivity
         Plan p = Plan.byCode(Plan.getFromSharedPrefs());
         planView.setText(p.getShortName());
         String branchName = Branch.getNameFromSharedPrefs();
+        branchView.setText("");
         if (!branchName.isEmpty()) {
             branchView.setText(branchName);
             branchView.setVisibility(View.VISIBLE);
