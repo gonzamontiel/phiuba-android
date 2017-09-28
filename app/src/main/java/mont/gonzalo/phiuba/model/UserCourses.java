@@ -32,6 +32,7 @@ public class UserCourses extends Observable implements Serializable {
     private HashMap<String, ArrayList<String>> studyingCourses;
     private HashMap<String, Course> loadedCourses;
     private HashMap<String, Course> savedloadedCourses;
+    private CoursesStats stats;
 
     private static List<Course> loadedCoursesArray;
     private static UserCourses _instance = null;
@@ -71,6 +72,7 @@ public class UserCourses extends Observable implements Serializable {
 
     private void loadCourses(final String jsonApproved, final String jsonStudying) {
         if (loadedCourses != null && !loadedCourses.isEmpty()) {
+            savedloadedCourses.clear();
             savedloadedCourses.putAll(loadedCourses);
         }
         loadedCourses = new HashMap<>();
@@ -297,7 +299,7 @@ public class UserCourses extends Observable implements Serializable {
         List<Course> filtered= new ArrayList<>();
         String branchCode = Branch.getFromSharedPrefs();
         for (Course c: mCourses) {
-            if (c.isFromCurrentBranch(branchCode)) {
+            if (c.isFromBranch(branchCode)) {
                 filtered.add(c);
             }
         }
@@ -318,6 +320,10 @@ public class UserCourses extends Observable implements Serializable {
 
     public boolean isReady() {
         return _ready;
+    }
+
+    public void setReady(boolean readyValue) {
+        _ready = readyValue;
     }
 
     public Course getCourse(String courseCode) {
@@ -426,11 +432,18 @@ public class UserCourses extends Observable implements Serializable {
         return filterStudying(getAll());
     }
 
+    public List<Course> getApprovedCourses() {
+        return filterApproved(getAll());
+    }
+
+    public List<Course> getNotCoursedCourses() {
+        return filterNotCoursed(getAll());
+    }
+
     public List<Course> getAvailableAndStudyingCourses() {
         List<Course> result = getAvailableCourses();
         result.addAll(getStudyingCourses());
         Collections.sort(result, new Course.ComparatorByName());
         return result;
     }
-
 }
