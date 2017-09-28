@@ -22,6 +22,7 @@ import java.util.List;
 import mont.gonzalo.phiuba.api.DataFetcher;
 import mont.gonzalo.phiuba.model.Branch;
 import mont.gonzalo.phiuba.model.Plan;
+import mont.gonzalo.phiuba.model.User;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -219,7 +220,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             setHasOptionsMenu(true);
             final ListPreference planListPreference = (ListPreference) findPreference("pref_plan");
             final ListPreference branchListPreference = (ListPreference) findPreference("pref_branch");
+            final ListPreference tesisListPreference = (ListPreference) findPreference("pref_tesis");
             final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+            bindPreferenceSummaryToValue(tesisListPreference);
+
             branchListPreference.setSummary(prefs.getString("pref_branch_name", ""));
 
             DataFetcher.getInstance().getPlans(new Callback<List<Plan>>() {
@@ -259,11 +264,11 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
                     Plan plan = Plan.byCode(newValue.toString());
+                    User.get().selectPlan(plan);
                     fillBranchesPreference(plan, branchListPreference);
                     planListPreference.setSummary(plan.getShortName());
                     prefs.edit().putString("pref_branch", "").commit();
                     prefs.edit().putString("pref_branch_name", "").commit();
-                    branchListPreference.setSummary("");
                     return true;
                 }
             });

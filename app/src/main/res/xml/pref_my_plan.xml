@@ -20,4 +20,14 @@
         android:entries="@array/branch_preference_default_entries"
         android:entryValues="@array/branch_preference_default_entry_values"/>
 
+    <ListPreference
+        android:defaultValue="@string/default_tesis"
+        android:key="pref_tesis"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:dependency="pref_tesis"
+        android:title="@string/pref_title_tesis"
+        android:entries="@array/tesis_preference_entries"
+        android:entryValues="@array/tesis_preference_entry_values"/>
+
 </PreferenceScreen>
