@@ -37,6 +37,7 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
     private FloatingActionButton addButton;
     private ViewPager mViewPager;
     private ArrayList<Course> coursesToAdd;
+    private ArrayList<Course> coursesToRemove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,8 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
         setContentView(R.layout.activity_week_view);
         setTitle("Mi semana");
 
-        coursesToAdd = (ArrayList<Course>) UserCourses.getInstance().getStudyingCourses();
+        coursesToAdd = new ArrayList<>();
+        coursesToRemove = new ArrayList<>();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -83,12 +85,16 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                for (Course c : coursesToRemove) {
+                    UserCourses.getInstance().removeCourse(c);
+                }
                 for (Course c : coursesToAdd) {
                     UserCourses.getInstance().addStudying(c);
                 }
                 rebuildTree();
                 dialog.dismiss();
                 coursesToAdd.clear();
+                coursesToRemove.clear();
             }
         });
     }
@@ -151,8 +157,8 @@ public class WeekViewActivity extends AppCompatActivity implements CoursesFragme
 
     @Override
     public void onListFragmentInteraction(Course item) {
-        if (this.coursesToAdd.contains(item)) {
-            this.coursesToAdd.remove(item);
+        if (UserCourses.getInstance().isStudying(item)) {
+            this.coursesToRemove.add(item);
         } else {
             this.coursesToAdd.add(item);
         }
