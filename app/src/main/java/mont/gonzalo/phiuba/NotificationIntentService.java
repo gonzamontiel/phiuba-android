@@ -60,6 +60,8 @@ public class NotificationIntentService extends IntentService {
             if (ACTION_DELETE.equals(action)) {
                 processDeleteNotification(intent);
             }
+        }catch (Exception e) {
+            Log.e("NotificationService", "", e);
         } finally {
             WakefulBroadcastReceiver.completeWakefulIntent(intent);
         }
