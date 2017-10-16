@@ -201,13 +201,7 @@ public class MainActivity extends AppCompatActivity
 
     private void showFloatingButton() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Envia sugerencias!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setVisibility(View.GONE);
     }
 
     private void applyDefaultFragment(Bundle savedInstanceState) {
@@ -540,7 +534,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onLongClick(View v) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (prefs.getBoolean("speech_enabled", false)) {
+        if (prefs.getBoolean("accessibility_text_to_speech", false)) {
             if (textToSpeech.isSpeaking()) {
                 textToSpeech.stop();
             } else {
