@@ -70,7 +70,7 @@ class WeekViewPlaceholderFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
         int position = getArguments().getInt(ARG_SECTION_NUMBER);
@@ -98,14 +98,14 @@ class WeekViewPlaceholderFragment extends Fragment {
                 }
             });
 
-            WeekView weekView = (WeekView) rootView.findViewById(R.id.weekView);
+            final WeekView weekView = (WeekView) rootView.findViewById(R.id.weekView);
             weekView.setDateTimeInterpreter(new CustomDateTimeInterpreter());
             weekView.goToDate(ScheduleSlot.getUniqueWeekDate());
             weekView.goToHour(22);
             weekView.setOnEventClickListener(new WeekView.EventClickListener() {
                 @Override
                 public void onEventClick(WeekViewEvent event, RectF eventRect) {
-
+                    toggleLabels(textViewLabel);
                 }
             });
 
@@ -159,7 +159,7 @@ class WeekViewPlaceholderFragment extends Fragment {
         int color = getResources().getColor(c.getColor(), null);
         String hexColor = "#" + Integer.toHexString(color).substring(2);
         String name = UserCourses.getInstance().getCourseName(c.getCourseCode());
-        String colorStr = "<span style='color: " + hexColor + ";'> •••• </span>";
+        String colorStr = "<span style='color: " + hexColor + ";'> ⬤⬤⬤ </span>";
         return colorStr + name + " " + getString(R.string.weekview_with) + " <strong>" + c.getTeachers() + "</strong><br>";
     }
 }
