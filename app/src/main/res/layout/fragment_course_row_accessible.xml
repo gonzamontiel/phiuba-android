@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:sml="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/course_card_view"
+    android:id="@+id/course_card_view_accessible"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
@@ -20,6 +20,6 @@
         sml:sml_auto_open_percent="0.5"
         sml:sml_scroller_duration="250">
         <include android:id="@id/smContentView" layout="@layout/course_item_content"/>
-        <include android:id="@id/smMenuViewRight" layout="@layout/course_menu_right"/>
+        <include android:id="@id/smMenuViewRight" layout="@layout/course_menu_right_text"/>
     </com.tubb.smrv.SwipeHorizontalMenuLayout>
 </android.support.v7.widget.CardView>

@@ -27,7 +27,7 @@ public class Course implements Serializable {
     private String name;
     private String link;
     private String depto;
-    private String type;
+    private String type = "OPT";
     private boolean required = false;
     private int credits;
     private List<String> correlatives;
@@ -37,7 +37,6 @@ public class Course implements Serializable {
         this.planCode = User.get().getPlanCode();
         this.name = cName;
         this.code = cCode;
-        this.type = required ? "OBL" : "OPT";
     }
 
     public Course(String name, String depCode, String code, String depto) {
@@ -45,7 +44,6 @@ public class Course implements Serializable {
         this.code = code;
         this.depCode = depCode;
         this.depto = depto;
-        this.type = required ? "OBL" : "OPT";
     }
 
     public List<Cathedra> getCathedras() {
@@ -105,7 +103,15 @@ public class Course implements Serializable {
     }
 
     public Boolean isRequired() {
-        return getType().equals("OBL") || isFromCurrentBranch() || isTesisOrTP();
+        return isObl() || isFromCurrentBranch() || isTesisOrTP();
+    }
+
+    public Boolean isObl() {
+        return getType().equals("OBL");
+    }
+
+    public boolean isOpt() {
+        return !isRequired();
     }
 
     private boolean isTesisOrTP() {
@@ -160,7 +166,7 @@ public class Course implements Serializable {
         return UserCourses.getInstance().isFinalExamPending(this);
     }
 
-    public int getColorId() {
+    public CourseStatus getStatus() {
         CourseStatus status = CourseStatus.NOT_AVAILABLE;
         if (isApproved()) {
             status = CourseStatus.APPROVED;
@@ -171,7 +177,15 @@ public class Course implements Serializable {
         } else if (isAvailable()) {
             status = CourseStatus.AVAILABLE;
         }
-        return CourseStatus.getByStatus(status);
+        return status;
+    }
+
+    public int getColorId() {
+        return CourseStatus.getColorByStatus(getStatus());
+    }
+
+    public int getStatusAsStringResource() {
+        return CourseStatus.getStringByStatus(getStatus());
     }
 
     @Override

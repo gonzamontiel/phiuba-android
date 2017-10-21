@@ -1,7 +1,9 @@
 package mont.gonzalo.phiuba.layout;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,13 +27,14 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class CoursesFragment extends SearchableFragment implements Serializable {
+public class CoursesFragment extends SearchableFragment implements Serializable, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
     private transient OnListFragmentInteractionListener mListListener;
     private transient CoursesAdapter mAdapter;
     private transient RecyclerView recyclerView;
+    private boolean isAccessible;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -52,6 +55,9 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ActivityContext.get());
+        isAccessible = prefs.getBoolean("accessibility_text", false);
+        prefs.registerOnSharedPreferenceChangeListener(this);
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -61,41 +67,55 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_course_list, container, false);
-
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            mListListener = (OnListFragmentInteractionListener) getActivity();
-            if (!UserCourses.getInstance().isReady()) {
-                DataFetcher.getInstance().getCourses(User.get().getPlanCode(),new Callback<List<Course>>() {
-                    @Override
-                    public void success(List<Course> courses, Response response) {
-                        if (courses.size() > 0) {
-                            UserCourses.getInstance().setCourses(courses);
-                            loadCoursesToAdapter(courses);
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.d(DataFetcher.TAG, error.getMessage());
-                    }
-                });
-            } else {
-                List<Course> courses = UserCourses.getInstance().getLoadedCourses();
-                loadCoursesToAdapter(courses);
-            }
+            initializeFragment(context);
         }
         return view;
     }
 
+    private void initializeFragment(Context context) {
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        }
+        mListListener = (OnListFragmentInteractionListener) getActivity();
+        if (!UserCourses.getInstance().isReady()) {
+            DataFetcher.getInstance().getCourses(User.get().getPlanCode(),new Callback<List<Course>>() {
+                @Override
+                public void success(List<Course> courses, Response response) {
+                    if (courses.size() > 0) {
+                        UserCourses.getInstance().setCourses(courses);
+                        loadCoursesToAdapter(courses);
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    Log.d(DataFetcher.TAG, error.getMessage());
+                }
+            });
+        } else {
+            List<Course> courses = UserCourses.getInstance().getLoadedCourses();
+            loadCoursesToAdapter(courses);
+        }
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        recyclerView.invalidate();
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+        initializeFragment(getContext());
+    }
+
     private void loadCoursesToAdapter(List<Course> courses) {
-        mAdapter = new CoursesAdapter(courses, mListListener);
+        mAdapter = new CoursesAdapter(courses, mListListener, isAccessible);
         recyclerView.setAdapter(mAdapter);
         mListListener = (OnListFragmentInteractionListener) getActivity();
         registerForContextMenu(recyclerView);
@@ -181,7 +201,7 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
         DataFetcher.getInstance().getCourses(User.get().getPlanCode(), new Callback<List<Course>>() {
             @Override
             public void success(List<Course> courses, Response response) {
-                recyclerView.setAdapter(mAdapter = new CoursesAdapter(courses, mListListener));
+                recyclerView.setAdapter(mAdapter = new CoursesAdapter(courses, mListListener, isAccessible));
             }
 
             @Override
@@ -192,6 +212,13 @@ public class CoursesFragment extends SearchableFragment implements Serializable 
     @Override
     public SearchableFragment getResultsFragment() {
         return this;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ActivityContext.get());
+        isAccessible = prefs.getBoolean("texts_instead_icons", false);
+        this.mAdapter.notifyDataSetChanged();
     }
 
     /**

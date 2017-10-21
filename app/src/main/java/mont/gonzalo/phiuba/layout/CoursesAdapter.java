@@ -35,6 +35,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
     private final OnListFragmentInteractionListener mListener;
     private int position;
     private boolean menuEnabled;
+    private boolean accesible;
 
     public int getPosition() {
         return position;
@@ -45,8 +46,13 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
     }
 
     public CoursesAdapter(List<Course> courses, OnListFragmentInteractionListener mListener) {
-        mCourses = courses;
-        menuEnabled = true;
+        this(courses, mListener, false);
+    }
+
+    public CoursesAdapter(List<Course> courses, OnListFragmentInteractionListener mListener, boolean isAccesible) {
+        this.mCourses = courses;
+        this.menuEnabled = true;
+        this.accesible = isAccesible;
         this.mListener = mListener;
     }
 
@@ -66,9 +72,10 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
 
     @Override
     public CourseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        int layout = accesible ?  R.layout.fragment_course_row_accessible : R.layout.fragment_course_row;
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_course_row, parent, false);
-        return new CourseViewHolder(view);
+                    .inflate(layout, parent, false);
+        return new CourseViewHolder(view, accesible);
     }
 
     public Course getCourse(int position) {
@@ -79,8 +86,14 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
     @Override
     public void onBindViewHolder(final CourseViewHolder holder, int position) {
         holder.mItem = mCourses.get(position);
+        String description = holder.mItem.getTypeString();
+        if (accesible) {
+            String statusAsString = ActivityContext.get().getResources().getString(
+                    holder.mItem.getStatusAsStringResource());
+            description += " - " + statusAsString;
+        }
         holder.courseName.setText(holder.mItem.getName());
-        holder.courseDescription.setText(holder.mItem.getTypeString());
+        holder.courseDescription.setText(description);
         holder.courseIcon.setImageResource(holder.mItem.getImageResource());
         holder.status.setBackgroundColor(ActivityContext.get().getResources().getColor(
                 holder.mItem.getColorId(), null
@@ -136,9 +149,13 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         public Course mItem;
         public SwipeMenuLayout sml;
 
-        public CourseViewHolder(View itemView) {
+        public CourseViewHolder(View itemView, boolean accesible) {
             super(itemView);
-            rv = itemView.findViewById(R.id.course_card_view);
+            if (accesible) {
+                rv = itemView.findViewById(R.id.course_card_view_accessible);
+            } else {
+                rv = itemView.findViewById(R.id.course_card_view);
+            }
             courseName = (TextView)itemView.findViewById(R.id.course_name);
             courseDescription = (TextView)itemView.findViewById(R.id.course_description);
             courseIcon = (ImageView)itemView.findViewById(R.id.course_icon);
@@ -147,6 +164,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
             awardCalification = (TextView) itemView.findViewById(R.id.course_award_calif);
             awardIcon = (ImageView)itemView.findViewById(R.id.course_award);
             sml = (SwipeMenuLayout) itemView.findViewById(R.id.sml);
+            sml.setVisibility(View.VISIBLE);
         }
 
         public void updateAward(double calif) {
@@ -191,7 +209,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
         @Override
         public void endMenuOpened(SwipeMenuLayout swipeMenuLayout) {
             View v = swipeMenuLayout.findViewById(R.id.smMenuViewRight);
-            ImageView  done = (ImageView) v.findViewById(R.id.sml_action_done);
+            View  done = v.findViewById(R.id.sml_action_done);
             done.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -206,7 +224,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                 }
             });
 
-            ImageView studying = (ImageView) v.findViewById(R.id.sml_action_studying);
+            View studying = v.findViewById(R.id.sml_action_studying);
             studying.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -237,8 +255,8 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CourseVi
                 }
             });
 
-            ImageView star = (ImageView) v.findViewById(R.id.sml_action_remove);
-            star.setOnClickListener(new View.OnClickListener() {
+            View cross =  v.findViewById(R.id.sml_action_remove);
+            cross.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     UserCourses.getInstance().removeCourse(course);

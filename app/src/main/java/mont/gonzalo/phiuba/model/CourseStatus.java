@@ -30,7 +30,24 @@ public enum CourseStatus {
         mapColors.put(NOT_AVAILABLE, R.color.course_not_available);
     }
 
-    public static int getByStatus(CourseStatus courseStatus) {
+    private static HashMap<CourseStatus, Integer> mapNames;
+    static
+    {
+        mapNames = new HashMap<CourseStatus, Integer>();
+        mapNames.put(DEFAULT, R.string.course_default);
+        mapNames.put(FAVOURITE, R.string.course_added);
+        mapNames.put(STUDYING, R.string.course_studyng);
+        mapNames.put(APPROVED, R.string.course_approved);
+        mapNames.put(AVAILABLE, R.string.course_available);
+        mapNames.put(EXAM_PENDING, R.string.course_exam_pending);
+        mapNames.put(NOT_AVAILABLE, R.string.course_not_available);
+    }
+    public static int getColorByStatus(CourseStatus courseStatus) {
             return mapColors.get(courseStatus);
     }
+
+    public static int getStringByStatus(CourseStatus courseStatus) {
+        return mapNames.get(courseStatus);
+    }
 }
+
