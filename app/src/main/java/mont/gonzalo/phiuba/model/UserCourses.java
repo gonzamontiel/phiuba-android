@@ -260,6 +260,16 @@ public class UserCourses extends Observable implements Serializable {
         return filteredAv;
     }
 
+    public List<Course> getFromPlan() {
+        List<Course> filtered = new ArrayList<>();
+        for (Course c: getAll()) {
+            if (c.getPlanCode().equals(User.get().getPlan().getCode())) {
+                filtered.add(c);
+            }
+        }
+        return filtered;
+    }
+
     public static List<Course> filterAvailable(List<Course> mCourses) {
         UserCourses ucs = UserCourses.getInstance();
         List<Course> filteredAv = new ArrayList<>();
