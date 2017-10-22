@@ -332,6 +332,7 @@ public class MainActivity extends AppCompatActivity
             transaction.replace(R.id.flContent, currentFragment);
             transaction.addToBackStack(null);
             transaction.commit();
+            currentFragment.reset();
             searchView.setQuery("", false);
             searchView.setIconified(true);
         }
