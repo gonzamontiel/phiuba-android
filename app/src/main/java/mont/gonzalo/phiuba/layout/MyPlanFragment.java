@@ -1,6 +1,8 @@
 package mont.gonzalo.phiuba.layout;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +32,8 @@ import static mont.gonzalo.phiuba.layout.MyPlanActivity.TAB_STUDYING_ID;
 public class MyPlanFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private ArrayList<Course> mCourses;
+    private boolean isAccessible;
+
     public MyPlanFragment() {}
 
     public static MyPlanFragment newInstance(int sectionNumber, List<Course> mCourses) {
@@ -50,6 +54,8 @@ public class MyPlanFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ActivityContext.get());
+        isAccessible = prefs.getBoolean("accessibility_text", false);
         if (savedInstanceState != null) {
             mCourses = (ArrayList<Course>) savedInstanceState.getSerializable("mcourses");
         }
@@ -66,7 +72,7 @@ public class MyPlanFragment extends Fragment {
         List<Course> tabCourses = getCoursesByState(sectionNumber);
         if (tabCourses.size() > 0) {
             rv.setAdapter(new CoursesAdapter(tabCourses,
-                    (CoursesFragment.OnListFragmentInteractionListener) getActivity()));
+                    (CoursesFragment.OnListFragmentInteractionListener) getActivity(), isAccessible));
             rv.setVisibility(View.VISIBLE);
             placeHolder.setVisibility(View.GONE);
             placeHolderTitle.setVisibility(View.GONE);
